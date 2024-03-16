@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ParkSpace Finder</string>
+    <string name="app_name">ParkSpace</string>
     <string name="email">email</string>
     <string name="password">password</string>
     <string name="login">Sign In</string>

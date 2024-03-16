@@ -81,7 +81,7 @@ fun ParkSpaceFinderTheme(
 
     CompositionLocalProvider(LocalSpacing provides Spacing()) {
         MaterialTheme(
-            colorScheme = LightColors,
+            colorScheme = colors,
             content = content,
             typography = AppTypography,
 
