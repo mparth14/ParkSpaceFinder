@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ParkSpace Finder</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="login">Sign In</string>
+    <string name="dont_have_account">Don\'t have an account? Sign up</string>
+    <string name="name">name</string>
+    <string name="signup">signup</string>
+    <string name="already_have_account">Have an account? Sign in</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="empty" />
+    <string name="logout">logout</string>
 </resources>

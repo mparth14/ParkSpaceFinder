@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "110631296648",
+    "project_id": "parkspase-finder",
+    "storage_bucket": "parkspase-finder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110631296648:android:7abee7f77bf3a876afc93d",
+        "android_client_info": {
+          "package_name": "com.parkspace.finder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHPCWXK4uvhKVTMR2TEsF_5vcF5NDT-bA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
