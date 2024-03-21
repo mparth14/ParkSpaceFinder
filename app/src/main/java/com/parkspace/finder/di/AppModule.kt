@@ -1,8 +1,11 @@
 package com.parkspace.finder.di
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.parkspace.finder.data.AuthRepository
 import com.parkspace.finder.data.AuthRepositoryImpl
+import com.parkspace.finder.data.ParkingSpaceRepository
+import com.parkspace.finder.data.ParkingSpaceRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,4 +19,9 @@ class AppModule {
 
     @Provides
     fun provideAuthRepository(impl: AuthRepositoryImpl): AuthRepository = impl
+
+    @Provides
+    fun provideFirebaseFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+    @Provides
+    fun provideParkingSpaceRepository(impl: ParkingSpaceRepositoryImpl): ParkingSpaceRepository = impl
 }

@@ -32,9 +32,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.parkspace.finder.data.AuthViewModel
+import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
+import com.parkspace.finder.ui.browse.BrowseScreen
 import com.parkspace.finder.ui.home.HomeScreen
+import com.parkspace.finder.ui.parkingDetail.ParkingDetailScreen
 import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
@@ -50,6 +53,7 @@ sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon:
 @Composable
 fun AppNavHost(
     viewModel: AuthViewModel,
+    parkingSpaceViewModel: ParkingSpaceViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = ROUTE_LOGIN
@@ -60,7 +64,6 @@ fun AppNavHost(
         mutableStateOf(0)
     }
     val currentRoute = navBackStackEntry.value?.destination?.route
-    Log.d("AppNavHost", "currentRoute: $currentRoute")
     Scaffold (
         bottomBar = {
             if(screensToShowNavbar.any { it.route == currentRoute }){
@@ -93,63 +96,58 @@ fun AppNavHost(
                 }
             }
         }
-    ) {
-
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = startDestination,
+            modifier = modifier
+        ) {
+            composable(ROUTE_LOGIN) {
+                LoginScreen(viewModel ,navController = navController)
+            }
+            composable(ROUTE_SIGNUP) {
+                SignupScreen(viewModel, navController = navController)
+            }
+            composable(ROUTE_HOME) {
+                HomeScreen(viewModel,navController = navController)
+            }
+            composable(ROUTE_PAYMENT) {
+                PaymentScreen(navController = navController)
+            }
+            composable(ROUTE_PAYMENT_SUCCESS) {
+                PaymentSuccessScreen(navController = navController, onViewTicketClick = {})
+            }
+            composable(ROUTE_PARKING_TICKET) {
+                ParkingTicketScreen(
+                    startTime = "10:00 PM",
+                    endTime = "12:00 PM",
+                    spotNumber = "B20",
+                    duration = "2 hours",
+                    onBackClicked = { navController.popBackStack() }
+                )
+            }
+            composable(ROUTE_BROWSE) {
+                BrowseScreen(navController = navController, parkingSpaceViewModel = parkingSpaceViewModel)
+            }
+            composable(Screen.Bookings.route) {
+                BookignsScreen(navController = navController)
+            }
+            composable(Screen.Favorites.route) {
+                FavoritesScreen()
+            }
+            composable(Screen.Notifications.route) {
+                NotifactionsScreen()
+            }
+            composable(Screen.Account.route) {
+                HomeScreen(navController = navController, viewModel = viewModel)
+            }
+            composable(ROUTE_PARKING_DETAIL) {
+                ParkingDetailScreen(navController = navController)
+            }
+        }
     }
-    NavHost(
-        navController = navController,
-        startDestination = startDestination,
-        modifier = modifier
-    ) {
-        composable(ROUTE_LOGIN) {
-            LoginScreen(viewModel ,navController = navController)
-        }
-        composable(ROUTE_SIGNUP) {
-            SignupScreen(viewModel, navController = navController)
-        }
-        composable(ROUTE_HOME) {
-            HomeScreen(viewModel,navController = navController)
-        }
-        composable(ROUTE_PAYMENT) {
-            PaymentScreen(navController = navController)
-        }
-        composable(ROUTE_PAYMENT_SUCCESS) {
-            PaymentSuccessScreen(navController = navController, onViewTicketClick = {})
-        }
-        composable(ROUTE_PARKING_TICKET) {
-            ParkingTicketScreen(
-                startTime = "10:00 PM",
-                endTime = "12:00 PM",
-                spotNumber = "B20",
-                duration = "2 hours",
-                onBackClicked = { navController.popBackStack() }
-            )
-        }
-        composable(Screen.Browse.route) {
-            HomeScreen(viewModel,navController = navController)
-        }
-        composable(Screen.Bookings.route) {
-            BookignsScreen(navController = navController)
-        }
-        composable(Screen.Favorites.route) {
-            FavoritesScreen()
-        }
-        composable(Screen.Notifications.route) {
-            NotifactionsScreen()
-        }
-        composable(Screen.Account.route) {
-            AccontScreen()
-        }
-    }
-}
 
-@Composable
-fun BrowseScreen(navController: NavHostController) {
-    Text(text = "Browse")
-    // Login screen content
-    // Navigate to HomeScreen after successful login
 }
-
 @Composable
 fun BookignsScreen(navController: NavHostController) {
     Text(text = "Bookings")
