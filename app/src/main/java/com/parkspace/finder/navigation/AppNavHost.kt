@@ -10,6 +10,7 @@ import com.parkspace.finder.data.AuthViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
 import com.parkspace.finder.ui.home.HomeScreen
+import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
 
@@ -39,6 +40,15 @@ fun AppNavHost(
         }
         composable(ROUTE_PAYMENT_SUCCESS) {
             PaymentSuccessScreen(navController = navController, onViewTicketClick = {})
+        }
+        composable(ROUTE_PARKING_TICKET) {
+            ParkingTicketScreen(
+                startTime = "10:00 PM",
+                endTime = "12:00 PM",
+                spotNumber = "B20",
+                duration = "2 hours",
+                onBackClicked = { navController.popBackStack() }
+            )
         }
     }
 }

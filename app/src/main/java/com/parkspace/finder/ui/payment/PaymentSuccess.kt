@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.parkspace.finder.navigation.ROUTE_PARKING_TICKET
+import com.parkspace.finder.navigation.ROUTE_PAYMENT_SUCCESS
 
 @Composable
 fun PaymentSuccessScreen(navController : NavController, onViewTicketClick: () -> Unit) {
@@ -73,7 +75,7 @@ fun PaymentSuccessScreen(navController : NavController, onViewTicketClick: () ->
             )
             Spacer(modifier = Modifier.height(32.dp))
             Button(
-                onClick = onViewTicketClick
+                onClick = { navController.navigate(ROUTE_PARKING_TICKET)}
             ) {
                 Text(text = "View parking ticket")
             }
