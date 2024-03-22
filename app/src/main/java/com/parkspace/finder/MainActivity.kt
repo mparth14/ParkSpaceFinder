@@ -14,13 +14,12 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<AuthViewModel>()
-    private val parkingSpaceViewModel by viewModels<ParkingSpaceViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ParkSpaceFinderTheme {
                 // A surface container using the 'background' color from the theme
-                AppNavHost(viewModel, parkingSpaceViewModel)
+                AppNavHost(viewModel)
             }
         }
     }

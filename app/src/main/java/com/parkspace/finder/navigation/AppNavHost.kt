@@ -53,7 +53,6 @@ sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon:
 @Composable
 fun AppNavHost(
     viewModel: AuthViewModel,
-    parkingSpaceViewModel: ParkingSpaceViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = ROUTE_LOGIN
@@ -127,7 +126,7 @@ fun AppNavHost(
                 )
             }
             composable(ROUTE_BROWSE) {
-                BrowseScreen(navController = navController, parkingSpaceViewModel = parkingSpaceViewModel)
+                BrowseScreen(navController = navController)
             }
             composable(Screen.Bookings.route) {
                 BookignsScreen(navController = navController)

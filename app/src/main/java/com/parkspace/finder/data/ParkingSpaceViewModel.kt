@@ -20,7 +20,7 @@ class ParkingSpaceViewModel @Inject  constructor(private val repository: Parking
     init {
         fetchParkingSpaces()
     }
-    private fun fetchParkingSpaces() {
+    fun fetchParkingSpaces() {
         viewModelScope.launch {
             _parkingSpaces.value = Resource.Loading
             val result = repository.getParkingSpaces()
