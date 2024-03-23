@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             ParkSpaceFinderTheme {
                 val screen = splashViewModel.startDestination
-                AppNavHost(viewModel, startDestination = screen.value)
+                AppNavHost(viewModel, startDestination = screen.value, context = this@MainActivity)
             }
         }
     }

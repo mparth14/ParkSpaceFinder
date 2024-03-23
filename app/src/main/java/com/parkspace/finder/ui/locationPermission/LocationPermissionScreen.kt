@@ -1,6 +1,10 @@
 package com.parkspace.finder.ui.locationPermission
 
 import android.content.res.Resources.Theme
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContract
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,12 +32,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.parkspace.finder.R
+import com.parkspace.finder.navigation.ROUTE_BROWSE
 
 @Composable
-fun LocationPermissionScreen() {
+fun LocationPermissionScreen(navController: NavHostController?) {
     val context = LocalContext.current
+    val permissions = arrayOf(
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.ACCESS_FINE_LOCATION
+    )
 
+    val launchMultiplePermissions = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()){
+        permissionMap ->
+        val areGranted = permissionMap.values.reduce{acc, next -> acc && next}
+        if(areGranted){
+            // Navigate to the next screen
+            navController?.popBackStack()
+            navController?.navigate(ROUTE_BROWSE)
+        }else{
+            Toast.makeText(context, "Permissions denied", Toast.LENGTH_SHORT).show()
+        }
+    }
     Surface(
         modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
     ) {
@@ -74,11 +96,12 @@ fun LocationPermissionScreen() {
             )
             Spacer(modifier = Modifier.height(32.dp))
             Button(
-                modifier = Modifier.fillMaxWidth(), onClick = {
-                    // Implement the logic to use the current location
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                          launchMultiplePermissions.launch(permissions)
                 }, colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary, contentColor = Color.White
-                )
+                ),
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.my_location_24),
@@ -103,5 +126,5 @@ fun LocationPermissionScreen() {
 @Preview(showBackground = true)
 @Composable
 fun LocationPermissionScreenPreview() {
-    LocationPermissionScreen()
+    LocationPermissionScreen(null)
 }

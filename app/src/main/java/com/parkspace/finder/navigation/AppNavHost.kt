@@ -1,5 +1,6 @@
 package com.parkspace.finder.navigation
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -38,6 +39,7 @@ import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
 import com.parkspace.finder.ui.browse.BrowseScreen
 import com.parkspace.finder.ui.home.HomeScreen
+import com.parkspace.finder.ui.locationPermission.LocationPermissionScreen
 import com.parkspace.finder.ui.onboarding.OnboardingScreen
 import com.parkspace.finder.ui.parkingDetail.ParkingDetailScreen
 import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
@@ -58,7 +60,8 @@ fun AppNavHost(
     viewModel: AuthViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUTE_ONBOARDING
+    startDestination: String = ROUTE_ONBOARDING,
+    context: Context
 ) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val screensToShowNavbar = listOf(Screen.Browse, Screen.Bookings, Screen.Favorites, Screen.Notifications, Screen.Account)
@@ -132,7 +135,7 @@ fun AppNavHost(
                 )
             }
             composable(ROUTE_BROWSE) {
-                BrowseScreen(navController = navController)
+                BrowseScreen(context = context, navController = navController)
             }
             composable(Screen.Bookings.route) {
                 BookignsScreen(navController = navController)
@@ -148,6 +151,9 @@ fun AppNavHost(
             }
             composable(ROUTE_PARKING_DETAIL) {
                 ParkingDetailScreen(navController = navController)
+            }
+            composable(ROUTE_REQUEST_LOCATION_PERMISSION) {
+                LocationPermissionScreen(navController = navController)
             }
         }
     }

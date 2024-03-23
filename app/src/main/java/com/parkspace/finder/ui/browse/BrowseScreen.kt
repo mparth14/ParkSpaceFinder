@@ -1,5 +1,7 @@
 package com.parkspace.finder.ui.browse
 
+import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
@@ -16,16 +18,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.data.Resource
+import com.parkspace.finder.navigation.ROUTE_REQUEST_LOCATION_PERMISSION
 import kotlinx.coroutines.delay
 
 @Composable
 @ExperimentalMaterial3Api
-fun BrowseScreen(navController: NavController, parkingSpaceViewModel: ParkingSpaceViewModel = hiltViewModel()) {
+fun BrowseScreen(context: Context, parkingSpaceViewModel: ParkingSpaceViewModel = hiltViewModel(), navController: NavHostController) {
+    val permissions = arrayOf(
+        android.Manifest.permission.ACCESS_COARSE_LOCATION,
+        android.Manifest.permission.ACCESS_FINE_LOCATION
+    )
+
+    if(!permissions.all {
+        ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        }){
+        navController.popBackStack()
+        navController.navigate(ROUTE_REQUEST_LOCATION_PERMISSION)
+    }else{
+
+    }
+
     val parkingSpaces = parkingSpaceViewModel.parkingSpaces.collectAsState()
     val state = rememberPullToRefreshState()
     if (state.isRefreshing) {
