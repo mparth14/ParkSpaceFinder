@@ -53,7 +53,6 @@ fun Rating(rating: Int) {
 fun ParkingLotItem(navController: NavController, parkingSpace: ParkingSpace) {
     Card(
         modifier = Modifier
-            .padding(8.dp)
             .fillMaxWidth()
             .height(120.dp),
         shape = RoundedCornerShape(8.dp),

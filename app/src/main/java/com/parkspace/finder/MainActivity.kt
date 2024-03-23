@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.parkspace.finder.data.AuthViewModel
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.navigation.AppNavHost
