@@ -38,6 +38,7 @@ import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
 import com.parkspace.finder.ui.browse.BrowseScreen
 import com.parkspace.finder.ui.home.HomeScreen
+import com.parkspace.finder.ui.onboarding.OnboardingScreen
 import com.parkspace.finder.ui.parkingDetail.ParkingDetailScreen
 import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
 import com.parkspace.finder.ui.payment.PaymentScreen
@@ -57,7 +58,7 @@ fun AppNavHost(
     viewModel: AuthViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUTE_LOGIN
+    startDestination: String = ROUTE_ONBOARDING
 ) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val screensToShowNavbar = listOf(Screen.Browse, Screen.Bookings, Screen.Favorites, Screen.Notifications, Screen.Account)
@@ -103,6 +104,9 @@ fun AppNavHost(
             startDestination = startDestination,
             modifier = modifier
         ) {
+            composable(ROUTE_ONBOARDING) {
+                OnboardingScreen(navController = navController)
+            }
             composable(ROUTE_LOGIN) {
                 LoginScreen(viewModel ,navController = navController)
             }

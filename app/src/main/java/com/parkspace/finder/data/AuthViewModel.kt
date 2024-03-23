@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,6 +22,9 @@ class AuthViewModel @Inject constructor(
     private val _signupFlow = MutableStateFlow<Resource<FirebaseUser>?>(null)
     val signupFlow:StateFlow<Resource<FirebaseUser>?> = _signupFlow
 
+    private val _isReady = MutableStateFlow(false)
+    val isReady = _isReady.asStateFlow()
+
     var signupUIState = mutableStateOf(SignupUIState())
     var loginUIState = mutableStateOf(LoginUIState())
 
@@ -27,8 +32,12 @@ class AuthViewModel @Inject constructor(
     get() = repository.currentUser
 
     init {
-        if (repository.currentUser != null){
-            _loginFlow.value = Resource.Success(repository.currentUser!!)
+        viewModelScope.launch {
+            if (repository.currentUser != null){
+                _loginFlow.value = Resource.Success(repository.currentUser!!)
+            }
+            delay(500)
+            _isReady.value = true
         }
     }
 
