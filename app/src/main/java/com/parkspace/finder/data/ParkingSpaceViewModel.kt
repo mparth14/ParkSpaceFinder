@@ -23,6 +23,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
+import com.parkspace.finder.data.utils.distanceBetween
 import com.parkspace.finder.navigation.ROUTE_REQUEST_LOCATION_PERMISSION
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -88,6 +89,7 @@ class ParkingSpaceViewModel @Inject constructor(
                     _currentLocation.value = LatLng(location.latitude, location.longitude)
                     _addresses.value =
                         geocoder.getFromLocation(location.latitude, location.longitude, 1)!!
+                    sortParkingSpaces()
                 }
             }
         }
@@ -100,11 +102,26 @@ class ParkingSpaceViewModel @Inject constructor(
         }
     }
 
+    fun sortParkingSpaces() {
+        _parkingSpaces.value?.let { spaces ->
+            if(spaces is Resource.Success) {
+                spaces.result?.forEach {
+                    val sortedSpaces = spaces.result.sortedBy {
+                        it.distanceFromCurrentLocation  = distanceBetween(_currentLocation.value, LatLng(it.location.latitude, it.location.longitude))
+                        it.distanceFromCurrentLocation
+                    }
+                    _parkingSpaces.value = Resource.Success(sortedSpaces)
+                }
+            }
+        }
+    }
+
     fun fetchParkingSpaces() {
         viewModelScope.launch {
             _parkingSpaces.value = Resource.Loading
             val result = repository.getParkingSpaces()
             _parkingSpaces.value = result
+            sortParkingSpaces()
         }
     }
 }
