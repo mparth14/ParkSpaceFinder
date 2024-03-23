@@ -15,12 +15,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.parkspace.finder.data.AuthViewModel
 import com.parkspace.finder.navigation.ROUTE_PAYMENT_SUCCESS
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PaymentScreen( navController: NavController) {
+    val bookingDetails = BookingDetails(
+        startTime = "10:00 PM",
+        endTime = "12:00 PM",
+        spotNumber = "B20",
+        duration = "2 hours",
+        price = 100.5,
+        lotName = "Halifax Shopping Center Parking"
+    )
+
+    val db = FirebaseFirestore.getInstance()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -114,8 +126,14 @@ fun PaymentScreen( navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    // Navigate to the success screen
-                    navController.navigate(ROUTE_PAYMENT_SUCCESS)
+                    db.collection("bookings")
+                        .add(bookingDetails)
+                        .addOnSuccessListener { documentReference ->
+                            // Navigate to the success screen
+                            navController.navigate("$ROUTE_PAYMENT_SUCCESS/${bookingDetails.startTime}/${bookingDetails.endTime}/${bookingDetails.spotNumber}/${bookingDetails.duration}/${bookingDetails.price}/${bookingDetails.lotName}")
+                        }
+                        .addOnFailureListener { e ->
+                        }
               },
                 modifier = Modifier.fillMaxWidth()
             ) {
