@@ -29,10 +29,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.parkspace.finder.data.AuthViewModel
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
@@ -43,6 +45,7 @@ import com.parkspace.finder.ui.locationPermission.LocationPermissionScreen
 import com.parkspace.finder.ui.onboarding.OnboardingScreen
 import com.parkspace.finder.ui.parkingDetail.ParkingDetailScreen
 import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
+import com.parkspace.finder.ui.payment.BookingDetails
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
 
@@ -122,18 +125,51 @@ fun AppNavHost(
             composable(ROUTE_PAYMENT) {
                 PaymentScreen(navController = navController)
             }
-            composable(ROUTE_PAYMENT_SUCCESS) {
-                PaymentSuccessScreen(navController = navController, onViewTicketClick = {})
+            composable(
+                route = "$ROUTE_PAYMENT_SUCCESS/{startTime}/{endTime}/{spotNumber}/{duration}/{price}/{lotName}",
+                arguments = listOf(
+                    navArgument("startTime") { type = NavType.StringType },
+                    navArgument("endTime") { type = NavType.StringType },
+                    navArgument("spotNumber") { type = NavType.StringType },
+                    navArgument("duration") { type = NavType.StringType },
+                    navArgument("price") { type = NavType.FloatType },
+                    navArgument("lotName") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                val bookingDetails = BookingDetails(
+                    startTime = backStackEntry.arguments?.getString("startTime") ?: "",
+                    endTime = backStackEntry.arguments?.getString("endTime") ?: "",
+                    spotNumber = backStackEntry.arguments?.getString("spotNumber") ?: "",
+                    duration = backStackEntry.arguments?.getString("duration") ?: "",
+                    price = backStackEntry.arguments?.getDouble("price") ?: 0.00,
+                    lotName = backStackEntry.arguments?.getString("lotName") ?: "",
+                )
+                PaymentSuccessScreen(navController = navController, bookingDetails = bookingDetails) {
+                }
             }
-            composable(ROUTE_PARKING_TICKET) {
+
+            composable(
+                route = "$ROUTE_PARKING_TICKET/{startTime}/{endTime}/{spotNumber}/{duration}/{price}/{lotName}",
+                arguments = listOf(
+                    navArgument("startTime") { type = NavType.StringType },
+                    navArgument("endTime") { type = NavType.StringType },
+                    navArgument("spotNumber") { type = NavType.StringType },
+                    navArgument("duration") { type = NavType.StringType },
+                    navArgument("price") { type = NavType.FloatType },
+                    navArgument("lotName") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
                 ParkingTicketScreen(
-                    startTime = "10:00 PM",
-                    endTime = "12:00 PM",
-                    spotNumber = "B20",
-                    duration = "2 hours",
+                    startTime = backStackEntry.arguments?.getString("startTime") ?: "",
+                    endTime = backStackEntry.arguments?.getString("endTime") ?: "",
+                    spotNumber = backStackEntry.arguments?.getString("spotNumber") ?: "",
+                    duration = backStackEntry.arguments?.getString("duration") ?: "",
+                    price = backStackEntry.arguments?.getDouble("price") ?: 0.0,
+                    lotName = backStackEntry.arguments?.getString("lotName") ?: "",
                     onBackClicked = { navController.popBackStack() }
                 )
             }
+
             composable(ROUTE_BROWSE) {
                 BrowseScreen(context = context, navController = navController)
             }

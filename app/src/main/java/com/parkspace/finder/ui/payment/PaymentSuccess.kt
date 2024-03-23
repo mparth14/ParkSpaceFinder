@@ -12,16 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.parkspace.finder.navigation.ROUTE_PARKING_TICKET
-import com.parkspace.finder.navigation.ROUTE_PAYMENT_SUCCESS
 
 @Composable
-fun PaymentSuccessScreen(navController : NavController, onViewTicketClick: () -> Unit) {
+fun PaymentSuccessScreen(navController : NavController, bookingDetails: BookingDetails, onViewTicketClick: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -75,17 +72,15 @@ fun PaymentSuccessScreen(navController : NavController, onViewTicketClick: () ->
             )
             Spacer(modifier = Modifier.height(32.dp))
             Button(
-                onClick = { navController.navigate(ROUTE_PARKING_TICKET)}
+                onClick = {
+                    navController.navigate(
+                        "$ROUTE_PARKING_TICKET/${bookingDetails.startTime}/${bookingDetails.endTime}/${bookingDetails.spotNumber}/${bookingDetails.duration}/${bookingDetails.price}/${bookingDetails.lotName}"
+                    )
+                }
             ) {
                 Text(text = "View parking ticket")
             }
+
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewSuccessScreen() {
-    val navController = rememberNavController()
-    PaymentSuccessScreen(navController = navController, onViewTicketClick = {})
 }

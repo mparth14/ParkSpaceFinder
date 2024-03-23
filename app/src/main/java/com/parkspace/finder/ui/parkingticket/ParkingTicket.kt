@@ -28,10 +28,21 @@ fun ParkingTicketScreen(
     endTime: String,
     spotNumber: String,
     duration: String,
+    price: Double,
+    lotName: String,
     onBackClicked: () -> Unit
 ) {
     val context = LocalContext.current
-    val qrCodeBitmap by remember { mutableStateOf(generateQRCodeBitmap(context)) }
+    val priceUpdated = price.toFloat();
+    val qrData = "Start Time: $startTime\n" +
+            "End Time: $endTime\n" +
+            "Spot Number: $spotNumber\n" +
+            "Duration: $duration\n" +
+            "Price: $priceUpdated\n" +
+            "Lot Name: $lotName"
+    val qrCodeBitmap by remember { mutableStateOf(generateQRCodeBitmap(qrData, context)) }
+
+
 
     Scaffold(
         topBar = {
@@ -79,18 +90,21 @@ fun ParkingTicketScreen(
                         contentDescription = "QR Code"
                     )
                 }
-                Text(text = "Start Time: $startTime", style = MaterialTheme.typography.headlineSmall)
-                Text(text = "End Time: $endTime", style = MaterialTheme.typography.headlineSmall)
-                Text(text = "Spot Number: $spotNumber", style = MaterialTheme.typography.headlineSmall)
-                Text(text = "Duration: $duration", style = MaterialTheme.typography.headlineSmall)
+                Text(text = "Start Time: $startTime", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "End Time: $endTime", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Spot Number: $spotNumber", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Duration: $duration", style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Price: $price"  , style = MaterialTheme.typography.bodyLarge)
+                Text(text = "Parking Lot: $lotName", style = MaterialTheme.typography.bodyLarge)
+
             }
         }
     )
 }
 
-fun generateQRCodeBitmap(context: android.content.Context): ImageBitmap {
+fun generateQRCodeBitmap(qrData : String, context: android.content.Context): ImageBitmap {
     val writer = QRCodeWriter()
-    val bitMatrix = writer.encode("Your QR Code Data", BarcodeFormat.QR_CODE, 350, 350)
+    val bitMatrix = writer.encode(qrData, BarcodeFormat.QR_CODE, 350, 350)
     val width = bitMatrix.width
     val height = bitMatrix.height
     val bmp = android.graphics.Bitmap.createBitmap(width, height, android.graphics.Bitmap.Config.RGB_565)
@@ -111,6 +125,8 @@ fun PreviewParkingTicketScreen() {
         endTime = "12:00 PM",
         spotNumber = "B20",
         duration = "2 hours",
+        price = 100.0,
+        lotName = "Mic Mac Mall Parking",
         onBackClicked = {}
     )
 }
