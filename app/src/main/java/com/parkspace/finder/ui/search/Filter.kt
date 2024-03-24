@@ -73,31 +73,37 @@ fun FilterSection() {
                             fontWeight = FontWeight.Bold
                         ),
                     )
-                    Row(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(
-                                md_theme_light_onPrimary,
-                                RoundedCornerShape(16.dp)
-                            ),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
+                            .padding(14.dp)
                     ) {
-                        Text(
-                            text = "Available Today",
-                            color = md_theme_light_onPrimaryContainer,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                        Switch(
-                            checked = isChecked,
-                            onCheckedChange = { isChecked = it },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = md_theme_light_onPrimary,
-                                checkedTrackColor = md_theme_light_switchColor,
-                                uncheckedThumbColor = md_theme_light_onPrimary,
-                                uncheckedTrackColor = md_theme_light_outline
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    md_theme_light_onPrimary,
+                                    RoundedCornerShape(16.dp)
+                                ),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text(
+                                text = "Available Now",
+                                color = md_theme_light_onPrimaryContainer,
+                                modifier = Modifier.padding(16.dp)
                             )
-                        )
+                            Switch(
+                                checked = isChecked,
+                                onCheckedChange = { isChecked = it },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = md_theme_light_onPrimary,
+                                    checkedTrackColor = md_theme_light_switchColor,
+                                    uncheckedThumbColor = md_theme_light_onPrimary,
+                                    uncheckedTrackColor = md_theme_light_outline
+                                )
+                            )
+                        }
                     }
 
                     Text(

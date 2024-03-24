@@ -107,5 +107,20 @@ class ParkingSpaceViewModel @Inject constructor(
             _parkingSpaces.value = result
         }
     }
+    fun fetchParkingSpacesSortedByPriceHighToLow() {
+        viewModelScope.launch {
+            _parkingSpaces.value = Resource.Loading
+            val result = repository.getParkingSpacesSortedByPriceHighToLow()
+            _parkingSpaces.value = result
+        }
+    }
+
+    fun fetchParkingSpacesSortedByPriceLowToHigh() {
+        viewModelScope.launch {
+            _parkingSpaces.value = Resource.Loading
+            val result = repository.getParkingSpacesSortedByPriceLowToHigh()
+            _parkingSpaces.value = result
+        }
+    }
 
 }
