@@ -107,4 +107,5 @@ class ParkingSpaceViewModel @Inject constructor(
             _parkingSpaces.value = result
         }
     }
+
 }

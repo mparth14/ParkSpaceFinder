@@ -1,7 +1,9 @@
 package com.parkspace.finder.navigation
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
@@ -48,6 +50,7 @@ import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
 import com.parkspace.finder.ui.payment.BookingDetails
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
+import com.parkspace.finder.ui.search.ParkingBookingScreen
 
 
 sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon: ImageVector?, val title: String) {
@@ -57,6 +60,7 @@ sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon:
     object Notifications : Screen("notifications", Icons.Outlined.Notifications, Icons.Filled.Notifications, "Notifications")
     object Account : Screen("account", Icons.Outlined.AccountCircle, Icons.Filled.AccountCircle, "Account")
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavHost(
@@ -171,7 +175,7 @@ fun AppNavHost(
             }
 
             composable(ROUTE_BROWSE) {
-                BrowseScreen(context = context, navController = navController)
+                BrowseScreen(context  = context, navController = navController)
             }
             composable(Screen.Bookings.route) {
                 BookignsScreen(navController = navController)

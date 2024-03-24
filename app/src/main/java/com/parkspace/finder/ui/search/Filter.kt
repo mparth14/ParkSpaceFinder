@@ -1,6 +1,7 @@
 package com.parkspace.finder.ui.search
 
 import androidx.compose.foundation.background
+import androidx.compose.material3.Button
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,29 +26,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.material3.RangeSlider
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.parkspace.finder.ui.theme.*
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarOutline
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.*
 
-import androidx.compose.ui.draw.alpha
-
-import androidx.compose.ui.res.painterResource
-
-import androidx.compose.ui.unit.dp
-import androidx.core.util.toRange
-import androidx.navigation.NavHostController
-import com.parkspace.finder.data.AuthViewModel
 
 @Composable
 @Preview
@@ -55,8 +47,9 @@ fun FilterSection() {
 // viewModel: AuthViewModel?, navController: NavHostController
     val selectedDistance = remember { mutableStateOf("Any") }
     val duration = remember { mutableStateOf("More than 2 hours") }
-    val onDurationChange = remember { mutableStateOf("More than 2 hours") }
     val popularityFilter = remember { mutableStateOf(PopularityFilter.STAR_RATING_HIGHEST_FIRST) }
+    var isChecked by remember { mutableStateOf(true) }
+    var rating by remember { mutableStateOf(0) }
     LazyColumn( modifier = Modifier
         .fillMaxSize()
         .background(md_theme_light_inverseOnSurface)){
@@ -96,8 +89,8 @@ fun FilterSection() {
                             modifier = Modifier.padding(16.dp)
                         )
                         Switch(
-                            checked = true,
-                            onCheckedChange = {  },
+                            checked = isChecked,
+                            onCheckedChange = { isChecked = it },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = md_theme_light_onPrimary,
                                 checkedTrackColor = md_theme_light_switchColor,
@@ -139,6 +132,39 @@ fun FilterSection() {
                         }
                     )
 
+                    StarSelector(
+                        rating = rating,
+                        onRatingSelected = { newRating ->
+                            rating = newRating
+                            // Perform any additional actions with the new rating
+                        }
+                    )
+
+                    Column (
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ){
+                        Button(
+                            onClick = { /*TODO*/ },
+                            modifier = Modifier
+                                .width(350.dp)
+                                .padding(
+                                    5.dp
+                                )
+                                .background(
+                                    color = md_theme_light_primary,
+                                    shape = MaterialTheme.shapes.small
+                                ),
+                            colors = ButtonDefaults.buttonColors(
+                                md_theme_light_primary
+                            )
+                        ) {
+                            Text(
+                                text = "Apply Filters",
+                            )
+                        }
+                    }
 
 
     }
@@ -202,10 +228,8 @@ fun PopularityFilterRadioButtons(
 }
 
 enum class PopularityFilter(val displayName: String) {
-    POUPULARITY("Popularity"),
     STAR_RATING_HIGHEST_FIRST("Star Rating (highest first)"),
     STAR_RATING_LOWEST_FIRST("Star Rating (lowest first)"),
-    BEST_REVIEWED_FIRST("Best Reviewed First"),
     MOST_REVIEWED_FIRST("Most Reviewed First"),
     PRICE_LOWEST_FIRST("Price (lowest first)"),
     PRICE_HIGHEST_FIRST("Price (highest first)")
@@ -378,56 +402,136 @@ fun DurationPicker(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .background(md_theme_light_onPrimary, RoundedCornerShape(16.dp))
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Text(
+            text = "Duration",
+            style = MaterialTheme.typography.labelLarge.copy(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            ),
+            color = md_theme_light_onSurface,
+            modifier = Modifier.padding(16.dp),
+            )
+        Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onDurationChange("More than 2 hours") },
-            horizontalArrangement = Arrangement.SpaceBetween,
-
+                .background(md_theme_light_surface, RoundedCornerShape(16.dp))
+                .padding(16.dp),
         ) {
-            Text(text = "More than 2 hours")
-            RadioButton(
-                selected = duration == "More than 2 hours",
-                onClick = { onDurationChange("More than 2 hours") }
-            )
 
-        }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onDurationChange("1 - 2 hours") },
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(text = "1 - 2 hours")
-            RadioButton(
-                selected = duration == "1 - 2 hours",
-                onClick = { onDurationChange("1 - 2 hours") }
-            )
+            ) {
 
-        }
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onDurationChange("<1 hour") },
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(text = "<1 hour")
-            RadioButton(
-                selected = duration == "<1 hour",
-                onClick = { onDurationChange("<1 hour") },
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onDurationChange("More than 2 hours") }
+                        .padding(start = 15.dp)
+                        .background(md_theme_light_surface),
+                    horizontalArrangement = Arrangement.SpaceBetween,
 
-            )
+                    ) {
+                    Text(text = "More than 2 hours")
+                    RadioButton(
+                        selected = duration == "More than 2 hours",
+                        onClick = { onDurationChange("More than 2 hours") }
+                    )
 
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onDurationChange("1 - 2 hours") }
+                        .padding(start = 15.dp)
+                        .background(md_theme_light_surface),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(text = "1 - 2 hours")
+                    RadioButton(
+                        selected = duration == "1 - 2 hours",
+                        onClick = { onDurationChange("1 - 2 hours") }
+                    )
+
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onDurationChange("<1 hour") }
+                        .padding(start = 15.dp)
+                        .background(md_theme_light_surface),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(text = "<1 hour")
+                    RadioButton(
+                        selected = duration == "<1 hour",
+                        onClick = { onDurationChange("<1 hour") },
+
+                        )
+
+                }
+            }
         }
     }
 }
+@Composable
+fun StarSelector(
+    rating: Int,
+    maxRating: Int = 5,
+    onRatingSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Rating",
+            style = MaterialTheme.typography.labelLarge.copy(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            ),
+            color = md_theme_light_onSurface,
+            modifier = Modifier.padding(16.dp),
+        )
+
+        Row(
+            modifier = Modifier
+                .background(md_theme_light_surface, RoundedCornerShape(30.dp))
+                .fillMaxWidth()
+                .height(40.dp)
+                .clickable {
+                },
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically,
+
+
+        ) {
+            repeat(maxRating) { index ->
+                Text(text = "${index + 1}")
+                    Icon(
+                        imageVector = if (index < rating) Icons.Filled.Star else Icons.Filled.StarOutline,
+                        contentDescription = null,
+                        tint = md_theme_light_primary,
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable {
+                                onRatingSelected(index + 1)
+                            }
+                    )
+                }
+            }
+        }
+    }
 
 
 
