@@ -1,7 +1,7 @@
 package com.parkspace.finder.navigation
 
+import BookingScreen
 import android.content.Context
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
@@ -22,7 +22,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -36,7 +36,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parkspace.finder.data.AuthViewModel
-import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
 import com.parkspace.finder.ui.browse.BrowseScreen
@@ -68,8 +67,8 @@ fun AppNavHost(
 ) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val screensToShowNavbar = listOf(Screen.Browse, Screen.Bookings, Screen.Favorites, Screen.Notifications, Screen.Account)
-    var selectedScreen = rememberSaveable {
-        mutableStateOf(0)
+    val selectedScreen = rememberSaveable {
+        mutableIntStateOf(0)
     }
     val currentRoute = navBackStackEntry.value?.destination?.route
     Scaffold (
@@ -174,13 +173,13 @@ fun AppNavHost(
                 BrowseScreen(context = context, navController = navController)
             }
             composable(Screen.Bookings.route) {
-                BookignsScreen(navController = navController)
+                BookingScreen()
             }
             composable(Screen.Favorites.route) {
                 FavoritesScreen()
             }
             composable(Screen.Notifications.route) {
-                NotifactionsScreen()
+                NotificationsScreen()
             }
             composable(Screen.Account.route) {
                 HomeScreen(navController = navController, viewModel = viewModel)
@@ -195,12 +194,6 @@ fun AppNavHost(
     }
 
 }
-@Composable
-fun BookignsScreen(navController: NavHostController) {
-    Text(text = "Bookings")
-    // Payment screen content
-    // Navigate back to the previous screen after completing the payment
-}
 
 @Composable
 fun FavoritesScreen() {
@@ -209,13 +202,13 @@ fun FavoritesScreen() {
 }
 
 @Composable
-fun NotifactionsScreen() {
+fun NotificationsScreen() {
     Text(text = "Notifications")
     // Dashboard screen content
 }
 
 @Composable
-fun AccontScreen() {
+fun AccountScreen() {
     Text(text = "Account")
     // Notifications screen content
 }
