@@ -90,7 +90,7 @@ fun ParkingLotItem(navController: NavController, parkingSpace: ParkingSpace) {
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
-                            "1.23 mi away",
+                            "${String.format("%.2f", parkingSpace.distanceFromCurrentLocation)} km away",
                             style = MaterialTheme.typography.bodySmall,
                             color = Color(0xFF777777)
                         )

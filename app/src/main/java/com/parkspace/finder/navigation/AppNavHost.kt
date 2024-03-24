@@ -50,8 +50,7 @@ import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
 import com.parkspace.finder.ui.payment.BookingDetails
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
-import com.parkspace.finder.ui.search.ParkingBookingScreen
-
+import com.parkspace.finder.ui.favourite.FavouriteScreen
 
 sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon: ImageVector?, val title: String) {
     object Browse : Screen("browse", Icons.Outlined.Search, Icons.Filled.Search, "Browse")
