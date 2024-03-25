@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.Alignment
@@ -14,22 +15,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.navigation.NavController
 import com.parkspace.finder.R
 import com.parkspace.finder.ui.bookings.BookingItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookingScreen() {
+fun BookingScreen(navController: NavController) {
     var selectedTab by remember { mutableIntStateOf(0) }
     val bookingItems = listOf(
-        BookingItem(1, "Blue Skies Parking", "Monday, October 24", "8:00 AM - 12:00 PM", "$60", "Confirmed"),
-        BookingItem(2, "North Cerulean District", "Saturday, October 22", "8:00 AM - 7:00 PM", "$24", "Completed"),
-        BookingItem(3, "Splitter Garage", "Friday, October 21", "8:00 AM - 4:00 PM", "$45", "Cancelled"),
-        BookingItem(4, "Park It Down", "Wednesday, October 19", "8:00 AM - 12:00 PM", "$34", "Completed"),
-        BookingItem(5, "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed")
+        BookingItem("1", "Blue Skies Parking", "Monday, October 24", "8:00 AM - 12:00 PM", "$60", "Confirmed"),
+        BookingItem("2", "North Cerulean District", "Saturday, October 22", "8:00 AM - 7:00 PM", "$24", "Completed"),
+        BookingItem("3", "Splitter Garage", "Friday, October 21", "8:00 AM - 4:00 PM", "$45", "Cancelled"),
+        BookingItem("4", "Park It Down", "Wednesday, October 19", "8:00 AM - 12:00 PM", "$34", "Completed"),
+        BookingItem("5", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed")
     )
     val tabs = listOf("Active", "Completed")
-
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Bookings",style = MaterialTheme.typography.headlineLarge.copy(
@@ -52,26 +53,43 @@ fun BookingScreen() {
                 else -> bookingItems.filter { it.status == "Completed" }
             }
 
-            BookingList(bookingItems = filteredBookings)
+            BookingList(bookingItems = filteredBookings, navController)
         }
     }
 }
 
 @Composable
-fun BookingList(bookingItems: List<BookingItem>) {
+fun BookingList(bookingItems: List<BookingItem>, navController: NavController) {
     LazyColumn(contentPadding = PaddingValues(all = 8.dp)) {
         items(bookingItems) { booking ->
-            BookingItemCard(booking = booking)
+            BookingItemCard(booking = booking) {
+                // Determine the navigation action based on the booking status
+                when (booking.status) {
+                    "Confirmed" -> {
+                        // Navigate to the detailed screen for active bookings
+                        navController.navigate("activeBookingScreen/${booking.id}")
+                    }
+                    "Completed" -> {
+                        // Navigate to the detailed screen for completed bookings
+                        navController.navigate("completedBookingScreen/${booking.id}")
+                    }
+                    else -> {
+                        // Navigate to the detailed screen for cancelled bookings
+                        navController.navigate("cancelledBookingScreen/${booking.id}")
+                    }
+                }
+            }
         }
     }
 }
 
 @Composable
-fun BookingItemCard(booking: BookingItem) {
+fun BookingItemCard(booking: BookingItem, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 5.dp, vertical = 5.dp),
+            .padding(horizontal = 5.dp, vertical = 5.dp)
+            .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -161,10 +179,10 @@ fun BookingStatusBadge(status: String) {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MaterialTheme {
-        BookingScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//    MaterialTheme {
+//        BookingScreen(navController = navController)
+//    }
+//}

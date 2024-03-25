@@ -38,6 +38,9 @@ import androidx.navigation.navArgument
 import com.parkspace.finder.data.AuthViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
+import com.parkspace.finder.ui.bookings.ActiveBookingScreen
+import com.parkspace.finder.ui.bookings.CancelledBookingScreen
+import com.parkspace.finder.ui.bookings.CompletedBookingScreen
 import com.parkspace.finder.ui.browse.BrowseScreen
 import com.parkspace.finder.ui.home.HomeScreen
 import com.parkspace.finder.ui.locationPermission.LocationPermissionScreen
@@ -173,7 +176,19 @@ fun AppNavHost(
                 BrowseScreen(context = context, navController = navController)
             }
             composable(Screen.Bookings.route) {
-                BookingScreen()
+                BookingScreen(navController = navController)
+            }
+            composable("activeBookingScreen/{bookingId}") { backStackEntry ->
+                val bookingId = backStackEntry.arguments?.getString("bookingId")
+                ActiveBookingScreen(bookingId = bookingId)
+            }
+            composable("cancelledBookingScreen/{bookingId}") { backStackEntry ->
+                val bookingId = backStackEntry.arguments?.getString("bookingId")
+                CancelledBookingScreen(bookingId = bookingId)
+            }
+            composable("completedBookingScreen/{bookingId}") { backStackEntry ->
+                val bookingId = backStackEntry.arguments?.getString("bookingId")
+                CompletedBookingScreen(bookingId = bookingId)
             }
             composable(Screen.Favorites.route) {
                 FavoritesScreen()
