@@ -182,7 +182,7 @@ fun FilterSection(parkingSpaceViewModel: ParkingSpaceViewModel,
 
                                 parkingSpaceViewModel.updateFilterOptions(filterOptions)
                                 Log.d("-------------FilterOptions", filterOptions.toString())
-//                                navController.navigate("browse")
+                                navController.navigate("browse")
                             },
                             modifier = Modifier
                                 .fillMaxWidth()

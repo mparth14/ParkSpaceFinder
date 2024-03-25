@@ -119,14 +119,12 @@ class ParkingSpaceViewModel @Inject constructor(
 
     fun fetchParkingSpaces() {
         viewModelScope.launch {
-            Log.d("ParkingSpaceViewModel", filterOptions.value.toString())
-//            Log.d("-----------ParkingSpaceViewModel", filterOptions.value.toString())
             _parkingSpaces.value = Resource.Loading
             val result = when (filterOptions.value.sortingOption) {
-                "rating" -> repository.getParkingSpacesSortedByRating(
-                    filterOptions.value.sortingOrder == "DESC"
-                )
-                "price" -> if (filterOptions.value.sortingOrder == "ASCE") {
+//                "rating" -> repository.getParkingSpacesSortedByRating(
+//                    filterOptions.value.sortingOrder == "DESC"
+//                )
+                "price" -> if (filterOptions.value.sortingOrder == "DESC") {
                     repository.getParkingSpacesSortedByPriceHighToLow()
                 } else {
                     repository.getParkingSpacesSortedByPriceLowToHigh()
