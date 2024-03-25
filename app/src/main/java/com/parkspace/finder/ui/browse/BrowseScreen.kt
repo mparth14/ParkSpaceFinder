@@ -1,6 +1,7 @@
 package com.parkspace.finder.ui.browse
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,6 +43,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,6 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.parkspace.finder.FilterSection
 import com.parkspace.finder.R
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.ParkingSpaceViewModel
@@ -110,7 +115,9 @@ fun ParkingSpotRow(
                 painter = painter,
                 contentDescription = null,
                 contentScale = ContentScale.FillBounds,
-                modifier = Modifier.fillMaxSize().clip(shape = RoundedCornerShape(16.dp))
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clip(shape = RoundedCornerShape(16.dp))
             )
         }
 
@@ -380,7 +387,7 @@ fun BrowseScreen(
     val needsLocationPermission = parkingSpaceViewModel.needsLocationPermission.collectAsState()
     val currentLocation = parkingSpaceViewModel.currentLocation.collectAsState()
     val addresses = parkingSpaceViewModel.addresses.collectAsState()
-    print(addresses.value[0].getAddressLine(0))
+//    Log.d("BrowseScreen", addresses.value[0].getAddressLine(0))
 
     if (needsLocationPermission.value) {
         navController.popBackStack()
@@ -388,6 +395,9 @@ fun BrowseScreen(
     }
 
     val parkingSpaces = parkingSpaceViewModel.parkingSpaces
+//    val filterOptions = FilterViewModel.filterOptions.toString()
+//
+//    Log.d("******BrowseScreen", filterOptions)
     val state = rememberPullToRefreshState()
     if (state.isRefreshing) {
         LaunchedEffect(true) {
@@ -417,7 +427,7 @@ fun BrowseScreen(
                 location = "Your Location", // Replace with location string
                 cityName = "Halifax", // Replace with city name
                 onLocationClick = { /* Handle location click */ },
-                onSearchClick = { /* Handle search click */ }
+                onSearchClick = { navController.navigate("search") }
             )
         }
 
@@ -543,7 +553,7 @@ fun BrowseScreen(
 
                 // Search Button
                 Button(
-                    onClick = { /* Handle search button click */ },
+                    onClick = { navController.navigate("search")},
                     colors = ButtonDefaults.buttonColors(Color(0xFF7C77F6)),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -635,7 +645,7 @@ fun BrowseScreen(
 
         //Filter Button
         Button(
-            onClick = { /* Handle button click */ },
+            onClick = {navController.navigate("filter")},
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()

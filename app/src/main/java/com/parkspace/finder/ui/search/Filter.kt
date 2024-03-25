@@ -1,5 +1,6 @@
-package com.parkspace.finder.ui.search
+package com.parkspace.finder
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.material3.Button
 import androidx.compose.foundation.border
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
@@ -28,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.parkspace.finder.ui.theme.*
@@ -39,17 +38,21 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.*
+import androidx.navigation.NavController
+import com.parkspace.finder.data.FilterOptions
+import com.parkspace.finder.data.ParkingSpaceViewModel
 
 
 @Composable
-@Preview
-fun FilterSection() {
+fun FilterSection(parkingSpaceViewModel: ParkingSpaceViewModel,
+                  navController: NavController) {
 // viewModel: AuthViewModel?, navController: NavHostController
     val selectedDistance = remember { mutableStateOf("Any") }
     val duration = remember { mutableStateOf("More than 2 hours") }
     val popularityFilter = remember { mutableStateOf(PopularityFilter.STAR_RATING_HIGHEST_FIRST) }
     var isChecked by remember { mutableStateOf(true) }
     var rating by remember { mutableStateOf(0) }
+    var priceRange by remember { mutableStateOf(0f..100f) }
     LazyColumn( modifier = Modifier
         .fillMaxSize()
         .background(md_theme_light_inverseOnSurface)){
@@ -128,9 +131,12 @@ fun FilterSection() {
                         onDistanceSelected = { newDistance ->
                             selectedDistance.value = newDistance
                         }
+
                     )
 
-                    MyRangeSlider()
+                    MyRangeSlider(priceRange= priceRange, onRangeChange = { newRange ->
+                        priceRange = newRange
+                    })
                     DurationPicker(
                         duration = duration.value,
                         onDurationChange = { newDuration ->
@@ -152,23 +158,42 @@ fun FilterSection() {
                             .padding(16.dp)
                     ){
                         Button(
-                            onClick = { /*TODO*/ },
-                            modifier = Modifier
-                                .width(350.dp)
-                                .padding(
-                                    5.dp
+                            onClick = {
+                                val filterOptions = FilterOptions(
+                                    sortingOption = when (popularityFilter.value) {
+                                        PopularityFilter.STAR_RATING_HIGHEST_FIRST -> "rating"
+                                        PopularityFilter.STAR_RATING_LOWEST_FIRST -> "rating"
+                                        PopularityFilter.PRICE_LOWEST_FIRST -> "price"
+                                        PopularityFilter.PRICE_HIGHEST_FIRST -> "price"
+                                        else -> "price"
+                                    },
+                                    sortingOrder = when (popularityFilter.value) {
+                                        PopularityFilter.STAR_RATING_HIGHEST_FIRST -> "DESC"
+                                        PopularityFilter.STAR_RATING_LOWEST_FIRST -> "ASCE"
+                                        PopularityFilter.PRICE_LOWEST_FIRST -> "ASCE"
+                                        PopularityFilter.PRICE_HIGHEST_FIRST -> "DESC"
+                                        else -> "DESC"
+                                    },
+                                    distance = selectedDistance.value,
+                                    duration = duration.value,
+                                    rating = rating,
+                                    priceRange = priceRange
                                 )
+
+                                parkingSpaceViewModel.updateFilterOptions(filterOptions)
+                                Log.d("-------------FilterOptions", filterOptions.toString())
+//                                navController.navigate("browse")
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(5.dp)
                                 .background(
                                     color = md_theme_light_primary,
                                     shape = MaterialTheme.shapes.small
                                 ),
-                            colors = ButtonDefaults.buttonColors(
-                                md_theme_light_primary
-                            )
+                            colors = ButtonDefaults.buttonColors(md_theme_light_primary)
                         ) {
-                            Text(
-                                text = "Apply Filters",
-                            )
+                            Text(text = "Apply Filters")
                         }
                     }
 
@@ -236,7 +261,6 @@ fun PopularityFilterRadioButtons(
 enum class PopularityFilter(val displayName: String) {
     STAR_RATING_HIGHEST_FIRST("Star Rating (highest first)"),
     STAR_RATING_LOWEST_FIRST("Star Rating (lowest first)"),
-    MOST_REVIEWED_FIRST("Most Reviewed First"),
     PRICE_LOWEST_FIRST("Price (lowest first)"),
     PRICE_HIGHEST_FIRST("Price (highest first)")
 }
@@ -354,8 +378,7 @@ fun DistanceChip(
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MyRangeSlider() {
-    var sliderRange by remember { mutableStateOf(0f..100f) }
+fun MyRangeSlider(priceRange: ClosedFloatingPointRange<Float> = 0f..100f, onRangeChange: (ClosedFloatingPointRange<Float>) -> Unit = {}) {
     Column(modifier= Modifier
         .fillMaxWidth()
         .padding(16.dp)) {
@@ -380,19 +403,19 @@ fun MyRangeSlider() {
                 modifier = Modifier
                     .background(md_theme_light_surface)
                     .padding(16.dp),
-                value = sliderRange,
+                value = priceRange,
                 colors = SliderDefaults.colors(
                     thumbColor = md_theme_light_onPrimary,
                     activeTrackColor = md_theme_light_primary,
                 ),
-                onValueChange = { sliderRange = it },
+                onValueChange = { onRangeChange(it) },
 
                 onValueChangeFinished = {
                     // Do something when the user stops changing the value
                 }
             )
             Text(
-                text = "$${sliderRange.start.toInt()} - $${sliderRange.endInclusive.toInt()}",
+                text = "$${priceRange.start.toInt()} - $${priceRange.endInclusive.toInt()}",
                 color = md_theme_light_onBackground
             )
         }
@@ -538,6 +561,9 @@ fun StarSelector(
             }
         }
     }
+
+
+
 
 
 

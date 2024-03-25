@@ -2,7 +2,6 @@ package com.parkspace.finder.navigation
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -37,6 +36,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.parkspace.finder.FilterSection
 import com.parkspace.finder.data.AuthViewModel
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
@@ -50,7 +50,7 @@ import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
 import com.parkspace.finder.ui.payment.BookingDetails
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
-import com.parkspace.finder.ui.favourite.FavouriteScreen
+import com.parkspace.finder.ui.search.ParkingBookingScreen
 
 sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon: ImageVector?, val title: String) {
     object Browse : Screen("browse", Icons.Outlined.Search, Icons.Filled.Search, "Browse")
@@ -64,6 +64,7 @@ sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon:
 @Composable
 fun AppNavHost(
     viewModel: AuthViewModel,
+    parkingSpaceViewModel: ParkingSpaceViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = ROUTE_ONBOARDING,
@@ -174,7 +175,7 @@ fun AppNavHost(
             }
 
             composable(ROUTE_BROWSE) {
-                BrowseScreen(context  = context, navController = navController)
+                BrowseScreen(context  = context, navController = navController, parkingSpaceViewModel = parkingSpaceViewModel)
             }
             composable(Screen.Bookings.route) {
                 BookignsScreen(navController = navController)
@@ -194,6 +195,13 @@ fun AppNavHost(
             composable(ROUTE_REQUEST_LOCATION_PERMISSION) {
                 LocationPermissionScreen(navController = navController)
             }
+            composable(ROUTE_FILTER) {
+                FilterSection( parkingSpaceViewModel = parkingSpaceViewModel,navController = navController)
+            }
+            composable(ROUTE_SEARCH) {
+                ParkingBookingScreen(navController = navController,parkingSpaceViewModel = parkingSpaceViewModel)
+            }
+
         }
     }
 

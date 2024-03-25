@@ -31,6 +31,8 @@ import androidx.navigation.NavHostController
 import com.parkspace.finder.data.AuthViewModel
 import com.parkspace.finder.ui.theme.*
 import androidx.compose.ui.text.input.ImeAction
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.parkspace.finder.data.ParkingSpaceViewModel
 import java.util.*
 
 
@@ -39,7 +41,7 @@ import java.util.*
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ParkingBookingScreen(viewModel: AuthViewModel?, navController: NavHostController) {
+fun ParkingBookingScreen(navController: NavHostController,parkingSpaceViewModel: ParkingSpaceViewModel) {
     //viewModel: AuthViewModel?, navController: NavHostController
     var hint: String = "Search for everything..."
     var text by remember { mutableStateOf("") }
@@ -47,6 +49,8 @@ fun ParkingBookingScreen(viewModel: AuthViewModel?, navController: NavHostContro
     var place by remember { mutableStateOf("Halifax?") }
     var selectedDate by remember { mutableStateOf("") }
     var selectedTime by remember { mutableStateOf("") }
+    val searchQuery by parkingSpaceViewModel.searchQuery.collectAsState()
+    val parkingSpaces by parkingSpaceViewModel.parkingSpaces.collectAsState()
 
     val context = LocalContext.current
 
@@ -86,9 +90,9 @@ fun ParkingBookingScreen(viewModel: AuthViewModel?, navController: NavHostContro
                 .align(Alignment.CenterHorizontally),
         ) {
             BasicTextField(
-                value = text,
+                value = searchQuery,
                 onValueChange = {
-                    text = it
+                    parkingSpaceViewModel.setSearchQuery(it)
                     isHintDisplayed = it.isEmpty()
                 },
                 maxLines = 1,
@@ -222,7 +226,10 @@ fun ParkingBookingScreen(viewModel: AuthViewModel?, navController: NavHostContro
         DurationSelector()
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                        parkingSpaceViewModel.setSearchQuery(searchQuery)
+                        navController.navigate("browse")
+                      },
             modifier = Modifier
                 .width(350.dp)
                 .padding(
@@ -239,7 +246,7 @@ fun ParkingBookingScreen(viewModel: AuthViewModel?, navController: NavHostContro
 
         ) {
             Text(
-                text = "Proceed with Booking",
+                text = "Proceed with Search",
             )
         }
     }

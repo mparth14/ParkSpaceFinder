@@ -1,19 +1,12 @@
 package com.parkspace.finder.data
 
-import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.os.Looper
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -24,7 +17,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import com.parkspace.finder.data.utils.distanceBetween
-import com.parkspace.finder.navigation.ROUTE_REQUEST_LOCATION_PERMISSION
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,6 +32,15 @@ class ParkingSpaceViewModel @Inject constructor(
 ) : ViewModel() {
     private val _parkingSpaces = MutableStateFlow<Resource<List<ParkingSpace>>?>(null)
     val parkingSpaces: StateFlow<Resource<List<ParkingSpace>>?> = _parkingSpaces
+    private val _filterOptions = MutableStateFlow(FilterOptions())
+    val filterOptions: StateFlow<FilterOptions> = _filterOptions
+
+    fun updateFilterOptions(filterOptions: FilterOptions) {
+        _filterOptions.value = filterOptions
+        Log.d("FilterViewModel", "Filter options updated: $filterOptions")
+        fetchParkingSpaces()
+    }
+
 
 
     val permissions = arrayOf(
@@ -89,7 +90,7 @@ class ParkingSpaceViewModel @Inject constructor(
                     _currentLocation.value = LatLng(location.latitude, location.longitude)
                     _addresses.value =
                         geocoder.getFromLocation(location.latitude, location.longitude, 1)!!
-                    sortParkingSpaces()
+//                    sortParkingSpaces()
                 }
             }
         }
@@ -118,26 +119,78 @@ class ParkingSpaceViewModel @Inject constructor(
 
     fun fetchParkingSpaces() {
         viewModelScope.launch {
+            Log.d("ParkingSpaceViewModel", filterOptions.value.toString())
+//            Log.d("-----------ParkingSpaceViewModel", filterOptions.value.toString())
             _parkingSpaces.value = Resource.Loading
-            val result = repository.getParkingSpaces()
-            _parkingSpaces.value = result
-            sortParkingSpaces()
-        }
-    }
-    fun fetchParkingSpacesSortedByPriceHighToLow() {
-        viewModelScope.launch {
-            _parkingSpaces.value = Resource.Loading
-            val result = repository.getParkingSpacesSortedByPriceHighToLow()
-            _parkingSpaces.value = result
+            val result = when (filterOptions.value.sortingOption) {
+                "rating" -> repository.getParkingSpacesSortedByRating(
+                    filterOptions.value.sortingOrder == "DESC"
+                )
+                "price" -> if (filterOptions.value.sortingOrder == "ASCE") {
+                    repository.getParkingSpacesSortedByPriceHighToLow()
+                } else {
+                    repository.getParkingSpacesSortedByPriceLowToHigh()
+                }
+                else -> repository.getParkingSpaces()
+            }
+            _parkingSpaces.value = result.filterByOptions(filterOptions.value)
         }
     }
 
-    fun fetchParkingSpacesSortedByPriceLowToHigh() {
-        viewModelScope.launch {
-            _parkingSpaces.value = Resource.Loading
-            val result = repository.getParkingSpacesSortedByPriceLowToHigh()
-            _parkingSpaces.value = result
+    private fun Resource<List<ParkingSpace>>.filterByOptions(filterOptions: FilterOptions): Resource<List<ParkingSpace>> {
+        return when (this) {
+            is Resource.Success -> {
+                val filteredSpaces = this.result.filter { parkingSpace ->
+                    val distance = distanceBetween(
+                        _currentLocation.value,
+                        LatLng(parkingSpace.location.latitude, parkingSpace.location.longitude)
+                    )
+                    val distanceFilter = when (filterOptions.distance) {
+                        "Within 1km" -> distance <= 1
+                        "Any" -> true
+                        else -> {
+                            val range = filterOptions.distance.substringBefore("-").toDoubleOrNull()?.let { it..it + 1 }
+                            range?.let { distance in it } ?: false
+                        }
+                    }
+//                    val durationFilter = when (filterOptions.duration) {
+//                        "More than 2 hours" -> true
+//                        "1 - 2 hours" -> parkingSpace.duration in 1..2
+//                        "<1 hour" -> parkingSpace.duration < 1
+//                        else -> false
+//                    }
+//                    val ratingFilter = filterOptions.rating == 0 || parkingSpace.rating >= filterOptions.rating
+                    val priceFilter = parkingSpace.hourlyPrice in filterOptions.priceRange
+
+                    distanceFilter  && priceFilter//&& durationFilter && ratingFilter
+                }
+                Resource.Success(filteredSpaces)
+            }
+            is Resource.Failure -> this
+            else -> this
         }
     }
+
+
+        private var _searchQuery = MutableStateFlow("")
+        var searchQuery: StateFlow<String> = _searchQuery
+
+        fun setSearchQuery(query: String) {
+            _searchQuery.value = query
+            searchParkingSpaces(query)
+        }
+
+        private fun searchParkingSpaces(query: String) {
+            viewModelScope.launch {
+                _parkingSpaces.value = Resource.Loading
+                val result = repository.searchParkingSpaces(query)
+                _parkingSpaces.value = result
+                Log.d("yessssssss", result.toString())
+            }
+        }
+
+
+
+
 
 }
