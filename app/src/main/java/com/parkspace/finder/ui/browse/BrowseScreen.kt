@@ -129,6 +129,11 @@ fun BrowseScreen(
                                         ParkingLotItem(
                                             navController = navController,
                                             parkingSpace = it.result[index],
+                                            onItemClick = {
+                                                val parkingSpaceName = it.result[index].name
+                                                // Navigate to parking details page when clicked
+                                                navController.navigate("parking_details/$parkingSpaceName")
+                                            }
                                         )
                                     }
 

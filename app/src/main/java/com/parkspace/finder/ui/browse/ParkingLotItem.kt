@@ -50,7 +50,7 @@ fun Rating(rating: Int) {
 
 
 @Composable
-fun ParkingLotItem(navController: NavController, parkingSpace: ParkingSpace) {
+fun ParkingLotItem(navController: NavController, parkingSpace: ParkingSpace, onItemClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -58,9 +58,10 @@ fun ParkingLotItem(navController: NavController, parkingSpace: ParkingSpace) {
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         onClick = {
-            navController.navigate(ROUTE_PARKING_DETAIL)
+            navController.navigate("parking_details/${parkingSpace.name}")
         }
-    ) {
+    )
+    {
         Row(
             modifier = Modifier.padding(8.dp)
         ) {
