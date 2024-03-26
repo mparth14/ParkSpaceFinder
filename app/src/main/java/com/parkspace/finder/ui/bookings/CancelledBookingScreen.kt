@@ -17,7 +17,15 @@ fun CancelledBookingScreen(bookingId: String?) {
         BookingItem("2", "North Cerulean District", "Saturday, October 22", "8:00 AM - 7:00 PM", "$24", "Completed"),
         BookingItem("3", "Splitter Garage", "Friday, October 21", "8:00 AM - 4:00 PM", "$45", "Cancelled"),
         BookingItem("4", "Park It Down", "Wednesday, October 19", "8:00 AM - 12:00 PM", "$34", "Completed"),
-        BookingItem("5", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed")
+        BookingItem("5", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed"),
+        BookingItem("6", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Cancelled"),
+        BookingItem("7", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed"),
+        BookingItem("8", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Cancelled"),
+        BookingItem("9", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed"),
+        BookingItem("10", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Cancelled"),
+        BookingItem("11", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed"),
+        BookingItem("12", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Cancelled"),
+        BookingItem("13", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed")
     )
     val booking = bookingItems.first { it.id == bookingId }
     Scaffold(
