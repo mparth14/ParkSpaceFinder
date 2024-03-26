@@ -166,7 +166,8 @@ fun BookingItemCard(booking: BookingItem, onClick: () -> Unit) {
         }
     }
     HorizontalDivider(
-        thickness = 0.8.dp,
+        modifier = Modifier.padding(horizontal = 0.dp),
+        thickness = 1.dp,
         color = Color.LightGray
     )
 }
