@@ -185,9 +185,14 @@ fun AppNavHost(
             composable(Screen.Account.route) {
                 HomeScreen(navController = navController, viewModel = viewModel)
             }
-            composable(ROUTE_PARKING_DETAIL) {
-                ParkingDetailScreen(navController = navController)
+            composable(
+                route = "parking_details/{name}",
+                arguments = listOf(navArgument("name") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val parkingSpaceName = backStackEntry.arguments?.getString("name") ?: ""
+                ParkingDetailScreen(navController = navController, parkingSpaceName = parkingSpaceName)
             }
+
             composable(ROUTE_REQUEST_LOCATION_PERMISSION) {
                 LocationPermissionScreen(navController = navController)
             }
