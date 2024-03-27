@@ -1,117 +1,77 @@
 package com.parkspace.finder.ui.booking
 
-import android.app.TimePickerDialog
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import java.util.*
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 
 @Composable
-fun TimePickerDialog(onTimeSelected: (String) -> Unit) {
-    // Fetching local context
-    val mContext = LocalContext.current
-
-    // Declaring and initializing a calendar
-    val mCalendar = Calendar.getInstance()
-    val mHour = mCalendar[Calendar.HOUR_OF_DAY]
-    val mMinute = mCalendar[Calendar.MINUTE]
-
-    // Value for storing time as a string
-    val mTime = remember { mutableStateOf("") }
-
-    // Creating a TimePicker dialog
-    val mTimePickerDialog = TimePickerDialog(
-        mContext,
-        {_, hourOfDay: Int, minute: Int ->
-            if(minute<10)
-            {val timeString = "$hourOfDay:0$minute"
-            mTime.value = timeString
-            onTimeSelected(timeString)}
-            else{
-                val timeString = "$hourOfDay:$minute"
-                mTime.value = timeString
-                onTimeSelected(timeString)
-            }
-        },
-        mHour, mMinute, false
-    )
-    Row( ){
-
-            Button(
-                onClick = { mTimePickerDialog.show() },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0000FF))
-            ) {
-                Text(text = "Start Time", color = Color.White)
-            }
-
-            // Add a spacer of 100dp
-            Spacer(modifier = Modifier.size(30.dp))
-
-            // Display selected time
-            Text(text = "${mTime.value}", fontSize = 30.sp)
-            Spacer(modifier = Modifier.size(30.dp))
-//    }
-
-        }
-
-}
-
-@Composable
-fun EndTimePickerDialog(onTimeSelected: (String) -> Unit) {
-    // Fetching local context
-    val mContext = LocalContext.current
-
-    // Declaring and initializing a calendar
-    val mCalendar = Calendar.getInstance()
-    val mHour = mCalendar[Calendar.HOUR_OF_DAY]
-    val mMinute = mCalendar[Calendar.MINUTE]
-
-    // Value for storing time as a string
-    val mTime = remember { mutableStateOf("") }
-
-    // Creating a TimePicker dialog
-    val mTimePickerDialog = TimePickerDialog(
-        mContext,
-        {_, hourOfDay: Int, minute: Int ->
-            if(minute<10)
-            {val timeString = "$hourOfDay:0$minute"
-                mTime.value = timeString
-                onTimeSelected(timeString)}
-            else{
-                val timeString = "$hourOfDay:$minute"
-                mTime.value = timeString
-                onTimeSelected(timeString)
-            }
-        },
-        mHour, mMinute, false
-    )
-
-    Row( ){
-
-        Button(
-            onClick = { mTimePickerDialog.show() },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF0000FF))
+fun TimePickerDialog(
+    title: String = "Select Time",
+    onCancel: () -> Unit,
+    onConfirm: () -> Unit,
+    toggle: @Composable () -> Unit = {},
+    content: @Composable () -> Unit,
+) {
+    Dialog(
+        onDismissRequest = onCancel,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false
+        ),
+    ) {
+        Surface(
+            shape = MaterialTheme.shapes.extraLarge,
+            tonalElevation = 6.dp,
+            modifier = Modifier
+                .width(IntrinsicSize.Min)
+                .height(IntrinsicSize.Min)
+                .background(
+                    shape = MaterialTheme.shapes.extraLarge,
+                    color = MaterialTheme.colorScheme.surface
+                ),
         ) {
-            Text(text = "End  Time", color = Color.White)
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 20.dp),
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium
+                )
+                content()
+                Row(
+                    modifier = Modifier
+                        .height(40.dp)
+                        .fillMaxWidth()
+                ) {
+                    toggle()
+                    Spacer(modifier = Modifier.weight(1f))
+                    TextButton(
+                        onClick = onCancel
+                    ) { Text("Cancel") }
+                    TextButton(
+                        onClick = onConfirm
+                    ) { Text("OK") }
+                }
+            }
         }
-
-        // Add a spacer of 100dp
-        Spacer(modifier = Modifier.size(30.dp))
-
-        // Display selected time
-        Text(text = " ${mTime.value}", fontSize = 30.sp)
-
-//    }
-
     }
 }
