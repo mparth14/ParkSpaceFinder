@@ -151,7 +151,7 @@ fun ParkingSpotRow(
                 }
 
                 Text(
-                    text = "· $ $price",
+                    text = " · $$price",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Color.Black,
                         fontSize = 15.sp,
@@ -271,7 +271,7 @@ fun ProductCard(
                     modifier = Modifier.size(18.dp) // Adjust size as needed
                 )
                 Text(
-                    text = " 0.25 miles away",
+                    text = " $productLocation km away",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Color(0xff808080)
                     ),
@@ -372,15 +372,16 @@ fun BrowseScreen(
     val addresses = parkingSpaceViewModel.addresses.collectAsState()
 
     val firstAddress = addresses.value.firstOrNull() // Get the first address if available
-
-    var locality: String? = null
-    var admin: String? = null
-    var countryCode: String? = null
+    val isLoading = firstAddress == null
+    var locality: String? = ""
+    var admin: String? = ""
+    var countryCode: String? = ""
     firstAddress?.let { address ->
-        locality = address.locality // Get the locality
-        admin = address.adminArea // Get the administrative area (admin)
+        locality = address.locality+", " // Get the locality
+        admin = address.adminArea+", " // Get the administrative area (admin)
         countryCode = address.countryCode // Get the country code
     }
+    Log.d("Inside Browse Screen", firstAddress.toString())
 
     if (needsLocationPermission.value) {
         navController.popBackStack()
@@ -404,7 +405,6 @@ fun BrowseScreen(
     var selectedDateStart by remember { mutableStateOf(Calendar.getInstance()) }
     val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
     val timeFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
-    //var selectedTime by remember { mutableStateOf("") }
 
 
     val spacing = MaterialTheme.spacing
@@ -423,7 +423,7 @@ fun BrowseScreen(
         ){
             TopBar(
                 location = "Your Location", // Replace with location string
-                cityName = "$locality, $admin, $countryCode", // Replace with city name
+                cityName = "$locality $admin $countryCode", // Replace with city name
                 onLocationClick = { /* Handle location click */ },
                 onSearchClick = { /* Handle search click */ }
             )
@@ -488,6 +488,7 @@ fun BrowseScreen(
                                 Text(
                                     text = selectedTimeStart, // Replace with your start time
                                     color = Color.Black,
+                                    fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(8.dp)
                                 )
                             }
@@ -577,6 +578,7 @@ fun BrowseScreen(
                                 Text(
                                     text = selectedTimeEnd, // Replace with your start date
                                     color = Color.Black,
+                                    fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(8.dp),
                                     maxLines = 1
                                 )
@@ -653,7 +655,7 @@ fun BrowseScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 7.dp, horizontal = 10.dp),
+                    .padding(vertical = 9.dp, horizontal = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ){
@@ -703,9 +705,9 @@ fun BrowseScreen(
                 items(spaces) { space ->
                     ProductCard(
                         price = space.hourlyPrice.toString(),
-                        productName = space.name.toString(),
-                        productDescription = space.imageURL.toString(),
-                        productLocation = "Location "
+                        productName = space.name,
+                        productDescription = space.imageURL,
+                        productLocation = String.format("%.2f", space.distanceFromCurrentLocation)
                     )
                     }
                 }
@@ -768,7 +770,7 @@ fun BrowseScreen(
                                 price = space.hourlyPrice.toString(),
                                 title = space.name.toString(),
                                 rating = 4.5f,
-                                distance = "0.31 miles · 27 available"
+                                distance = "${String.format("%.2f", space.distanceFromCurrentLocation)} km away · 27 left"
                                 //modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                             )
                         }
