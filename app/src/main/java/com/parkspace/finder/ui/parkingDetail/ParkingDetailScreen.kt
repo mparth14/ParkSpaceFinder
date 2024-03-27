@@ -3,45 +3,41 @@ package com.parkspace.finder.ui.parkingDetail
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.*
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.runtime.remember
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.text.font.FontWeight
-import com.parkspace.finder.data.ParkingSpaceViewModel
-import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.parkspace.finder.R
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.ParkingSpaceRepository
-import kotlinx.coroutines.launch
+import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.browse.Rating
+import kotlinx.coroutines.launch
+
 
 
 //@Composable
@@ -212,21 +208,22 @@ fun ParkingDetailScreen(
                         Spacer(modifier = Modifier.width(8.dp))
                         FacilityItem(name = "Parking Assistance")
                     }
+                    Spacer(modifier = Modifier.height(8.dp))
                     // Working Hours section
                     Text(
                         text = "Working Hours",
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        //modifier = Modifier.padding(vertical = 8.dp)
                     )
                     Column(
                         modifier = Modifier
-                            .padding(bottom = 16.dp)
+                            .padding(bottom = 8.dp)
                             .background(color = Color.White, shape = MaterialTheme.shapes.medium)
-                            .padding(16.dp)
+                            .padding(8.dp)
                     ) {
                         // Display working hours
-                        listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday").forEach { day ->
+                        listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday").forEach { day ->
                             Row(
                                 modifier = Modifier.padding(vertical = 4.dp),
                                 verticalAlignment = Alignment.CenterVertically
@@ -242,17 +239,23 @@ fun ParkingDetailScreen(
                                 )
                             }
                         }
-                        // Saturday and Sunday
-                        Text(
-                            text = "Saturday - Sunday",
-                            color = Color.DarkGray, // Adjust color for days
-                            modifier = Modifier.padding(vertical = 4.dp)
-                        )
-                        Text(
-                            text = "Closed",
-                            modifier = Modifier.padding(vertical = 4.dp)
-                        )
                     }
+                    Text(
+                        text = "Description",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        //modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                    Text(
+                        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis mauris vel odio ultricies condimentum. Nullam efficitur quam at est blandit, ac bibendum nulla sagittis. Mauris id quam et velit fermentum consectetur.",
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                    Text(
+                        text = "Location",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
                 }
             }
         }
