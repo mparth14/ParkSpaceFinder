@@ -1,16 +1,19 @@
 package com.parkspace.finder.ui.parkingDetail
 
 import android.annotation.SuppressLint
-import android.location.Geocoder
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.*
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -29,18 +32,37 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import com.parkspace.finder.R
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.ParkingSpaceRepository
 import kotlinx.coroutines.launch
-import java.util.Locale
+import com.parkspace.finder.ui.browse.Rating
+
 
 //@Composable
 //fun ParkingDetailScreen(navController: NavHostController) {
 //    Text(text = "Parking Detail Screen")
 //}
+
+@Composable
+fun Rating(rating: Int) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        for (i in 1..5) {
+            androidx.compose.material3.Icon(
+                painter = painterResource(id = if (i <= rating) R.drawable.star_filled_24 else R.drawable.star_empty_24),
+                contentDescription = "Rating Star",
+                tint = if (i <= rating) Color(0xFFFAAF00) else Color(0xFFAAAAAA),
+                modifier = Modifier.size(18.dp)
+            )
+        }
+    }
+}
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -53,7 +75,7 @@ fun ParkingDetailScreen(
     var parkingSpace by remember { mutableStateOf<ParkingSpace?>(null) }
     val coroutineScope = rememberCoroutineScope()
     var isFavorite by remember { mutableStateOf(false) }
-
+    val locationName = remember { mutableStateOf("Loading...") }
 
     LaunchedEffect(key1 = parkingSpaceName) {
         // Fetch parking space details when the parkingSpaceName changes
@@ -64,6 +86,16 @@ fun ParkingDetailScreen(
             } catch (e: Exception) {
                 // Handle error
             }
+//            try {
+//                val fetchedParkingSpace = parkingSpaceRepository.getParkingSpaceByName(parkingSpaceName)
+//                parkingSpace = fetchedParkingSpace
+//                // Get the address based on latitude and longitude
+//                fetchedParkingSpace?.let { space ->
+//                    locationName.value = getLocationName(space.location.latitude, space.location.longitude)
+//                }
+//            } catch (e: Exception) {
+//                // Handle error
+//            }
         }
     }
     Scaffold(
@@ -102,35 +134,64 @@ fun ParkingDetailScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
             ) {
                 parkingSpace?.let { space ->
-                    // Display location name above parking space name
-                    val locationName = getLocationName( .geocoder, space.location.latitude, space.location.longitude)
-                    Text(text = locationName, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+                    Text(
+                        text = "${space.location}",
+                        fontSize = 12.sp
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
-                    // Display parking space name
-                    Text(text = "Parking Space Name: ${space.name}", fontWeight = FontWeight.Bold)
+                    Text(
+                        text = space.name,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    // Display hourly rate
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "$${space.hourlyPrice}/hr",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        // Display rating stars and rating value
+                        Rating(rating = 4)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "23",
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.location_24), // Your location icon resource
+                                contentDescription = "Location",
+                                tint = Color(0xFF777777),
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Text(
+                                text = "${String.format("%.2f", space.distanceFromCurrentLocation)} km away",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color(0xFF777777),
+                                modifier = Modifier.padding(start = 4.dp) // Add padding to separate the icon and text
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(16.dp)) // Add space between the first and second items
+                        // Add the second item: "Available"
+                        Text(
+                            text = "Available",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFF777777)
+                        )
+                    }
                     Spacer(modifier = Modifier.height(16.dp))
-                    // Display other details of the parking space
-                    // For example:
-                    Text(text = "Hourly Price: ${space.hourlyPrice}")
-                    Text(text = "Location: ${space.location}")
-                    // Add more details as needed
                 }
             }
         }
     )
-}
-@Composable
-fun getLocationName(latitude: Double, longitude: Double): String {
-    return try {
-        val geocoder = Geocoder(LocalContext.current, Locale.getDefault())
-        val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-        addresses?.firstOrNull()?.getAddressLine(0) ?: "Unknown Location"
-    } catch (e: Exception) {
-        Log.e("ParkingDetailScreen", "Error getting location name: ${e.message}")
-        "Unknown Location"
-    }
 }
