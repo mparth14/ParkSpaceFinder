@@ -1,6 +1,7 @@
 package com.parkspace.finder.ui.parkingDetail
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -190,8 +191,84 @@ fun ParkingDetailScreen(
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
+                    // Facilities section
+                    Text(
+                        text = "Facilities",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    // Display facilities in rounded rectangles
+                    Row {
+                        FacilityItem(name = "CCTV")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        FacilityItem(name = "Hydraulic Parking")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        FacilityItem(name = "Security")
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row {
+                        FacilityItem(name = "Automated Tickets")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        FacilityItem(name = "Parking Assistance")
+                    }
+                    // Working Hours section
+                    Text(
+                        text = "Working Hours",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                    Column(
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .background(color = Color.White, shape = MaterialTheme.shapes.medium)
+                            .padding(16.dp)
+                    ) {
+                        // Display working hours
+                        listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday").forEach { day ->
+                            Row(
+                                modifier = Modifier.padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = day,
+                                    color = Color.DarkGray, // Adjust color for days
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Text(
+                                    text = "8am - 8pm",
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                        }
+                        // Saturday and Sunday
+                        Text(
+                            text = "Saturday - Sunday",
+                            color = Color.DarkGray, // Adjust color for days
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+                        Text(
+                            text = "Closed",
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        )
+                    }
                 }
             }
         }
     )
+}
+@Composable
+fun FacilityItem(name: String) {
+    Surface(
+        color = Color.LightGray.copy(alpha = 0.4f),
+        shape = MaterialTheme.shapes.medium,
+        modifier = Modifier.padding(4.dp)
+    ) {
+        Text(
+            text = name,
+            modifier = Modifier.padding(8.dp),
+            fontWeight = FontWeight.Bold
+        )
+    }
 }
