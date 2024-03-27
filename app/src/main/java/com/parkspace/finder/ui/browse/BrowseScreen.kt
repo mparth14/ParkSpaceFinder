@@ -1,5 +1,8 @@
 package com.parkspace.finder.ui.browse
 
+import android.Manifest
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -18,15 +21,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-
 import androidx.compose.material3.Text
-
 import androidx.compose.ui.draw.clip
-
 import androidx.compose.ui.res.painterResource
-
 import androidx.compose.ui.unit.dp
-
 import com.parkspace.finder.ui.theme.spacing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -50,7 +48,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
@@ -61,26 +62,9 @@ import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.data.Resource
 import com.parkspace.finder.navigation.ROUTE_REQUEST_LOCATION_PERMISSION
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.toCollection
-
-//@Composable
-//fun AddressBar(address: String) {
-//    Row {
-//        Icon(
-//            painter = painterResource(id = R.drawable.location_24),
-//            contentDescription = "Location icon",
-//            tint = MaterialTheme.colorScheme.primary,
-//            modifier = Modifier
-//                .size(54.dp)
-//                .padding(end = 8.dp)
-//        )
-//        Column {
-//            Text(text = "Your Location", fontSize = MaterialTheme.typography.bodySmall.fontSize, color = MaterialTheme.colorScheme.onSurfaceVariant)
-//            Text(text = address, fontSize = MaterialTheme.typography.bodyMedium.fontSize, color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold)
-//        }
-//    }
-//}
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun ParkingSpotRow(
@@ -145,9 +129,9 @@ fun ParkingSpotRow(
                     modifier = Modifier.size(18.dp) // Adjust size as needed
                 )
                 Text(
-                    text = distance,
+                    text = " $distance",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Color(0xffC8C7CC)
+                        color = Color(0xff808080)
                     ),
                 )
             }
@@ -170,7 +154,7 @@ fun ParkingSpotRow(
                 }
 
                 Text(
-                    text = price,
+                    text = " · $$price",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Color.Black,
                         fontSize = 15.sp,
@@ -290,9 +274,9 @@ fun ProductCard(
                     modifier = Modifier.size(18.dp) // Adjust size as needed
                 )
                 Text(
-                    text = "productDescription",
+                    text = " $productLocation km away",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Color(0xffC8C7CC)
+                        color = Color(0xff808080)
                     ),
                 )
             }
@@ -333,7 +317,7 @@ fun TopBar(location: String, cityName: String, onLocationClick: () -> Unit, onSe
             painter = painterResource(id = R.drawable.ic_location),
             contentDescription = null,
             modifier = Modifier
-                .size(40.dp)
+                .size(55.dp)
                 .padding(end = spacing.medium)
                 .clickable(onClick = onLocationClick), // Handle click event
         )
@@ -343,8 +327,9 @@ fun TopBar(location: String, cityName: String, onLocationClick: () -> Unit, onSe
         ) {
             Text(
                 text = "Your Location",
+                fontSize = 17.sp,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color(0xFFD4D4D4),
+                color = Color(0xFF808080),
             )
 
             // City name
@@ -352,7 +337,8 @@ fun TopBar(location: String, cityName: String, onLocationClick: () -> Unit, onSe
                 text = cityName,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black // Bold and dark black color for city name
+                    color = Color.Black, // Bold and dark black color for city name
+                    fontSize = 16.sp
                 )
             )
         }
@@ -364,7 +350,7 @@ fun TopBar(location: String, cityName: String, onLocationClick: () -> Unit, onSe
             painter = painterResource(id = R.drawable.ic_search),
             contentDescription = null,
             modifier = Modifier
-                .size(24.dp)
+                .size(28.dp)
                 .clickable(onClick = onSearchClick), // Handle click event
         )
     }
@@ -380,14 +366,25 @@ fun BrowseScreen(
     navController: NavHostController
 ) {
     val permissions = arrayOf(
-        android.Manifest.permission.ACCESS_COARSE_LOCATION,
-        android.Manifest.permission.ACCESS_FINE_LOCATION
+        Manifest.permission.ACCESS_COARSE_LOCATION,
+        Manifest.permission.ACCESS_FINE_LOCATION
     )
 
     val needsLocationPermission = parkingSpaceViewModel.needsLocationPermission.collectAsState()
     val currentLocation = parkingSpaceViewModel.currentLocation.collectAsState()
     val addresses = parkingSpaceViewModel.addresses.collectAsState()
-//    Log.d("BrowseScreen", addresses.value[0].getAddressLine(0))
+    print(addresses.value[0].getAddressLine(0))
+        val firstAddress = addresses.value.firstOrNull() // Get the first address if available
+    val isLoading = firstAddress == null
+    var locality: String? = ""
+    var admin: String? = ""
+    var countryCode: String? = ""
+    firstAddress?.let { address ->
+        locality = address.locality+", " // Get the locality
+        admin = address.adminArea+", " // Get the administrative area (admin)
+        countryCode = address.countryCode // Get the country code
+    }
+    Log.d("Inside Browse Screen", firstAddress.toString())
 
     if (needsLocationPermission.value) {
         navController.popBackStack()
@@ -408,6 +405,13 @@ fun BrowseScreen(
         }
     }
 
+    var selectedTimeStart by remember { mutableStateOf("7:00 AM") }
+    var selectedTimeEnd by remember { mutableStateOf("9:00 PM") }
+    var selectedDateEnd by remember { mutableStateOf(Calendar.getInstance()) }
+    var selectedDateStart by remember { mutableStateOf(Calendar.getInstance()) }
+    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
+
 
     val spacing = MaterialTheme.spacing
     val scrollState = rememberScrollState()
@@ -425,7 +429,7 @@ fun BrowseScreen(
         ){
             TopBar(
                 location = "Your Location", // Replace with location string
-                cityName = "Halifax", // Replace with city name
+                cityName = "$locality $admin $countryCode", // Replace with city name
                 onLocationClick = { /* Handle location click */ },
                 onSearchClick = { navController.navigate("search") }
             )
@@ -469,11 +473,28 @@ fun BrowseScreen(
                                         shape = RoundedCornerShape(8.dp)
                                     )
                                     .padding(8.dp)
-                                    .clickable { /* Handle click */ }
+                                    .clickable {
+                                        val timePickerDialog = TimePickerDialog(
+                                            context,
+                                            { _, hourOfDay, minute ->
+                                                // Update selectedTime with the chosen time
+                                                val selectedCalendar = Calendar.getInstance().apply {
+                                                    set(Calendar.HOUR_OF_DAY, hourOfDay)
+                                                    set(Calendar.MINUTE, minute)
+                                                }
+                                                selectedTimeStart = timeFormat.format(selectedCalendar.time)
+                                            },
+                                            Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+                                            Calendar.getInstance().get(Calendar.MINUTE),
+                                            false // 24-hour format
+                                        )
+                                        timePickerDialog.show()
+                                    }
                             ) {
                                 Text(
-                                    text = "7:00 AM", // Replace with your start time
+                                    text = selectedTimeStart, // Replace with your start time
                                     color = Color.Black,
+                                    fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(8.dp)
                                 )
                             }
@@ -488,13 +509,35 @@ fun BrowseScreen(
                                         shape = RoundedCornerShape(8.dp)
                                     )
                                     .padding(8.dp)
-                                    .clickable { /* Handle click */ }
+                                    .clickable {
+                                        val datePickerDialog = DatePickerDialog(
+                                            context,
+                                            { _, year, month, dayOfMonth ->
+                                                // Update selectedDate with the chosen date
+                                                selectedDateStart = Calendar.getInstance().apply {
+                                                    set(Calendar.YEAR, year)
+                                                    set(Calendar.MONTH, month)
+                                                    set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                                                }
+                                            },
+                                            selectedDateStart.get(Calendar.YEAR),
+                                            selectedDateStart.get(Calendar.MONTH),
+                                            selectedDateStart.get(Calendar.DAY_OF_MONTH)
+                                        )
+                                        datePickerDialog.show()
+                                    }
                             ) {
-                                Text(
-                                    text = "3 Feb, 2024", // Replace with your start date
-                                    color = Color.Black,
-                                    modifier = Modifier.padding(8.dp)
-                                )
+                                    Text(
+                                        text = buildAnnotatedString {
+                                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                                append(dateFormat.format(selectedDateStart.time)) // Format the date
+                                            }
+                                        }, // Replace with your start date
+                                        color = Color.Black,
+                                        modifier = Modifier.padding(8.dp),
+                                        maxLines = 1
+                                    )
+
                             }
                         }
                     }
@@ -520,12 +563,30 @@ fun BrowseScreen(
                                         shape = RoundedCornerShape(8.dp)
                                     )
                                     .padding(8.dp)
-                                    .clickable { /* Handle click */ }
+                                    .clickable {
+                                        val timePickerDialog = TimePickerDialog(
+                                            context,
+                                            { _, hourOfDay, minute ->
+                                                // Update selectedTime with the chosen time
+                                                val selectedCalendar = Calendar.getInstance().apply {
+                                                    set(Calendar.HOUR_OF_DAY, hourOfDay)
+                                                    set(Calendar.MINUTE, minute)
+                                                }
+                                                selectedTimeEnd = timeFormat.format(selectedCalendar.time)
+                                            },
+                                            Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
+                                            Calendar.getInstance().get(Calendar.MINUTE),
+                                            false // 24-hour format
+                                        )
+                                        timePickerDialog.show()
+                                    }
                             ) {
                                 Text(
-                                    text = "9:00 PM", // Replace with your end time
+                                    text = selectedTimeEnd, // Replace with your start date
                                     color = Color.Black,
-                                    modifier = Modifier.padding(8.dp)
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(8.dp),
+                                    maxLines = 1
                                 )
                             }
 
@@ -539,10 +600,30 @@ fun BrowseScreen(
                                         shape = RoundedCornerShape(8.dp)
                                     )
                                     .padding(8.dp)
-                                    .clickable { /* Handle click */ }
+                                    .clickable {
+                                        val datePickerDialog = DatePickerDialog(
+                                            context,
+                                            { _, year, month, dayOfMonth ->
+                                                // Update selectedDate with the chosen date
+                                                selectedDateEnd = Calendar.getInstance().apply {
+                                                    set(Calendar.YEAR, year)
+                                                    set(Calendar.MONTH, month)
+                                                    set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                                                }
+                                            },
+                                            selectedDateEnd.get(Calendar.YEAR),
+                                            selectedDateEnd.get(Calendar.MONTH),
+                                            selectedDateEnd.get(Calendar.DAY_OF_MONTH)
+                                        )
+                                        datePickerDialog.show()
+                                    }
                             ) {
                                 Text(
-                                    text = "3 Feb, 2024", // Replace with your end date
+                                    text = buildAnnotatedString {
+                                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                            append(dateFormat.format(selectedDateEnd.time)) // Format the date
+                                        }
+                                    }, // Replace with your end date
                                     color = Color.Black,
                                     modifier = Modifier.padding(8.dp)
                                 )
@@ -558,14 +639,15 @@ fun BrowseScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            top = 15.dp,
-                            bottom = 5.dp
+                            top = 13.dp,
+                            bottom = 4.dp
                         ) // Adjust top and bottom padding as needed
-                        .height(40.dp),
+                        .height(45.dp),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
                         text = "Search",
+                        fontSize = 18.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
@@ -579,7 +661,7 @@ fun BrowseScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 7.dp, horizontal = 10.dp),
+                    .padding(vertical = 9.dp, horizontal = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ){
@@ -592,27 +674,27 @@ fun BrowseScreen(
                 )
 
 
-                Row(
-                    modifier = Modifier.clickable { /* Handle click */ },
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    Text(
-                        text = "See all",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            color = Color.DarkGray
-                        )
-                    )
-
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_arrow_forward),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(27.dp)
-                            .padding(end = spacing.medium)
-                    )
-
-
-                }
+//                Row(
+//                    modifier = Modifier.clickable { /* Handle click */ },
+//                    verticalAlignment = Alignment.CenterVertically
+//                ){
+//                    Text(
+//                        text = "See all",
+//                        style = MaterialTheme.typography.bodyMedium.copy(
+//                            color = Color.DarkGray
+//                        )
+//                    )
+//
+//                    Image(
+//                        painter = painterResource(id = R.drawable.ic_arrow_forward),
+//                        contentDescription = null,
+//                        modifier = Modifier
+//                            .size(27.dp)
+//                            .padding(end = spacing.medium)
+//                    )
+//
+//
+//                }
             }
         }
 
@@ -629,9 +711,9 @@ fun BrowseScreen(
                 items(spaces) { space ->
                     ProductCard(
                         price = space.hourlyPrice.toString(),
-                        productName = space.name.toString(),
-                        productDescription = space.imageURL.toString(),
-                        productLocation = "Location "
+                        productName = space.name,
+                        productDescription = space.imageURL,
+                        productLocation = String.format("%.2f", space.distanceFromCurrentLocation)
                     )
                     }
                 }
@@ -694,7 +776,7 @@ fun BrowseScreen(
                                 price = space.hourlyPrice.toString(),
                                 title = space.name.toString(),
                                 rating = 4.5f,
-                                distance = "0.31 miles 27 available"
+                                distance = "${String.format("%.2f", space.distanceFromCurrentLocation)} km away · 27 left"
                                 //modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                             )
                         }
