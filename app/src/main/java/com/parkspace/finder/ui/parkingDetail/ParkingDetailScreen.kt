@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Geocoder
 import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import com.parkspace.finder.R
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.ParkingSpaceRepository
@@ -217,108 +220,108 @@ fun ParkingDetailScreen(
                             fontWeight = FontWeight.Bold
                         )
                     }
-//                    Spacer(modifier = Modifier.height(16.dp))
-//                    Row(verticalAlignment = Alignment.CenterVertically) {
-//                        Row(verticalAlignment = Alignment.CenterVertically) {
-//                            Spacer(modifier = Modifier.width(16.dp))
-//                            Icon(
-//                                painter = painterResource(id = R.drawable.location_24), // Your location icon resource
-//                                contentDescription = "Location",
-//                                tint = Color(0xFF777777),
-//                                modifier = Modifier.size(16.dp)
-//                            )
-//                            Text(
-//                                text = "${String.format("%.2f", space.distanceFromCurrentLocation)} km away",
-//                                style = MaterialTheme.typography.bodySmall,
-//                                color = Color(0xFF777777),
-//                                modifier = Modifier.padding(start = 4.dp) // Add padding to separate the icon and text
-//                            )
-//                        }
-//                        Spacer(modifier = Modifier.width(32.dp)) // Add space between the first and second items
-//                        // Add the second item: "Available"
-//                        Text(
-//                            text = "Available",
-//                            style = MaterialTheme.typography.bodySmall,
-//                            color = Color(0xFF777777)
-//                        )
-//                    }
-//                    Card(
-//                        modifier = Modifier
-//                            .padding(vertical = 8.dp)
-//                            .height(200.dp)
-//                            .width(500.dp),
-//                        shape = MaterialTheme.shapes.medium,
-//                    ) {
-//                        Image(
-//                            painter = rememberAsyncImagePainter(space.imageURL),
-//                            contentDescription = "Crosswalk Lot",
-//                            modifier = Modifier.fillMaxSize(),
-//                        )
-//                    }
-//                    Spacer(modifier = Modifier.height(16.dp))
-//                    // Facilities section
-//                    Text(
-//                        text = "Facilities",
-//                        fontWeight = FontWeight.Bold,
-//                        fontSize = 20.sp
-//                    )
-//                    Spacer(modifier = Modifier.height(8.dp))
-//                    // Display facilities in rounded rectangles
-//                    Row {
-//                        FacilityItem(name = "CCTV")
-//                        Spacer(modifier = Modifier.width(8.dp))
-//                        FacilityItem(name = "Hydraulic Parking")
-//                        Spacer(modifier = Modifier.width(8.dp))
-//                        FacilityItem(name = "Security")
-//                    }
-//                    Spacer(modifier = Modifier.height(8.dp))
-//                    Row {
-//                        FacilityItem(name = "Automated Tickets")
-//                        Spacer(modifier = Modifier.width(8.dp))
-//                        FacilityItem(name = "Parking Assistance")
-//                    }
-//                    Spacer(modifier = Modifier.height(8.dp))
-//                    // Working Hours section
-//                    Text(
-//                        text = "Working Hours",
-//                        fontWeight = FontWeight.Bold,
-//                        fontSize = 20.sp,
-//                        //modifier = Modifier.padding(vertical = 8.dp)
-//                    )
-//                    Column(
-//                        modifier = Modifier
-//                            .padding(bottom = 8.dp)
-//                            .background(color = Color.White, shape = MaterialTheme.shapes.medium)
-//                            .padding(8.dp)
-//                    ) {
-//                        // Display working hours
-//                        listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday").forEach { day ->
-//                            Row(
-//                                modifier = Modifier.padding(vertical = 4.dp),
-//                                verticalAlignment = Alignment.CenterVertically
-//                            ) {
-//                                Text(
-//                                    text = day,
-//                                    color = Color.DarkGray, // Adjust color for days
-//                                    modifier = Modifier.weight(1f)
-//                                )
-//                                Text(
-//                                    text = "8am - 8pm",
-//                                    modifier = Modifier.weight(1f)
-//                                )
-//                            }
-//                        }
-//                    }
-//                    Text(
-//                        text = "Description",
-//                        fontWeight = FontWeight.Bold,
-//                        fontSize = 20.sp,
-//                        //modifier = Modifier.padding(vertical = 8.dp)
-//                    )
-//                    Text(
-//                        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis mauris vel odio ultricies condimentum. Nullam efficitur quam at est blandit, ac bibendum nulla sagittis. Mauris id quam et velit fermentum consectetur.",
-//                        modifier = Modifier.padding(top = 8.dp)
-//                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Icon(
+                                painter = painterResource(id = R.drawable.location_24), // Your location icon resource
+                                contentDescription = "Location",
+                                tint = Color(0xFF777777),
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Text(
+                                text = "${String.format("%.2f", space.distanceFromCurrentLocation)} km away",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color(0xFF777777),
+                                modifier = Modifier.padding(start = 4.dp) // Add padding to separate the icon and text
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(32.dp)) // Add space between the first and second items
+                        // Add the second item: "Available"
+                        Text(
+                            text = "Available",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFF777777)
+                        )
+                    }
+                    Card(
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .height(200.dp)
+                            .width(500.dp),
+                        shape = MaterialTheme.shapes.medium,
+                    ) {
+                        Image(
+                            painter = rememberAsyncImagePainter(space.imageURL),
+                            contentDescription = "Crosswalk Lot",
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    // Facilities section
+                    Text(
+                        text = "Facilities",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    // Display facilities in rounded rectangles
+                    Row {
+                        FacilityItem(name = "CCTV")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        FacilityItem(name = "Hydraulic Parking")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        FacilityItem(name = "Security")
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row {
+                        FacilityItem(name = "Automated Tickets")
+                        Spacer(modifier = Modifier.width(8.dp))
+                        FacilityItem(name = "Parking Assistance")
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    // Working Hours section
+                    Text(
+                        text = "Working Hours",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        //modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                    Column(
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                            .background(color = Color.White, shape = MaterialTheme.shapes.medium)
+                            .padding(8.dp)
+                    ) {
+                        // Display working hours
+                        listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday").forEach { day ->
+                            Row(
+                                modifier = Modifier.padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = day,
+                                    color = Color.DarkGray, // Adjust color for days
+                                    modifier = Modifier.weight(1f)
+                                )
+                                Text(
+                                    text = "8am - 8pm",
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                        }
+                    }
+                    Text(
+                        text = "Description",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        //modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                    Text(
+                        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis mauris vel odio ultricies condimentum. Nullam efficitur quam at est blandit, ac bibendum nulla sagittis. Mauris id quam et velit fermentum consectetur.",
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
                     Text(
                         text = "Location",
                         fontWeight = FontWeight.Bold,
