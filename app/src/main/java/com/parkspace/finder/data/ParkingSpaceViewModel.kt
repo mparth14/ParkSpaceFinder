@@ -6,6 +6,7 @@ import android.location.Address
 import android.location.Geocoder
 import android.os.Looper
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,6 +23,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
@@ -34,14 +37,18 @@ class ParkingSpaceViewModel @Inject constructor(
     val parkingSpaces: StateFlow<Resource<List<ParkingSpace>>?> = _parkingSpaces
     private val _filterOptions = MutableStateFlow(FilterOptions())
     val filterOptions: StateFlow<FilterOptions> = _filterOptions
+    var selectedTimeStart = mutableStateOf("7:00 AM")
+    var selectedTimeEnd = mutableStateOf("9:00 PM")
+    var selectedDateEnd = mutableStateOf(Calendar.getInstance())
+    var selectedDateStart = mutableStateOf(Calendar.getInstance())
+    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
 
     fun updateFilterOptions(filterOptions: FilterOptions) {
         _filterOptions.value = filterOptions
         Log.d("FilterViewModel", "Filter options updated: $filterOptions")
         fetchParkingSpaces()
     }
-
-
 
     val permissions = arrayOf(
         android.Manifest.permission.ACCESS_COARSE_LOCATION,

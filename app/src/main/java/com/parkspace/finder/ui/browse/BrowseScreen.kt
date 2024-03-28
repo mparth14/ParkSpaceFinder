@@ -373,7 +373,7 @@ fun BrowseScreen(
     val needsLocationPermission = parkingSpaceViewModel.needsLocationPermission.collectAsState()
     val currentLocation = parkingSpaceViewModel.currentLocation.collectAsState()
     val addresses = parkingSpaceViewModel.addresses.collectAsState()
-    print(addresses.value[0].getAddressLine(0))
+//    print(addresses.value[0].getAddressLine(0))
         val firstAddress = addresses.value.firstOrNull() // Get the first address if available
     val isLoading = firstAddress == null
     var locality: String? = ""
@@ -405,12 +405,12 @@ fun BrowseScreen(
         }
     }
 
-    var selectedTimeStart by remember { mutableStateOf("7:00 AM") }
-    var selectedTimeEnd by remember { mutableStateOf("9:00 PM") }
-    var selectedDateEnd by remember { mutableStateOf(Calendar.getInstance()) }
-    var selectedDateStart by remember { mutableStateOf(Calendar.getInstance()) }
-    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-    val timeFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
+    var selectedTimeStart by parkingSpaceViewModel.selectedTimeStart
+    var selectedTimeEnd by parkingSpaceViewModel.selectedTimeEnd
+    var selectedDateStart by parkingSpaceViewModel.selectedDateStart
+    var selectedDateEnd by parkingSpaceViewModel.selectedDateEnd
+    val dateFormat = parkingSpaceViewModel.dateFormat
+    val timeFormat = parkingSpaceViewModel.timeFormat
 
 
     val spacing = MaterialTheme.spacing
