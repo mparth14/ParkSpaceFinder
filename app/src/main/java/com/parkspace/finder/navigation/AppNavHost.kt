@@ -208,11 +208,10 @@ fun AppNavHost(
             composable(ROUTE_REQUEST_LOCATION_PERMISSION) {
                 LocationPermissionScreen(navController = navController)
             }
+            composable(ROUTE_ENTER_DETAILS_CONTENT) {
+                EnterDetailsContent(navController = navController, onViewTicketClick = {})
+            }
         }
-        composable(ROUTE_ENTER_DETAILS_CONTENT) {
-            EnterDetailsContent(navController = navController, onViewTicketClick = {})
-        }
-
     }
 
 }
