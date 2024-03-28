@@ -2,18 +2,6 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="Payment">
-        <State />
-      </entry>
-      <entry key="PaymentScreenPreview">
-        <State />
-      </entry>
-      <entry key="PaymentScreenPreview (1)">
-        <State />
-      </entry>
-      <entry key="PreviewSuccessScreen">
-        <State />
-      </entry>
       <entry key="app">
         <State />
       </entry>
