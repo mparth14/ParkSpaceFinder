@@ -3,6 +3,7 @@ package com.parkspace.finder.data
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.parkspace.finder.data.utils.await
+import com.parkspace.finder.data.utils.checkIfDateTimeIsInPast
 import javax.inject.Inject
 
 class BookingDetailRepositoryImpl @Inject constructor(
@@ -41,6 +42,9 @@ class BookingDetailRepositoryImpl @Inject constructor(
                 try {
                     document.toObject(BookingDetails::class.java)?.apply {
                         id = document.id // Set the document ID here
+                        if(checkIfDateTimeIsInPast(this.bookingDate, this.endTime)) {
+                            status = "Completed"
+                        }
                     }
                 } catch (e: Exception) {
                     null

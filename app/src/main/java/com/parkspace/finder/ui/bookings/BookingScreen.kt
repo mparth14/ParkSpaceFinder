@@ -24,6 +24,7 @@ import com.parkspace.finder.R
 import com.parkspace.finder.data.BookingDetails
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.Resource
+import com.parkspace.finder.data.utils.checkIfDateTimeIsInPast
 import com.parkspace.finder.navigation.ROUTE_BOOKING_DETAIL
 import com.parkspace.finder.ui.bookings.BookingItem
 import com.parkspace.finder.viewmodel.AllBookingsDetailViewModel
@@ -36,21 +37,6 @@ fun BookingScreen(navController: NavController, allBookingsDetailViewModel: AllB
     val bookings = allBookingsDetailViewModel.bookings.collectAsState();
     val parkingSpaces = allBookingsDetailViewModel.parkingSpaces.collectAsState();
     val tabs = listOf("Active", "Completed")
-//    val bookingItems = listOf(
-//        BookingItem("1", "Blue Skies Parking", "Monday, October 24", "8:00 AM - 12:00 PM", "$60", "Confirmed"),
-//        BookingItem("2", "North Cerulean District", "Saturday, October 22", "8:00 AM - 7:00 PM", "$24", "Completed"),
-//        BookingItem("3", "Splitter Garage", "Friday, October 21", "8:00 AM - 4:00 PM", "$45", "Cancelled"),
-//        BookingItem("4", "Park It Down", "Wednesday, October 19", "8:00 AM - 12:00 PM", "$34", "Completed"),
-//        BookingItem("5", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed"),
-//        BookingItem("6", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Cancelled"),
-//        BookingItem("7", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed"),
-//        BookingItem("8", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Cancelled"),
-//        BookingItem("9", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed"),
-//        BookingItem("10", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Cancelled"),
-//        BookingItem("11", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed"),
-//        BookingItem("12", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Cancelled"),
-//        BookingItem("13", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed")
-//    )
     when(bookings.value){
         is Resource.Success -> {
             val bookingItems = (bookings.value as Resource.Success<List<BookingDetails>>).result
@@ -117,21 +103,8 @@ fun BookingList(bookingItems: List<BookingDetails>, navController: NavController
         items(bookingItems) { booking ->
             BookingItemCard(booking = booking, parkingSpaces = parkingSpaces) {
                 // Determine the navigation action based on the booking status
-                when (booking.status) {
-                    "Confirmed" -> {
-                        // Navigate to the detailed screen for active bookings
-                        navController.navigate(ROUTE_BOOKING_DETAIL.replace("{bookingId}", booking.id
-                            ?: ""))
-                    }
-                    "Completed" -> {
-                        // Navigate to the detailed screen for completed bookings
-                        navController.navigate("completedBookingScreen/${booking.id}")
-                    }
-                    else -> {
-                        // Navigate to the detailed screen for cancelled bookings
-                        navController.navigate("cancelledBookingScreen/${booking.id}")
-                    }
-                }
+                navController.navigate(ROUTE_BOOKING_DETAIL.replace("{bookingId}", booking.id
+                    ?: ""))
             }
         }
     }

@@ -82,7 +82,7 @@ fun BookingDetailsScreen(navController: NavHostController, bookingId: String) {
                             Spacer(modifier = Modifier.height(1.dp))
                             PriceSection(booking)
                             Spacer(modifier = Modifier.weight(1f))
-                            ActionButtons(navController, bookingId)
+                            ActionButtons(navController, booking)
                         }
                     }
                 }
@@ -289,24 +289,29 @@ fun PriceSection(booking : BookingDetails) {
 }
 
 @Composable
-fun ActionButtons(navController: NavHostController, bookingId: String) {
+fun ActionButtons(navController: NavHostController, booking: BookingDetails) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(
-            onClick = { /* TODO: Handle cancel action */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
-            shape = RoundedCornerShape(25), // Fully rounded corners
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Red
-            )
-        ) {
-            Text("Cancel", style = MaterialTheme.typography.titleMedium, color = Color.White, fontWeight = FontWeight.Bold)
+        if(booking.status == "Cancelled") {
+            return
+        }
+        if(booking.status == "Confirmed") {
+            Button(
+                onClick = { /* TODO: Handle cancel action */ },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(25), // Fully rounded corners
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Red
+                )
+            ) {
+                Text("Cancel", style = MaterialTheme.typography.titleMedium, color = Color.White, fontWeight = FontWeight.Bold)
+            }
         }
         Spacer(modifier = Modifier.height(8.dp)) // Space between the buttons
         Row(
@@ -327,7 +332,7 @@ fun ActionButtons(navController: NavHostController, bookingId: String) {
                 Text("View Timer", style = MaterialTheme.typography.titleMedium, color = Color.Black, fontWeight = FontWeight.Bold)
             }
             Button(
-                onClick = { navController.navigate(ROUTE_PARKING_TICKET.replace("{bookingId}", bookingId)) },
+                onClick = { navController.navigate(ROUTE_PARKING_TICKET.replace("{bookingId}", booking?.id ?: "")) },
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp),

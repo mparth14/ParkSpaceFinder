@@ -41,3 +41,22 @@ fun calculateDuration(startTimeStr: String, endTimeStr: String): String {
     }
     return ""
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun checkIfDateTimeIsInPast(date: String, endTime: String): Boolean {
+    val formatter = SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault())
+
+    val cal = Calendar.getInstance()
+    val calEnd = Calendar.getInstance()
+   if(date.isNotEmpty() && endTime.isNotEmpty()) {
+       val dateAndTime = "$date $endTime"
+       val dateTime = formatter.parse(dateAndTime)
+       if(dateTime != null) {
+           cal.time = dateTime
+           calEnd.time = Calendar.getInstance().time
+           return cal.before(calEnd)
+       }
+   }
+    return false
+
+}

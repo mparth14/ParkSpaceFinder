@@ -10,6 +10,6 @@ data class BookingDetails(
     val lotId: String = "",
     val bookingDate: String = "",
     val vehicleType: String = "",
-    val status: String = "Confirmed"
+    var status: String = "Confirmed"
 )
 
