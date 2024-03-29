@@ -9,12 +9,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
@@ -33,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -46,15 +49,15 @@ import com.parkspace.finder.data.AuthViewModel
 fun HomeScreen(viewModel: AuthViewModel?,
                navController: NavController?
 ) {
-    var name by remember { mutableStateOf("John Doe") }
-    var email by remember { mutableStateOf("johndoe@example.com") }
-    var phone by remember { mutableStateOf("1234567890") }
-    var emergencyContact by remember { mutableStateOf("9876543210") }
-    var vehicleMake by remember { mutableStateOf("Toyota") }
-    var vehicleModel by remember { mutableStateOf("Camry") }
-    var licensePlate by remember { mutableStateOf("ABC1234") }
+    var name by remember { mutableStateOf(viewModel?.currentUser?.displayName ?: "") }
+    var email by remember { mutableStateOf(viewModel?.currentUser?.email ?: "") }
+    var phone by remember { mutableStateOf("") }
+    var emergencyContact by remember { mutableStateOf("") }
+    var vehicleMake by remember { mutableStateOf("") }
+    var vehicleModel by remember { mutableStateOf("") }
+    var licensePlate by remember { mutableStateOf("") }
     var profileImageResource by remember {
-        mutableStateOf<Uri?>(Uri.parse("android.resource://com.parkspace.finder/" + R.drawable.extend_time))
+        mutableStateOf<Uri?>(Uri.parse("android.resource://com.parkspace.finder/" + R.drawable.user_profile))
     }
 
     var isEditMode by remember { mutableStateOf(false) }
@@ -71,7 +74,25 @@ fun HomeScreen(viewModel: AuthViewModel?,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(id = R.string.welcome_back),
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.padding(top = 20.dp),
+                color = MaterialTheme.colors.onSurface
+            )
+            Spacer(modifier = Modifier
+                .width(8.dp)
+                )
+            Text(
+                text = viewModel?.currentUser?.displayName ?: "",
+                modifier = Modifier
 
+                    .padding(top = 22.dp),
+                style = MaterialTheme.typography.h6,
+                color = MaterialTheme.colors.onSurface
+            )
+        }
         Box(
             modifier = Modifier
                 .size(120.dp)
