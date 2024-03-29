@@ -1,9 +1,13 @@
 package com.parkspace.finder.viewmodel
 
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.zxing.BarcodeFormat
@@ -81,6 +85,12 @@ class BookingDetailViewModel @AssistedInject constructor(
                         "Booking id: ${details.id}\n"
                 _qrCodeBitmap.value = generateQRCodeBitmap(qrData)
             }
+        }
+    }
+
+    fun openParkingSpaceInMaps(){
+        if(_bookedParkingSpace.value is Resource.Success){
+
         }
     }
 }
