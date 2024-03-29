@@ -3,6 +3,7 @@ package com.parkspace.finder.data
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.parkspace.finder.data.utils.await
+import com.parkspace.finder.data.utils.checkIfDateTimeIsInPast
 import javax.inject.Inject
 
 class BookingDetailRepositoryImpl @Inject constructor(
@@ -23,6 +24,33 @@ class BookingDetailRepositoryImpl @Inject constructor(
                 this?.id = result.id
             }
             Resource.Success(bookingDetails!!)
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
+    }
+
+    override suspend fun getBookingDetailsByEmail(email: String): Resource<List<BookingDetails>> {
+        return try {
+            val result = db.collection("bookings").whereEqualTo("userEmail", email).get().await()
+//            val bookingDetails = result.toObjects(BookingDetails::class.java).map {
+//                it.apply {
+//                    id = this.id
+//                }
+//            }
+            val bookingDetails = result.documents.mapNotNull { document ->
+                Log.d("ParkingSpaceRepositoryImpl", document.data.toString())
+                try {
+                    document.toObject(BookingDetails::class.java)?.apply {
+                        id = document.id // Set the document ID here
+                        if(checkIfDateTimeIsInPast(this.bookingDate, this.endTime)) {
+                            status = "Completed"
+                        }
+                    }
+                } catch (e: Exception) {
+                    null
+                }
+            }
+            Resource.Success(bookingDetails)
         } catch (e: Exception) {
             Resource.Failure(e)
         }
