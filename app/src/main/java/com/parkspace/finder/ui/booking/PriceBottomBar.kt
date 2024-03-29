@@ -19,13 +19,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
 import com.parkspace.finder.data.BookingViewModel
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.Resource
 
 
 @Composable
-fun PriceBottomBar(bookingViewModel: BookingViewModel) {
+fun PriceBottomBar(navController: NavController, bookingViewModel: BookingViewModel) {
     val parkingSpace = bookingViewModel.parkingSpace.collectAsState()
     when(parkingSpace.value){
         is Resource.Success -> {
@@ -53,7 +54,10 @@ fun PriceBottomBar(bookingViewModel: BookingViewModel) {
                                 fontWeight = FontWeight.Bold
                             )
                         }
-                        Button(onClick = { /*TODO*/ }) {
+                        Button(onClick = {
+                            Log.d("PriceBottomBar", space.toString())
+                            navController.navigate("parking/${space?.id}/pay")
+                        }) {
                             Text(
                                 text = "Book Now",
                                 fontWeight = FontWeight.Bold,

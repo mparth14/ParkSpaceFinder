@@ -135,51 +135,16 @@ fun AppNavHost(
                 HomeScreen(viewModel,navController = navController)
             }
             composable(ROUTE_PAYMENT) {
-                PaymentScreen(navController = navController)
+                val parkingId = it.arguments?.getString("parkingId") ?: "0"
+                PaymentScreen(navController = navController, parkingId = parkingId, it)
             }
-            composable(
-                route = "$ROUTE_PAYMENT_SUCCESS/{startTime}/{endTime}/{spotNumber}/{duration}/{price}/{lotName}",
-                arguments = listOf(
-                    navArgument("startTime") { type = NavType.StringType },
-                    navArgument("endTime") { type = NavType.StringType },
-                    navArgument("spotNumber") { type = NavType.StringType },
-                    navArgument("duration") { type = NavType.StringType },
-                    navArgument("price") { type = NavType.FloatType },
-                    navArgument("lotName") { type = NavType.StringType }
-                )
-            ) { backStackEntry ->
-                val bookingDetails = BookingDetails(
-                    startTime = backStackEntry.arguments?.getString("startTime") ?: "",
-                    endTime = backStackEntry.arguments?.getString("endTime") ?: "",
-                    spotNumber = backStackEntry.arguments?.getString("spotNumber") ?: "",
-                    duration = backStackEntry.arguments?.getString("duration") ?: "",
-                    price = backStackEntry.arguments?.getDouble("price") ?: 0.00,
-                    lotName = backStackEntry.arguments?.getString("lotName") ?: "",
-                )
-                PaymentSuccessScreen(navController = navController, bookingDetails = bookingDetails) {
-                }
+            composable(ROUTE_PAYMENT_SUCCESS) { backStackEntry ->
+
+                PaymentSuccessScreen(navController = navController, backStackEntry.arguments?.getString("bookingId") ?: "0")
             }
 
-            composable(
-                route = "$ROUTE_PARKING_TICKET/{startTime}/{endTime}/{spotNumber}/{duration}/{price}/{lotName}",
-                arguments = listOf(
-                    navArgument("startTime") { type = NavType.StringType },
-                    navArgument("endTime") { type = NavType.StringType },
-                    navArgument("spotNumber") { type = NavType.StringType },
-                    navArgument("duration") { type = NavType.StringType },
-                    navArgument("price") { type = NavType.FloatType },
-                    navArgument("lotName") { type = NavType.StringType }
-                )
-            ) { backStackEntry ->
-                ParkingTicketScreen(
-                    startTime = backStackEntry.arguments?.getString("startTime") ?: "",
-                    endTime = backStackEntry.arguments?.getString("endTime") ?: "",
-                    spotNumber = backStackEntry.arguments?.getString("spotNumber") ?: "",
-                    duration = backStackEntry.arguments?.getString("duration") ?: "",
-                    price = backStackEntry.arguments?.getDouble("price") ?: 0.0,
-                    lotName = backStackEntry.arguments?.getString("lotName") ?: "",
-                    onBackClicked = { navController.popBackStack() }
-                )
+            composable(ROUTE_PARKING_TICKET) { backStackEntry ->
+                ParkingTicketScreen(navController = navController, backStackEntry.arguments?.getString("bookingId") ?: "0")
             }
 
             composable(ROUTE_BROWSE) {
@@ -217,7 +182,8 @@ fun AppNavHost(
                 LocationPermissionScreen(navController = navController)
             }
             composable(ROUTE_ENTER_BOOKING_DETAIL_SCREEN) {
-                EnterDetailsContent(navController = navController, it.arguments?.getString("parkingId") ?: "0")
+                val parkingId = it.arguments?.getString("parkingId") ?: "0"
+                EnterDetailsContent(navController = navController, parkingId = parkingId)
             }
             composable(ROUTE_FILTER) {
                 FilterSection( parkingSpaceViewModel = parkingSpaceViewModel,navController = navController)

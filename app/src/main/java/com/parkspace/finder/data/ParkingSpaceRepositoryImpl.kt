@@ -116,7 +116,9 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
                 .get()
                 .await()
             Log.d("documentSnapshot", documentSnapshot.data.toString())
-            val parkingSpace = documentSnapshot.toObject(ParkingSpace::class.java)
+            val parkingSpace = documentSnapshot.toObject(ParkingSpace::class.java)?.apply {
+                this.id = documentSnapshot.id // Set the document ID here
+            }
             Resource.Success(parkingSpace)
         } catch (e: Exception) {
             Log.e("ParkingSpaceRepository", "Error getting parking space by id: $id", e)

@@ -18,7 +18,7 @@ import androidx.navigation.NavController
 import com.parkspace.finder.navigation.ROUTE_PARKING_TICKET
 
 @Composable
-fun PaymentSuccessScreen(navController : NavController, bookingDetails: BookingDetails, onViewTicketClick: () -> Unit) {
+fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
     Box(
         modifier = Modifier.fillMaxSize()
             .background(MaterialTheme.colorScheme.primary),
@@ -80,7 +80,7 @@ fun PaymentSuccessScreen(navController : NavController, bookingDetails: BookingD
                 Button(
                     onClick = {
                         navController.navigate(
-                            "$ROUTE_PARKING_TICKET/${bookingDetails.startTime}/${bookingDetails.endTime}/${bookingDetails.spotNumber}/${bookingDetails.duration}/${bookingDetails.price}/${bookingDetails.lotName}"
+                            "$ROUTE_PARKING_TICKET/123"
                         )
                     }
                 ) {

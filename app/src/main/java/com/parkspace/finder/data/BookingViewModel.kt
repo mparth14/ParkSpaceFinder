@@ -2,6 +2,7 @@ package com.parkspace.finder.data
 
 import android.app.Activity
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import java.time.LocalTime
 import javax.inject.Inject
 
 @OptIn(ExperimentalMaterial3Api::class)
+@HiltViewModel(assistedFactory = BookingViewModel.Factory::class)
 class BookingViewModel @AssistedInject constructor(
     @Assisted private val parkingId: String,
     private val parkingSpaceRepository: ParkingSpaceRepository
@@ -38,18 +40,18 @@ class BookingViewModel @AssistedInject constructor(
         fun create(parkingId: String): BookingViewModel
     }
 
-    companion object {
-        @Suppress("UNCHECKED_CAST")
-        fun provideFactory(
-            assistedFactory: Factory, // this is the Factory interface
-            // declared above
-            parkingId: String
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(parkingId) as T
-            }
-        }
-    }
+//    companion object {
+//        @Suppress("UNCHECKED_CAST")
+//        fun provideFactory(
+//            assistedFactory: Factory, // this is the Factory interface
+//            // declared above
+//            parkingId: String
+//        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+//            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//                return assistedFactory.create(parkingId) as T
+//            }
+//        }
+//    }
 
     val vehicleOptions = listOf(
         "SUV",
@@ -103,19 +105,19 @@ class BookingViewModel @AssistedInject constructor(
     }
 }
 
-@EntryPoint
-@InstallIn(ActivityComponent::class)
-interface ViewModelFactoryProvider {
-
-    fun bookingViewModelFactory(): BookingViewModel.Factory
-}
-
-@Composable
-fun bookingViewModel(parkingId: String): BookingViewModel {
-    val factory = EntryPointAccessors.fromActivity(
-        LocalContext.current as Activity,
-        ViewModelFactoryProvider::class.java
-    ).bookingViewModelFactory()
-
-    return viewModel(factory = BookingViewModel.provideFactory(factory, parkingId))
-}
+//@EntryPoint
+//@InstallIn(ActivityComponent::class)
+//interface ViewModelFactoryProvider {
+//
+//    fun bookingViewModelFactory(): BookingViewModel.Factory
+//}
+//
+//@Composable
+//fun bookingViewModel(parkingId: String): BookingViewModel {
+//    val factory = EntryPointAccessors.fromActivity(
+//        LocalContext.current as ComponentActivity,
+//        ViewModelFactoryProvider::class.java
+//    ).bookingViewModelFactory()
+//
+//    return viewModel(factory = BookingViewModel.provideFactory(factory, parkingId))
+//}

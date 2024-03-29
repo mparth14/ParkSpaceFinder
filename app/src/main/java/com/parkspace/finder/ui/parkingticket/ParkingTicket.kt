@@ -26,21 +26,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ParkingTicketScreen(
-    startTime: String,
-    endTime: String,
-    spotNumber: String,
-    duration: String,
-    price: Double,
-    lotName: String,
-    onBackClicked: () -> Unit
-) {
+fun ParkingTicketScreen(navController: NavController, bookingId: String) {
     val context = LocalContext.current
+    val startTime = "10:00 PM"
+    val endTime = "12:00 PM"
+    val spotNumber = "B20"
+    val duration = "2 hours"
+    val price = 100.0
+    val lotName = "Mic Mac Mall Parking"
+
     val priceUpdated = price.toFloat()
     val qrData = "Start Time: $startTime\n" +
             "End Time: $endTime\n" +
@@ -69,7 +69,7 @@ fun ParkingTicketScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { onBackClicked() }) {
+                    IconButton(onClick = { }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -269,18 +269,4 @@ fun generateQRCodeBitmap(qrData: String, context: android.content.Context): Imag
         }
     }
     return bmp.asImageBitmap()
-}
-
-@Preview
-@Composable
-fun PreviewParkingTicketScreen() {
-    ParkingTicketScreen(
-        startTime = "10:00 PM",
-        endTime = "12:00 PM",
-        spotNumber = "B20",
-        duration = "2 hours",
-        price = 100.0,
-        lotName = "Mic Mac Mall Parking",
-        onBackClicked = {}
-    )
 }
