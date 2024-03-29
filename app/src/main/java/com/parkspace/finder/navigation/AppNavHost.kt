@@ -41,7 +41,6 @@ import com.parkspace.finder.data.ParkingSpaceRepository
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
-import com.parkspace.finder.ui.booking.EnterDetailsActivity
 import com.parkspace.finder.ui.booking.EnterDetailsContent
 import com.parkspace.finder.ui.browse.BrowseScreen
 import com.parkspace.finder.ui.home.HomeScreen
@@ -208,8 +207,9 @@ fun AppNavHost(
             composable(ROUTE_REQUEST_LOCATION_PERMISSION) {
                 LocationPermissionScreen(navController = navController)
             }
-            composable(ROUTE_ENTER_DETAILS_CONTENT) {
-                EnterDetailsContent(navController = navController)
+            composable(ROUTE_ENTER_BOOKING_DETAIL_SCREEN) {
+                EnterDetailsContent(navController = navController, it.arguments?.getString("parkingId") ?: "0")
+
             }
         }
     }

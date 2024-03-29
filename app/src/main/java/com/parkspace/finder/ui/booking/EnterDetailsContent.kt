@@ -21,7 +21,7 @@ import com.parkspace.finder.data.BookingViewModel
 import java.util.Date
 
 @Composable
-fun EnterDetailsContent(navController : NavController, bookingViewModel: BookingViewModel = hiltViewModel()) {
+fun EnterDetailsContent(navController : NavController,parkingId: String, bookingViewModel: BookingViewModel = hiltViewModel()) {
 
     Surface(modifier = Modifier
         .fillMaxSize()

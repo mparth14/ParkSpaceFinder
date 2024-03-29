@@ -11,11 +11,17 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
     override suspend fun getParkingSpaces(): Resource<List<ParkingSpace>> {
         return try {
             val snapshot = db.collection("parking-spaces").get().await()
-            Log.d("ParkingSpaceRepositoryImpl", snapshot.toString())
-            snapshot.documents.forEach {
-                Log.d("ParkingSpaceRepositoryImpl", it.data.toString())
+            val parkingSpaces = snapshot.documents.mapNotNull { document ->
+                Log.d("ParkingSpaceRepositoryImpl", document.data.toString())
+                try {
+                    document.toObject(ParkingSpace::class.java)?.apply {
+                        id = document.id // Set the document ID here
+                    }
+                } catch (e: Exception) {
+                    Log.d("error", "Error converting document to ParkingSpace: ${e.message}")
+                    null
+                }
             }
-            val parkingSpaces = snapshot.toObjects(ParkingSpace::class.java)
             Resource.Success(parkingSpaces)
         } catch (e: Exception) {
             Log.d("error", e.toString())
