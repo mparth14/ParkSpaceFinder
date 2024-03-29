@@ -14,9 +14,7 @@ class EnterDetailsActivity : ComponentActivity() {
         setContent {
             NewPickersTheme {
                 val navController = rememberNavController()
-                EnterDetailsContent(navController = navController) {
-                    // Handle onViewTicketClick action
-                }
+                EnterDetailsContent(navController = navController)
             }
         }
     }

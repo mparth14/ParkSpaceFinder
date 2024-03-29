@@ -24,7 +24,7 @@ fun PriceBottomBar() {
         Surface(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .zIndex(1f)
+//                .zIndex(1f)
                 .fillMaxWidth()
                 .shadow(elevation= 20.dp),
             color = Color.White,

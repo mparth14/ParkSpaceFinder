@@ -209,7 +209,7 @@ fun AppNavHost(
                 LocationPermissionScreen(navController = navController)
             }
             composable(ROUTE_ENTER_DETAILS_CONTENT) {
-                EnterDetailsContent(navController = navController, onViewTicketClick = {})
+                EnterDetailsContent(navController = navController)
             }
         }
     }
