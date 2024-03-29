@@ -97,7 +97,7 @@ class ParkingSpaceViewModel @Inject constructor(
                     _currentLocation.value = LatLng(location.latitude, location.longitude)
                     _addresses.value =
                         geocoder.getFromLocation(location.latitude, location.longitude, 1)!!
-//                    sortParkingSpaces()
+                        sortParkingSpaces()
                 }
             }
         }
@@ -114,11 +114,7 @@ class ParkingSpaceViewModel @Inject constructor(
         _parkingSpaces.value?.let { spaces ->
             if(spaces is Resource.Success) {
                 spaces.result?.forEach {
-                    val sortedSpaces = spaces.result.sortedBy {
                         it.distanceFromCurrentLocation  = distanceBetween(_currentLocation.value, LatLng(it.location.latitude, it.location.longitude))
-                        it.distanceFromCurrentLocation
-                    }
-                    _parkingSpaces.value = Resource.Success(sortedSpaces)
                 }
             }
         }
