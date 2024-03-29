@@ -28,3 +28,16 @@ fun formatTime(timePickerState: TimePickerState): String {
     cal.isLenient = false
     return formatter.format(cal.time)
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+fun calculateDuration(startTimeStr: String, endTimeStr: String): String {
+    val startTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(startTimeStr)
+    val endTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(endTimeStr)
+    if(startTime != null && endTime != null) {
+        val diff = endTime.time - startTime.time
+        val hours = diff / (60 * 60 * 1000)
+        val minutes = (diff - hours * (60 * 60 * 1000)) / (60 * 1000)
+        return "$hours hours $minutes minutes"
+    }
+    return ""
+}

@@ -31,20 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.parkspace.finder.FilterSection
 import com.parkspace.finder.data.AuthViewModel
-import com.parkspace.finder.ui.bookings.ActiveBookingScreen
-import com.parkspace.finder.ui.bookings.CancelledBookingScreen
-import com.parkspace.finder.ui.bookings.CompletedBookingScreen
-import com.parkspace.finder.data.ParkingSpaceRepository
+import com.parkspace.finder.ui.bookings.BookingDetailsScreen
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
@@ -152,20 +146,20 @@ fun AppNavHost(
             composable(ROUTE_BROWSE) {
                 BrowseScreen(context  = context, navController = navController, parkingSpaceViewModel = parkingSpaceViewModel)
             }
-            composable(Screen.Bookings.route) {
+            composable(ROUTE_BOOKINGS) {
                 BookingScreen(navController = navController)
             }
-            composable("activeBookingScreen/{bookingId}") { backStackEntry ->
-                val bookingId = backStackEntry.arguments?.getString("bookingId")
-                ActiveBookingScreen(bookingId = bookingId)
+            composable(ROUTE_BOOKING_DETAIL) { backStackEntry ->
+                val bookingId = backStackEntry.arguments?.getString("bookingId") ?: "0"
+                BookingDetailsScreen(navController = navController, bookingId = bookingId)
             }
             composable("cancelledBookingScreen/{bookingId}") { backStackEntry ->
                 val bookingId = backStackEntry.arguments?.getString("bookingId")
-                CancelledBookingScreen(bookingId = bookingId)
+//                CancelledBookingScreen(bookingId = bookingId)
             }
             composable("completedBookingScreen/{bookingId}") { backStackEntry ->
                 val bookingId = backStackEntry.arguments?.getString("bookingId")
-                CompletedBookingScreen(bookingId = bookingId)
+//                CompletedBookingScreen(bookingId = bookingId)
             }
             composable(Screen.Favorites.route) {
                 FavouriteScreen(context = context, navController = navController)

@@ -27,4 +27,28 @@ class BookingDetailRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
+
+    override suspend fun getBookingDetailsByEmail(email: String): Resource<List<BookingDetails>> {
+        return try {
+            val result = db.collection("bookings").whereEqualTo("userEmail", email).get().await()
+//            val bookingDetails = result.toObjects(BookingDetails::class.java).map {
+//                it.apply {
+//                    id = this.id
+//                }
+//            }
+            val bookingDetails = result.documents.mapNotNull { document ->
+                Log.d("ParkingSpaceRepositoryImpl", document.data.toString())
+                try {
+                    document.toObject(BookingDetails::class.java)?.apply {
+                        id = document.id // Set the document ID here
+                    }
+                } catch (e: Exception) {
+                    null
+                }
+            }
+            Resource.Success(bookingDetails)
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
+    }
 }
