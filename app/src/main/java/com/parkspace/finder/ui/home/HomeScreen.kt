@@ -1,120 +1,199 @@
 package com.parkspace.finder.ui.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.navigation.NavController
 import com.parkspace.finder.R
 import com.parkspace.finder.data.AuthViewModel
-import com.parkspace.finder.navigation.ROUTE_LOGIN
-import com.parkspace.finder.ui.theme.spacing
-
 
 @Composable
-fun HomeScreen(viewModel: AuthViewModel?,navController: NavHostController) {
-    val spacing = MaterialTheme.spacing
+fun HomeScreen(viewModel: AuthViewModel?,
+               navController: NavController?
+) {
+    var name by remember { mutableStateOf("John Doe") }
+    var email by remember { mutableStateOf("johndoe@example.com") }
+    var phone by remember { mutableStateOf("1234567890") }
+    var emergencyContact by remember { mutableStateOf("9876543210") }
+    var vehicleMake by remember { mutableStateOf("Toyota") }
+    var vehicleModel by remember { mutableStateOf("Camry") }
+    var licensePlate by remember { mutableStateOf("ABC1234") }
+
+    var isEditMode by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(spacing.medium)
-            .padding(top = spacing.extraLarge),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(horizontal = 50.dp)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     ) {
+        Box(
+            modifier = Modifier
+                .size(120.dp)
+                .clip(CircleShape)
+                .background(Color.Gray),
+            contentAlignment = Alignment.Center
+        ) {
+            // You can replace the placeholder image with your actual image resource
+            Image(
+                painter = painterResource(R.drawable.ic_launcher_foreground),
+                contentDescription = "Profile Image",
+                modifier = Modifier.size(100.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp)) // Add some spacing between image and text fields
 
-        Text(
-            text = stringResource(id = R.string.welcome_back),
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-
-        Text(
-            text = viewModel?.currentUser?.displayName ?: "",
-            style = MaterialTheme.typography.displaySmall,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-
-        // TODO: update image
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = stringResource(id = R.string.empty),
-            modifier = Modifier.size(128.dp)
-        )
-
-        Column(
+        TextField(
+            value = name,
+            onValueChange = { if (isEditMode) name = it },
+            label = { Text("Name") },
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(spacing.medium)
+                .padding(vertical = 8.dp),
+                enabled = isEditMode,
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
+        )
+
+        TextField(
+            value = email,
+            onValueChange = { if (isEditMode) email = it },
+            label = { Text("Email") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            enabled = false, // Email field should always be non-editable
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Next
+            ),
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
+        )
+
+        TextField(
+            value = phone,
+            onValueChange = { if (isEditMode) phone = it },
+            label = { Text("Phone") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            enabled = isEditMode,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Phone,
+                imeAction = ImeAction.Next
+            ),
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
+        )
+
+        TextField(
+            value = emergencyContact,
+            onValueChange = { if (isEditMode) emergencyContact = it },
+            label = { Text("Emergency Contact") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            enabled = isEditMode,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Phone,
+                imeAction = ImeAction.Next
+            ),
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
+        )
+
+        TextField(
+            value = vehicleMake,
+            onValueChange = { if (isEditMode) vehicleMake = it },
+            label = { Text("Vehicle Make") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            enabled = isEditMode,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                capitalization = KeyboardCapitalization.Sentences,
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
+        )
+
+        TextField(
+            value = vehicleModel,
+            onValueChange = { if (isEditMode) vehicleModel = it },
+            label = { Text("Vehicle Model") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            enabled = isEditMode,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                capitalization = KeyboardCapitalization.Sentences,
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Next
+            ),
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
+        )
+
+        TextField(
+            value = licensePlate,
+            onValueChange = { if (isEditMode) licensePlate = it },
+            label = { Text("License Plate") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            enabled = isEditMode,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                capitalization = KeyboardCapitalization.None,
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            ),
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
+        )
+
+        Button(
+            onClick = {
+                if (isEditMode) {
+                    // Save action
+                    isEditMode = false // Switch back to view mode after saving
+                } else {
+                    isEditMode = true // Switch to edit mode
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            ) {
-                Text(
-                    text = stringResource(id = R.string.name),
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(0.3f),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Text(
-                    text = viewModel?.currentUser?.displayName ?: "",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(0.7f),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            ) {
-                Text(
-                    text = stringResource(id = R.string.email),
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(0.3f),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Text(
-                    text = viewModel?.currentUser?.email ?: "",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(0.7f),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-
-            Button(
-                onClick = {
-                    viewModel?.logout()
-                    navController.navigate(ROUTE_LOGIN){
-                        popUpTo(ROUTE_LOGIN){
-                            inclusive = true
-                        }
-                    }
-                },
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = spacing.extraLarge)
-            ) {
-                Text(text = stringResource(id = R.string.logout))
-            }
+            Text(if (isEditMode) "Save" else "Edit")
         }
     }
 }
