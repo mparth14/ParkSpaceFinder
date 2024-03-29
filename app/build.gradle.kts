@@ -110,6 +110,7 @@ dependencies {
     implementation ("androidx.compose.foundation:foundation:$compose_version")
     implementation ("androidx.compose.material:material-icons-core:$compose_version")
     implementation ("androidx.compose.material:material-icons-extended:$compose_version")
+    implementation ("com.google.android.gms:play-services-maps:17.0.1")
 }
 
 kapt {

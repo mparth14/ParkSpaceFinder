@@ -2,6 +2,7 @@ package com.parkspace.finder.ui.bookings
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -13,7 +14,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,11 +28,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.GeoPoint
 import com.parkspace.finder.R
 import com.parkspace.finder.data.BookingDetails
@@ -167,14 +175,17 @@ fun BookingInfoSection(booking : BookingDetails, parkingSpace: ParkingSpace?) {
             )
         }
     }
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 15.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        MapSection(parkingSpace = parkingSpace)
+    if(parkingSpace != null) {
+        MapSection(parkingSpace)
     }
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(horizontal = 15.dp, vertical = 10.dp),
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        MapSection(parkingSpace = parkingSpace)
+//    }
     HorizontalDivider(
         modifier = Modifier.padding(horizontal = 16.dp),
         thickness = 1.dp,
@@ -249,17 +260,52 @@ fun BookingDateAndTime(booking : BookingDetails) {
 }
 
 @Composable
-fun MapSection(parkingSpace: ParkingSpace?) {
+fun MapSection(parkingSpace: ParkingSpace) {
     val context = LocalContext.current
-    Button(onClick = {
-        val gmmIntentUri =
-            Uri.parse("google.navigation:q=${parkingSpace?.location?.latitude},${parkingSpace?.location?.longitude}")
-        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-        mapIntent.setPackage("com.google.android.apps.maps")
-        context.startActivity(mapIntent)
-    }) {
-        Text("Get Directions")
+    val mapView = rememberMapViewWithLifecycle()
+    val zoomLevel = 15f // Set the desired zoom level
+    val location = LatLng(parkingSpace.location.latitude ?: 0.0, parkingSpace.location.longitude ?: 0.0)
+    AndroidView({ mapView }, modifier = Modifier
+        .padding(horizontal = 15.dp, vertical = 10.dp)
+        .fillMaxWidth()
+        .height(150.dp)
+        .clip(RoundedCornerShape(12.dp))
+        .background(Color.Gray)) { mapView ->
+        mapView.getMapAsync { googleMap ->
+            googleMap.addMarker(MarkerOptions().position(location))
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoomLevel))
+            googleMap.uiSettings.isZoomControlsEnabled = false
+            googleMap.setOnMapClickListener {
+                // The URI to launch Google Maps in the desired location
+                val gmmIntentUri = Uri.parse("geo:0,0?q=${location.latitude},${location.longitude}(${parkingSpace.name})&z=$zoomLevel")
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                mapIntent.setPackage("com.google.android.apps.maps")
+                if (mapIntent.resolveActivity(context.packageManager) != null) {
+                    context.startActivity(mapIntent)
+                }
+            }
+        }
     }
+}
+@Composable
+fun rememberMapViewWithLifecycle(): MapView {
+    val context = LocalContext.current
+    val mapView = remember {
+        MapView(context).apply {
+            onCreate(Bundle())
+        }
+    }
+    LaunchedEffect(mapView) {
+        mapView.onResume()
+    }
+    DisposableEffect(mapView) {
+        onDispose {
+            mapView.onPause()
+            mapView.onStop()
+            mapView.onDestroy()
+        }
+    }
+    return mapView
 }
 
 @Composable
