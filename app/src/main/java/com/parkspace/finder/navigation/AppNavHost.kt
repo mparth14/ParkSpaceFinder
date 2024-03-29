@@ -1,6 +1,7 @@
 package com.parkspace.finder.navigation
 
 
+import NotificationScreen
 import android.content.Context
 import android.util.Log
 import android.os.Build
@@ -192,7 +193,7 @@ fun AppNavHost(
                 FavouriteScreen(context = context, navController = navController)
             }
             composable(Screen.Notifications.route) {
-                NotifactionsScreen()
+                NotificationScreen()
             }
             composable(Screen.Account.route) {
                 HomeScreen(navController = navController, viewModel = viewModel)
