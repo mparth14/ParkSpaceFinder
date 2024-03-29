@@ -55,6 +55,7 @@ import com.parkspace.finder.ui.payment.BookingDetails
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
 import com.parkspace.finder.ui.favourite.FavouriteScreen
+import com.parkspace.finder.ui.notification.NotificationScreen
 import com.parkspace.finder.ui.search.ParkingBookingScreen
 
 
@@ -190,7 +191,7 @@ fun AppNavHost(
                 FavouriteScreen(context = context, navController = navController)
             }
             composable(Screen.Notifications.route) {
-                NotifactionsScreen()
+                NotificationScreen()
             }
             composable(Screen.Account.route) {
                 HomeScreen(navController = navController, viewModel = viewModel)
