@@ -1,7 +1,11 @@
 package com.parkspace.finder.ui.home
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +18,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -33,6 +38,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.parkspace.finder.R
 import com.parkspace.finder.data.AuthViewModel
 
@@ -47,9 +53,17 @@ fun HomeScreen(viewModel: AuthViewModel?,
     var vehicleMake by remember { mutableStateOf("Toyota") }
     var vehicleModel by remember { mutableStateOf("Camry") }
     var licensePlate by remember { mutableStateOf("ABC1234") }
+    var profileImageResource by remember {
+        mutableStateOf<Uri?>(Uri.parse("android.resource://com.parkspace.finder/" + R.drawable.extend_time))
+    }
 
     var isEditMode by remember { mutableStateOf(false) }
-
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+        uri?.let {
+            // Update profile image resource with the selected image
+            profileImageResource = it
+        }
+    }
     Column(
         modifier = Modifier
             .padding(horizontal = 50.dp)
@@ -57,20 +71,48 @@ fun HomeScreen(viewModel: AuthViewModel?,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
+
         Box(
             modifier = Modifier
                 .size(120.dp)
-                .clip(CircleShape)
-                .background(Color.Gray),
+                .background(Color.Transparent), // Set background color to transparent
             contentAlignment = Alignment.Center
         ) {
-            // You can replace the placeholder image with your actual image resource
-            Image(
-                painter = painterResource(R.drawable.ic_launcher_foreground),
-                contentDescription = "Profile Image",
-                modifier = Modifier.size(100.dp)
-            )
+            // Your content here
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray),
+                contentAlignment = Alignment.Center
+            ) {
+                // Profile image
+                profileImageResource?.let { uri ->
+                    val painter = rememberAsyncImagePainter(uri)
+                    Image(
+                        painter = painter,
+                        contentDescription = "Profile Image",
+                        modifier = Modifier.size(100.dp)
+                    )
+                }
+            }
+            if (isEditMode) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_baseline_edit_24),
+                    contentDescription = "Edit Image",
+                    tint = Color.Unspecified,
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .size(24.dp)
+                        .align(Alignment.BottomEnd)
+                        .clickable {
+                            // Launch image selection intent
+                            launcher.launch("image/*")
+                        }
+                )
+            }
         }
+
         Spacer(modifier = Modifier.height(16.dp)) // Add some spacing between image and text fields
 
         TextField(
@@ -119,20 +161,6 @@ fun HomeScreen(viewModel: AuthViewModel?,
             colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
         )
 
-        TextField(
-            value = emergencyContact,
-            onValueChange = { if (isEditMode) emergencyContact = it },
-            label = { Text("Emergency Contact") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            enabled = isEditMode,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Phone,
-                imeAction = ImeAction.Next
-            ),
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
-        )
 
         TextField(
             value = vehicleMake,
@@ -181,7 +209,20 @@ fun HomeScreen(viewModel: AuthViewModel?,
             ),
             colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
         )
-
+        TextField(
+            value = emergencyContact,
+            onValueChange = { if (isEditMode) emergencyContact = it },
+            label = { Text("Emergency Contact") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            enabled = isEditMode,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Phone,
+                imeAction = ImeAction.Next
+            ),
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
+        )
         Button(
             onClick = {
                 if (isEditMode) {
