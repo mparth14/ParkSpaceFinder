@@ -73,7 +73,8 @@ fun ParkingSpotRow(
     distance: String,
     rating: Float,
     price: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onItemClick: () -> Unit
 ) {
     val painter: Painter = rememberImagePainter(
         data = imageResource,
@@ -184,6 +185,9 @@ fun ProductCard(
     productName: String,
     productDescription: String,
     productLocation: String,
+    navController: NavHostController,
+    onItemClick: () -> Unit
+
 ) {
     val painter: Painter = rememberImagePainter(
         data = productDescription,
@@ -195,7 +199,11 @@ fun ProductCard(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .padding(horizontal = 5.dp)
-            .background(Color.White)
+            .background(Color.White),
+        onClick = {
+            navController.navigate("parking_details/${productName}")
+        }
+
     ) {
         Column(
             modifier = Modifier.background(Color.White)
@@ -709,11 +717,19 @@ fun BrowseScreen(
                 val spaces = (resource as Resource.Success<List<ParkingSpace>>).result
             LazyRow {
                 items(spaces) { space ->
+
                     ProductCard(
                         price = space.hourlyPrice.toString(),
                         productName = space.name,
                         productDescription = space.imageURL,
-                        productLocation = String.format("%.2f", space.distanceFromCurrentLocation)
+                        productLocation = String.format("%.2f", space.distanceFromCurrentLocation),
+                        navController = navController,
+                        onItemClick = {
+                            val parkingSpaceName = space.name
+                            // Navigate to parking details page when clicked
+                            navController.navigate("parking_details/$parkingSpaceName")
+                        }
+
                     )
                     }
                 }
@@ -776,9 +792,12 @@ fun BrowseScreen(
                                 price = space.hourlyPrice.toString(),
                                 title = space.name.toString(),
                                 rating = 4.5f,
-                                distance = "${String.format("%.2f", space.distanceFromCurrentLocation)} km away · 27 left"
-                                //modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                distance = "${String.format("%.2f", space.distanceFromCurrentLocation)} km away · 27 left",
+                                onItemClick = {
+                                    val parkingSpaceName = space.name
+                                    navController.navigate("parking_details/$parkingSpaceName")}
                             )
+                                //modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         }
                     }
                 }
