@@ -1,6 +1,6 @@
 package com.parkspace.finder.navigation
 
-
+import BookingScreen
 import NotificationScreen
 import android.content.Context
 import android.os.Build
@@ -25,7 +25,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -41,6 +41,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parkspace.finder.FilterSection
 import com.parkspace.finder.data.AuthViewModel
+import com.parkspace.finder.ui.bookings.ActiveBookingScreen
+import com.parkspace.finder.ui.bookings.CancelledBookingScreen
+import com.parkspace.finder.ui.bookings.CompletedBookingScreen
 import com.parkspace.finder.data.ParkingSpaceRepository
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
@@ -79,8 +82,8 @@ fun AppNavHost(
 ) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val screensToShowNavbar = listOf(Screen.Browse, Screen.Bookings, Screen.Favorites, Screen.Notifications, Screen.Account)
-    var selectedScreen = rememberSaveable {
-        mutableStateOf(0)
+    val selectedScreen = rememberSaveable {
+        mutableIntStateOf(0)
     }
     val currentRoute = navBackStackEntry.value?.destination?.route
     Scaffold (
@@ -150,7 +153,19 @@ fun AppNavHost(
                 BrowseScreen(context  = context, navController = navController, parkingSpaceViewModel = parkingSpaceViewModel)
             }
             composable(Screen.Bookings.route) {
-                BookignsScreen(navController = navController)
+                BookingScreen(navController = navController)
+            }
+            composable("activeBookingScreen/{bookingId}") { backStackEntry ->
+                val bookingId = backStackEntry.arguments?.getString("bookingId")
+                ActiveBookingScreen(bookingId = bookingId)
+            }
+            composable("cancelledBookingScreen/{bookingId}") { backStackEntry ->
+                val bookingId = backStackEntry.arguments?.getString("bookingId")
+                CancelledBookingScreen(bookingId = bookingId)
+            }
+            composable("completedBookingScreen/{bookingId}") { backStackEntry ->
+                val bookingId = backStackEntry.arguments?.getString("bookingId")
+                CompletedBookingScreen(bookingId = bookingId)
             }
             composable(Screen.Favorites.route) {
                 FavouriteScreen(context = context, navController = navController)
@@ -190,12 +205,6 @@ fun AppNavHost(
     }
 
 }
-@Composable
-fun BookignsScreen(navController: NavHostController) {
-    Text(text = "Bookings")
-    // Payment screen content
-    // Navigate back to the previous screen after completing the payment
-}
 
 @Composable
 fun FavoritesScreen() {
@@ -204,13 +213,13 @@ fun FavoritesScreen() {
 }
 
 @Composable
-fun NotifactionsScreen() {
+fun NotificationsScreen() {
     Text(text = "Notifications")
     // Dashboard screen content
 }
 
 @Composable
-fun AccontScreen() {
+fun AccountScreen() {
     Text(text = "Account")
     // Notifications screen content
 }
