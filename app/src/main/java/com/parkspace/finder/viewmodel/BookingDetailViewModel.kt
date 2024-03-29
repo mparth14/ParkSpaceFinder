@@ -1,6 +1,7 @@
 package com.parkspace.finder.viewmodel
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
@@ -9,6 +10,9 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import com.parkspace.finder.data.BookingDetailRepository
 import com.parkspace.finder.data.BookingDetails
+import com.parkspace.finder.data.ParkingSpace
+import com.parkspace.finder.data.ParkingSpaceRepository
+import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.data.Resource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -40,7 +44,8 @@ fun generateQRCodeBitmap(qrData: String): ImageBitmap {
 @HiltViewModel(assistedFactory = BookingDetailViewModel.Factory::class)
 class BookingDetailViewModel @AssistedInject constructor(
     @Assisted private val bookingId: String,
-    private val bookingDetailRepository: BookingDetailRepository
+    private val bookingDetailRepository: BookingDetailRepository,
+    private val parkingSpaceRepository: ParkingSpaceRepository
 ) : ViewModel(){
 
     @AssistedFactory
@@ -51,6 +56,9 @@ class BookingDetailViewModel @AssistedInject constructor(
     private val _bookingDetail = MutableStateFlow<Resource<BookingDetails>?>(null)
     val bookingDetail: StateFlow<Resource<BookingDetails>?> = _bookingDetail
 
+    private val _bookedParkingSpace = MutableStateFlow<Resource<ParkingSpace?>?>(null)
+    val bookedParkingSpace: StateFlow<Resource<ParkingSpace?>?> = _bookedParkingSpace
+
     private val _qrCodeBitmap = MutableStateFlow<ImageBitmap?>(null)
     val qrCodeBitmap: StateFlow<ImageBitmap?> = _qrCodeBitmap
 
@@ -60,6 +68,11 @@ class BookingDetailViewModel @AssistedInject constructor(
             _bookingDetail.value = bookingDetailRepository.getBookingDetail(bookingId)
             if(_bookingDetail.value is Resource.Success){
                 val details = (_bookingDetail.value as Resource.Success).result
+                viewModelScope.launch {
+                    _bookedParkingSpace.value = Resource.Loading
+                    Log.d("BookingDetailViewModel", "Booking id: fetching parking with lot ${details.lotId}")
+                    _bookedParkingSpace.value =  parkingSpaceRepository.getParkingSpaceById(details.lotId)
+                }
                 val qrData = "Start Time: ${details.startTime}\n" +
                         "End Time: ${details.endTime}\n" +
                         "Spot Number: ${details.spotNumber}\n" +

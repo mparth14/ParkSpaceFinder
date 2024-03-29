@@ -19,7 +19,6 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
                         id = document.id // Set the document ID here
                     }
                 } catch (e: Exception) {
-                    Log.d("error", "Error converting document to ParkingSpace: ${e.message}")
                     null
                 }
             }
@@ -111,11 +110,12 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
 
     override suspend fun getParkingSpaceById(id: String): Resource<ParkingSpace?> {
         return try {
+            Log.d("ParkingSpaceRepositoryImpl", "Getting parking space by id: $id")
             val documentSnapshot = db.collection("parking-spaces")
                 .document(id)
                 .get()
                 .await()
-            Log.d("documentSnapshot", documentSnapshot.data.toString())
+            Log.d("ParkingSpaceRepositoryImpl", documentSnapshot.toString())
             val parkingSpace = documentSnapshot.toObject(ParkingSpace::class.java)?.apply {
                 this.id = documentSnapshot.id // Set the document ID here
             }

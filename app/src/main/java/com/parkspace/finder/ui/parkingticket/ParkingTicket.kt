@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -42,6 +43,7 @@ fun ParkingTicketScreen(navController: NavController, bookingId: String) {
     }
     val bookingDetail = bookingDetailViewModel.bookingDetail.collectAsState()
     val qrCodeBitmap = bookingDetailViewModel.qrCodeBitmap.collectAsState()
+    val bookedParkingSpace = bookingDetailViewModel.bookedParkingSpace.collectAsState()
     val context = LocalContext.current
     when(bookingDetail.value){
         is Resource.Success -> {
@@ -65,7 +67,7 @@ fun ParkingTicketScreen(navController: NavController, bookingId: String) {
                             )
                         },
                         navigationIcon = {
-                            IconButton(onClick = { }) {
+                            IconButton(onClick = { navController.popBackStack()}) {
                                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                             }
                         }
@@ -165,14 +167,26 @@ fun ParkingTicketScreen(navController: NavController, bookingId: String) {
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "Parking Lot ID",
+                                    text = "Parking Lot",
                                     style = MaterialTheme.typography.bodyMedium,
                                     fontWeight = FontWeight.Bold
                                 )
-                                Text(
-                                    text = details.lotId,
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
+                                when(bookedParkingSpace.value){
+                                    is Resource.Success -> {
+                                        val parkingSpace = (bookedParkingSpace.value as Resource.Success).result
+                                        Log.d("ParkingTicket", "Parking Space: ${parkingSpace}")
+                                        Text(
+                                            text = parkingSpace?.name ?: "",
+                                            style = MaterialTheme.typography.bodyLarge
+                                        )
+                                    }
+                                    else -> {
+                                        Text(
+                                            text = "Loading...",
+                                            style = MaterialTheme.typography.bodyLarge
+                                        )
+                                    }
+                                }
                             }
                         }
                         Row(
