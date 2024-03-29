@@ -40,19 +40,6 @@ class BookingViewModel @AssistedInject constructor(
         fun create(parkingId: String): BookingViewModel
     }
 
-//    companion object {
-//        @Suppress("UNCHECKED_CAST")
-//        fun provideFactory(
-//            assistedFactory: Factory, // this is the Factory interface
-//            // declared above
-//            parkingId: String
-//        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-//            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//                return assistedFactory.create(parkingId) as T
-//            }
-//        }
-//    }
-
     val vehicleOptions = listOf(
         "SUV",
         "Hatchback",
@@ -104,20 +91,3 @@ class BookingViewModel @AssistedInject constructor(
         _endTimeSelection.value = time
     }
 }
-
-//@EntryPoint
-//@InstallIn(ActivityComponent::class)
-//interface ViewModelFactoryProvider {
-//
-//    fun bookingViewModelFactory(): BookingViewModel.Factory
-//}
-//
-//@Composable
-//fun bookingViewModel(parkingId: String): BookingViewModel {
-//    val factory = EntryPointAccessors.fromActivity(
-//        LocalContext.current as ComponentActivity,
-//        ViewModelFactoryProvider::class.java
-//    ).bookingViewModelFactory()
-//
-//    return viewModel(factory = BookingViewModel.provideFactory(factory, parkingId))
-//}

@@ -73,7 +73,7 @@ fun PaymentScreen(navController: NavHostController, parkingId: String, backStack
                             )
                         },
                         navigationIcon = {
-                            IconButton(onClick = { /* Handle back navigation */ }) {
+                            IconButton(onClick = { navController.popBackStack()}) {
                                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                             }
                         }

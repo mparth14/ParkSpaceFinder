@@ -1,38 +1,34 @@
 package com.parkspace.finder.ui.booking
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.navigation.NavController
 
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.parkspace.finder.data.BookingViewModel
-import java.util.Date
 
 @Composable
-fun EnterDetailsContent(navController : NavController,parkingId: String,
-//                        bookingViewModel: BookingViewModel
+fun EnterDetailsContent(
+    navController: NavHostController, parkingId: String,
 ) {
-    val bookingViewModel = hiltViewModel<BookingViewModel, BookingViewModel.Factory>{
+    val bookingViewModel = hiltViewModel<BookingViewModel, BookingViewModel.Factory> {
         it.create(parkingId)
     }
-    Surface(modifier = Modifier
-        .fillMaxSize()
-        .background(color = MaterialTheme.colorScheme.surface)) {
-        Column(modifier = Modifier.padding(4.dp))  {
-            BookingHeader()
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.surface)
+    ) {
+        Column(modifier = Modifier.padding(4.dp)) {
+            BookingHeader(navController)
             VehicleSelection(bookingViewModel)
             DaySelector(bookingViewModel)
             TimeSelection(bookingViewModel)

@@ -18,15 +18,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.parkspace.finder.R
 
 @Composable
-fun BookingHeader() {
+fun BookingHeader(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = { navController.popBackStack() }) {
             Icon(
                 painter = painterResource(id = R.drawable.back_24),
                 contentDescription = "back icon"
@@ -39,10 +40,4 @@ fun BookingHeader() {
             fontWeight = FontWeight.Bold
         )
     }
-}
-
-@Preview
-@Composable
-fun BookingHeaderPreview() {
-    BookingHeader()
 }
