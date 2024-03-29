@@ -3,7 +3,6 @@ package com.parkspace.finder.navigation
 
 import NotificationScreen
 import android.content.Context
-import android.util.Log
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.material.icons.Icons
@@ -46,6 +45,7 @@ import com.parkspace.finder.data.ParkingSpaceRepository
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
+import com.parkspace.finder.ui.booking.EnterDetailsContent
 import com.parkspace.finder.ui.browse.BrowseScreen
 import com.parkspace.finder.ui.favourite.FavouriteScreen
 
@@ -53,10 +53,8 @@ import com.parkspace.finder.ui.locationPermission.LocationPermissionScreen
 import com.parkspace.finder.ui.onboarding.OnboardingScreen
 import com.parkspace.finder.ui.parkingDetail.ParkingDetailScreen
 import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
-import com.parkspace.finder.ui.payment.BookingDetails
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
-import com.parkspace.finder.ui.favourite.FavouriteScreen
 import com.parkspace.finder.ui.home.HomeScreen
 import com.parkspace.finder.ui.search.ParkingBookingScreen
 
@@ -136,51 +134,16 @@ fun AppNavHost(
                 HomeScreen(viewModel,navController = navController)
             }
             composable(ROUTE_PAYMENT) {
-                PaymentScreen(navController = navController)
+                val parkingId = it.arguments?.getString("parkingId") ?: "0"
+                PaymentScreen(navController = navController, parkingId = parkingId, it)
             }
-            composable(
-                route = "$ROUTE_PAYMENT_SUCCESS/{startTime}/{endTime}/{spotNumber}/{duration}/{price}/{lotName}",
-                arguments = listOf(
-                    navArgument("startTime") { type = NavType.StringType },
-                    navArgument("endTime") { type = NavType.StringType },
-                    navArgument("spotNumber") { type = NavType.StringType },
-                    navArgument("duration") { type = NavType.StringType },
-                    navArgument("price") { type = NavType.FloatType },
-                    navArgument("lotName") { type = NavType.StringType }
-                )
-            ) { backStackEntry ->
-                val bookingDetails = BookingDetails(
-                    startTime = backStackEntry.arguments?.getString("startTime") ?: "",
-                    endTime = backStackEntry.arguments?.getString("endTime") ?: "",
-                    spotNumber = backStackEntry.arguments?.getString("spotNumber") ?: "",
-                    duration = backStackEntry.arguments?.getString("duration") ?: "",
-                    price = backStackEntry.arguments?.getDouble("price") ?: 0.00,
-                    lotName = backStackEntry.arguments?.getString("lotName") ?: "",
-                )
-                PaymentSuccessScreen(navController = navController, bookingDetails = bookingDetails) {
-                }
+            composable(ROUTE_PAYMENT_SUCCESS) { backStackEntry ->
+
+                PaymentSuccessScreen(navController = navController, backStackEntry.arguments?.getString("bookingId") ?: "0")
             }
 
-            composable(
-                route = "$ROUTE_PARKING_TICKET/{startTime}/{endTime}/{spotNumber}/{duration}/{price}/{lotName}",
-                arguments = listOf(
-                    navArgument("startTime") { type = NavType.StringType },
-                    navArgument("endTime") { type = NavType.StringType },
-                    navArgument("spotNumber") { type = NavType.StringType },
-                    navArgument("duration") { type = NavType.StringType },
-                    navArgument("price") { type = NavType.FloatType },
-                    navArgument("lotName") { type = NavType.StringType }
-                )
-            ) { backStackEntry ->
-                ParkingTicketScreen(
-                    startTime = backStackEntry.arguments?.getString("startTime") ?: "",
-                    endTime = backStackEntry.arguments?.getString("endTime") ?: "",
-                    spotNumber = backStackEntry.arguments?.getString("spotNumber") ?: "",
-                    duration = backStackEntry.arguments?.getString("duration") ?: "",
-                    price = backStackEntry.arguments?.getDouble("price") ?: 0.0,
-                    lotName = backStackEntry.arguments?.getString("lotName") ?: "",
-                    onBackClicked = { navController.popBackStack() }
-                )
+            composable(ROUTE_PARKING_TICKET) { backStackEntry ->
+                ParkingTicketScreen(navController = navController, backStackEntry.arguments?.getString("bookingId") ?: "0")
             }
 
             composable(ROUTE_BROWSE) {
@@ -199,23 +162,22 @@ fun AppNavHost(
                 HomeScreen(navController = navController, viewModel = viewModel)
             }
             composable(
-                route = "parking_details/{name}",
-                arguments = listOf(navArgument("name") { type = NavType.StringType })
+                route = ROUTE_PARKING_DETAIL,
             ) { backStackEntry ->
-                val parkingSpaceName = backStackEntry.arguments?.getString("name") ?: ""
-                val viewModel: ParkingSpaceViewModel = hiltViewModel()
-                val parkingSpaceRepository: ParkingSpaceRepository = viewModel.repository // Assuming you have a property named repository in ParkingSpaceViewModel
+                val parkingId = backStackEntry.arguments?.getString("parkingId") ?: "0"
 
                 ParkingDetailScreen(
                     navController = navController,
-                    parkingSpaceName = parkingSpaceName,
-                    viewModel = viewModel,
-                    parkingSpaceRepository = parkingSpaceRepository
+                    parkingId = parkingId,
                 )
             }
 
             composable(ROUTE_REQUEST_LOCATION_PERMISSION) {
                 LocationPermissionScreen(navController = navController)
+            }
+            composable(ROUTE_ENTER_BOOKING_DETAIL_SCREEN) {
+                val parkingId = it.arguments?.getString("parkingId") ?: "0"
+                EnterDetailsContent(navController = navController, parkingId = parkingId)
             }
             composable(ROUTE_FILTER) {
                 FilterSection( parkingSpaceViewModel = parkingSpaceViewModel,navController = navController)

@@ -5,6 +5,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.parkspace.finder.data.AuthRepository
 import com.parkspace.finder.data.AuthRepositoryImpl
+import com.parkspace.finder.data.BookingDetailRepository
+import com.parkspace.finder.data.BookingDetailRepositoryImpl
 import com.parkspace.finder.data.DataStoreRepository
 import com.parkspace.finder.data.ParkingSpaceRepository
 import com.parkspace.finder.data.ParkingSpaceRepositoryImpl
@@ -32,4 +34,7 @@ class AppModule {
     @Provides
     @Singleton
     fun provideDataStoreRepository(@ApplicationContext context: Context): DataStoreRepository = DataStoreRepository(context)
+
+    @Provides
+    fun provideBookingDetailRepository(impl: BookingDetailRepositoryImpl): BookingDetailRepository = impl
 }

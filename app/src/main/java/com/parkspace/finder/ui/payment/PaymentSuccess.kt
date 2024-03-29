@@ -1,5 +1,7 @@
 package com.parkspace.finder.ui.payment
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -11,14 +13,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.parkspace.finder.data.Resource
 import com.parkspace.finder.navigation.ROUTE_PARKING_TICKET
+import com.parkspace.finder.viewmodel.BookingDetailViewModel
 
 @Composable
-fun PaymentSuccessScreen(navController : NavController, bookingDetails: BookingDetails, onViewTicketClick: () -> Unit) {
+fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
+    val bookingDetailViewModel = hiltViewModel<BookingDetailViewModel, BookingDetailViewModel.Factory> {
+        it.create(bookingId)
+    }
+    val bookedParkingSpace = bookingDetailViewModel.bookedParkingSpace.collectAsState()
+    val context = LocalContext.current
     Box(
         modifier = Modifier.fillMaxSize()
             .background(MaterialTheme.colorScheme.primary),
@@ -79,24 +90,38 @@ fun PaymentSuccessScreen(navController : NavController, bookingDetails: BookingD
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(
                     onClick = {
-                        navController.navigate(
-                            "$ROUTE_PARKING_TICKET/${bookingDetails.startTime}/${bookingDetails.endTime}/${bookingDetails.spotNumber}/${bookingDetails.duration}/${bookingDetails.price}/${bookingDetails.lotName}"
-                        )
+                        navController.navigate(ROUTE_PARKING_TICKET.replace("{bookingId}", bookingId))
                     }
                 ) {
                     Text(text = "View parking ticket",
                         fontWeight = FontWeight.Bold)
                 }
-                Button(
-                    onClick = {
-                        //
-                    },
-                    modifier = Modifier.background(Color.White)
-                ) {
-                    Text(text = "Let's go to parking!",
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                    )
+                when (bookedParkingSpace.value) {
+                    is Resource.Success -> {
+                        val space = (bookedParkingSpace.value as Resource.Success).result
+                        Button(
+                            onClick = {
+                                val latitude = space?.location?.latitude
+                                val longitude = space?.location?.longitude
+                                val gmmIntentUri =
+                                    Uri.parse("google.navigation:q=$latitude,$longitude")
+                                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                                mapIntent.setPackage("com.google.android.apps.maps")
+                                context.startActivity(mapIntent)
+                            }
+                        ) {
+                            Text("Let's go to parking!")
+                        }
+                    }
+                    else -> {
+                        Button(
+                            onClick = {
+                            },
+                            enabled = false
+                        ) {
+                            Text("Let's go to parking!")
+                        }
+                    }
                 }
             }
         }
