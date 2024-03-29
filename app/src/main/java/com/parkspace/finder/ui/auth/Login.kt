@@ -59,7 +59,6 @@ fun LoginScreen(viewModel: AuthViewModel?,navController: NavController) {
         val (refLoader) = createRefs()
         val spacing = MaterialTheme.spacing
 
-
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
