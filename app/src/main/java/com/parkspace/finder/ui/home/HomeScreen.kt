@@ -4,27 +4,23 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,11 +30,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
@@ -47,215 +40,119 @@ import com.parkspace.finder.data.AuthViewModel
 
 @Composable
 fun HomeScreen(viewModel: AuthViewModel?,
-               navController: NavController?
-) {
-    var name by remember { mutableStateOf(viewModel?.currentUser?.displayName ?: "") }
-    var email by remember { mutableStateOf(viewModel?.currentUser?.email ?: "") }
-    var phone by remember { mutableStateOf("") }
-    var emergencyContact by remember { mutableStateOf("") }
-    var vehicleMake by remember { mutableStateOf("") }
-    var vehicleModel by remember { mutableStateOf("") }
-    var licensePlate by remember { mutableStateOf("") }
-    var profileImageResource by remember {
-        mutableStateOf<Uri?>(Uri.parse("android.resource://com.parkspace.finder/" + R.drawable.user_profile))
-    }
-
-    var isEditMode by remember { mutableStateOf(false) }
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-        uri?.let {
-            // Update profile image resource with the selected image
-            profileImageResource = it
+               navController: NavController?) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        var name by remember { mutableStateOf(viewModel?.currentUser?.displayName ?: "") }
+        var email by remember { mutableStateOf(viewModel?.currentUser?.email ?: "") }
+        var phone by remember { mutableStateOf("") }
+        var emergencyContact by remember { mutableStateOf("") }
+        var vehicleMake by remember { mutableStateOf("") }
+        var vehicleModel by remember { mutableStateOf("") }
+        var licensePlate by remember { mutableStateOf("") }
+        var profileImageResource by remember {
+            mutableStateOf<Uri?>(Uri.parse("android.resource://com.parkspace.finder/" + R.drawable.user_profile))
         }
-    }
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 50.dp)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = stringResource(id = R.string.welcome_back),
-                style = MaterialTheme.typography.h5,
-                modifier = Modifier.padding(top = 20.dp),
-                color = MaterialTheme.colors.onSurface
-            )
-            Spacer(modifier = Modifier
-                .width(8.dp)
-                )
-            Text(
-                text = viewModel?.currentUser?.displayName ?: "",
-                modifier = Modifier
 
-                    .padding(top = 22.dp),
-                style = MaterialTheme.typography.h6,
-                color = MaterialTheme.colors.onSurface
-            )
-        }
-        Box(
-            modifier = Modifier
-                .size(120.dp)
-                .background(Color.Transparent), // Set background color to transparent
-            contentAlignment = Alignment.Center
-        ) {
-            // Your content here
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-                    .background(Color.Gray),
-                contentAlignment = Alignment.Center
-            ) {
-                // Profile image
-                profileImageResource?.let { uri ->
-                    val painter = rememberAsyncImagePainter(uri)
-                    Image(
-                        painter = painter,
-                        contentDescription = "Profile Image",
-                        modifier = Modifier.size(100.dp)
-                    )
-                }
+        val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                // Update profile image resource with the selected image
+                profileImageResource = it
             }
-            if (isEditMode) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_baseline_edit_24),
-                    contentDescription = "Edit Image",
-                    tint = Color.Unspecified,
+        }
+
+
+
+        // Top Section (replace with TopAppBar or Surface)
+        val dark_blue = colorResource(id = R.color.dark_blue)
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 600.dp), // Remove top padding
+            color = dark_blue,
+            shape = RoundedCornerShape(
+                topStart = CornerSize(0.dp),
+                topEnd = CornerSize(0.dp),
+                bottomStart = CornerSize(16.dp),
+                bottomEnd = CornerSize(16.dp)
+            ) // Adjust the corner radius as needed
+        ) {
+            //add the three dot menu
+            Column(modifier = Modifier.fillMaxSize()) {
+
+
+                Box(
                     modifier = Modifier
-                        .padding(4.dp)
-                        .size(24.dp)
-                        .align(Alignment.BottomEnd)
-                        .clickable {
-                            // Launch image selection intent
-                            launcher.launch("image/*")
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.TopEnd
+                ) {
+
+                    //three dot menu
+                    IconButton(
+                        onClick = { /* Handle menu click */ },
+                    ) {
+                        Icon(Icons.Filled.MoreVert, contentDescription = "Menu", tint = Color.White)
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalAlignment = Alignment.Bottom
+                    ) {                    Box(
+                        modifier = Modifier
+                    ) {
+                        //profile_picture
+                        profileImageResource?.let { uri ->
+                            val painter = rememberAsyncImagePainter(uri)
+                            Image(
+                                painter = painter,
+                                contentDescription = "Profile Image",
+                                modifier = Modifier.size(100.dp)
+                                    .clip(CircleShape),// Apply circular clipping
+                            )
                         }
-                )
-            }
-        }
+                        //edit image
+                        Icon(
+                            painter = painterResource(id = R.drawable.edit_image_icon),
+                            contentDescription = "Edit Image",
+                            tint = Color.Unspecified,
+                            modifier = Modifier
+                                .padding(start = 4.dp, bottom = 4.dp, end = 0.dp)
+                                .size(24.dp)
+                                .align(Alignment.BottomEnd)
+                                .clickable {
+                                    // Launch image selection intent
+                                    launcher.launch("image/*")
+                                }
+                                .clip(CircleShape) // Apply circular clipping
 
-        Spacer(modifier = Modifier.height(16.dp)) // Add some spacing between image and text fields
+                        )
 
-        TextField(
-            value = name,
-            onValueChange = { if (isEditMode) name = it },
-            label = { Text("Name") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-                enabled = isEditMode,
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Words,
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            ),
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
-        )
+                    }
 
-        TextField(
-            value = email,
-            onValueChange = { if (isEditMode) email = it },
-            label = { Text("Email") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            enabled = false, // Email field should always be non-editable
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
-            ),
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
-        )
+                        //box  - place its elements in a column
+                        //add_name
+                        //add_email
+                        Column(
+                            modifier = Modifier.padding(top = 110.dp, start = 20.dp)
+                        ) {
+                            // Add name text
+                            Text(
+                                text = viewModel?.currentUser?.displayName ?: "",
 
-        TextField(
-            value = phone,
-            onValueChange = { if (isEditMode) phone = it },
-            label = { Text("Phone") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            enabled = isEditMode,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Phone,
-                imeAction = ImeAction.Next
-            ),
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
-        )
-
-
-        TextField(
-            value = vehicleMake,
-            onValueChange = { if (isEditMode) vehicleMake = it },
-            label = { Text("Vehicle Make") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            enabled = isEditMode,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                capitalization = KeyboardCapitalization.Sentences,
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            ),
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
-        )
-
-        TextField(
-            value = vehicleModel,
-            onValueChange = { if (isEditMode) vehicleModel = it },
-            label = { Text("Vehicle Model") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            enabled = isEditMode,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                capitalization = KeyboardCapitalization.Sentences,
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            ),
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
-        )
-
-        TextField(
-            value = licensePlate,
-            onValueChange = { if (isEditMode) licensePlate = it },
-            label = { Text("License Plate") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            enabled = isEditMode,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                capitalization = KeyboardCapitalization.None,
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done
-            ),
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
-        )
-        TextField(
-            value = emergencyContact,
-            onValueChange = { if (isEditMode) emergencyContact = it },
-            label = { Text("Emergency Contact") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            enabled = isEditMode,
-            keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Phone,
-                imeAction = ImeAction.Next
-            ),
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = MaterialTheme.colors.surface)
-        )
-        Button(
-            onClick = {
-                if (isEditMode) {
-                    // Save action
-                    isEditMode = false // Switch back to view mode after saving
-                } else {
-                    isEditMode = true // Switch to edit mode
+                                style = MaterialTheme.typography.h6,
+                                color = Color.White // Changed to onSurface
+                            )
+                            // Add email text
+                            Text(
+                                text = viewModel?.currentUser?.email ?: "",
+                                style = MaterialTheme.typography.body1,
+                                modifier = Modifier.weight(0.7f),
+                                color = Color.White // Changed to onSurface
+                            )
+                        }
+                    }
                 }
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(if (isEditMode) "Save" else "Edit")
+            }
         }
     }
 }
+
