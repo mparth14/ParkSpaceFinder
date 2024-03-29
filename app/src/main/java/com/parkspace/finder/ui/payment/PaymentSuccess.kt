@@ -79,9 +79,7 @@ fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(
                     onClick = {
-                        navController.navigate(
-                            "$ROUTE_PARKING_TICKET/123"
-                        )
+                        navController.navigate(ROUTE_PARKING_TICKET.replace("{bookingId}", bookingId))
                     }
                 ) {
                     Text(text = "View parking ticket",

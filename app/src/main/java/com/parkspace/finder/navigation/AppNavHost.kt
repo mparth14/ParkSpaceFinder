@@ -1,7 +1,6 @@
 package com.parkspace.finder.navigation
 
 import android.content.Context
-import android.util.Log
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.material.icons.Icons
@@ -40,7 +39,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parkspace.finder.FilterSection
 import com.parkspace.finder.data.AuthViewModel
-import com.parkspace.finder.data.BookingViewModel
 import com.parkspace.finder.data.ParkingSpaceRepository
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
@@ -53,10 +51,8 @@ import com.parkspace.finder.ui.locationPermission.LocationPermissionScreen
 import com.parkspace.finder.ui.onboarding.OnboardingScreen
 import com.parkspace.finder.ui.parkingDetail.ParkingDetailScreen
 import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
-import com.parkspace.finder.ui.payment.BookingDetails
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
-import com.parkspace.finder.ui.favourite.FavouriteScreen
 import com.parkspace.finder.ui.search.ParkingBookingScreen
 
 

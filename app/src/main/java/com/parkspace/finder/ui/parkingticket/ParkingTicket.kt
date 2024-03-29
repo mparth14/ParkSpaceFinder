@@ -26,196 +26,211 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
+import com.parkspace.finder.data.BookingViewModel
+import com.parkspace.finder.data.Resource
+import com.parkspace.finder.viewmodel.BookingDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParkingTicketScreen(navController: NavController, bookingId: String) {
+    val bookingDetailViewModel = hiltViewModel<BookingDetailViewModel, BookingDetailViewModel.Factory> {
+        it.create(bookingId)
+    }
+    val bookingDetail = bookingDetailViewModel.bookingDetail.collectAsState()
+    val qrCodeBitmap = bookingDetailViewModel.qrCodeBitmap.collectAsState()
     val context = LocalContext.current
-    val startTime = "10:00 PM"
-    val endTime = "12:00 PM"
-    val spotNumber = "B20"
-    val duration = "2 hours"
-    val price = 100.0
-    val lotName = "Mic Mac Mall Parking"
-
-    val priceUpdated = price.toFloat()
-    val qrData = "Start Time: $startTime\n" +
-            "End Time: $endTime\n" +
-            "Spot Number: $spotNumber\n" +
-            "Duration: $duration\n" +
-            "Price: $priceUpdated\n" +
-            "Lot Name: $lotName"
-    val qrCodeBitmap by remember { mutableStateOf(generateQRCodeBitmap(qrData, context)) }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black,
-                    navigationIconContentColor = Color.Black,
-                    actionIconContentColor = Color.Black
-                ),
-                title = {
-                    Text(
-                        text = "Parking Ticket",
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 30.dp)
+    when(bookingDetail.value){
+        is Resource.Success -> {
+            var details = (bookingDetail.value as Resource.Success).result
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.White,
+                            titleContentColor = Color.Black,
+                            navigationIconContentColor = Color.Black,
+                            actionIconContentColor = Color.Black
+                        ),
+                        title = {
+                            Text(
+                                text = "Parking Ticket",
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 30.dp)
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = { }) {
+                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            }
+                        }
                     )
                 },
-                navigationIcon = {
-                    IconButton(onClick = { }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                content = {
+                    Column(
+                        modifier = Modifier
+                            .padding(it)
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Text(
+                            text = "Scan QR Code to Enter",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Box(
+                            modifier = Modifier
+                                .size(350.dp)
+                                .background(color = Color.White, shape = RoundedCornerShape(8.dp))
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                bitmap = qrCodeBitmap.value!!,
+                                contentDescription = "QR Code"
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Start Time",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = details.startTime,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "End Time",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = details.endTime,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Spot Number",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = details.spotNumber,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Price",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "${details.price}",
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Parking Lot ID",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = details.lotId,
+                                    style = MaterialTheme.typography.bodyLarge
+                                )
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Button(
+                                onClick = {
+                                    val qrData = "Start Time: ${details.startTime}\n" +
+                                            "End Time: ${details.endTime}\n" +
+                                            "Spot Number: ${details.spotNumber}\n" +
+                                            "Price: ${details.price}\n" +
+                                            "Lot id: ${details.lotId}\n" +
+                                            "Booking id: ${details.id}\n"
+                                    qrCodeBitmap.value?.let { it1 -> shareTicketInfo(qrData, it1.asAndroidBitmap(), context) }
+                                }
+                            ) {
+                                Text("Share")
+                            }
+                            Button(
+                                onClick = {
+
+                                },
+                                modifier = Modifier.background(Color.White)
+                            ) {
+                                Text("Let's go to Parking", color = Color.White)
+                            }
+                        }
                     }
                 }
             )
-        },
-        content = {
-            Column(
-                modifier = Modifier
-                    .padding(it)
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+        }
+        is Resource.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Scan QR Code to Enter",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Box(
-                    modifier = Modifier
-                        .size(350.dp)
-                        .background(color = Color.White, shape = RoundedCornerShape(8.dp))
-                        .padding(16.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        bitmap = qrCodeBitmap,
-                        contentDescription = "QR Code"
-                    )
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Start Time",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = startTime,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "End Time",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = endTime,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Spot Number",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = spotNumber,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Duration",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = duration,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Price",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "$price",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Parking Lot",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = lotName,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Button(
-                        onClick = {
-                            shareTicketInfo(qrData, qrCodeBitmap.asAndroidBitmap(), context)
-                        }
-                    ) {
-                        Text("Share")
-                    }
-                    Button(
-                        onClick = {
-
-                        },
-                        modifier = Modifier.background(Color.White)
-                    ) {
-                        Text("Let's go to Parking", color = Color.White)
-                    }
-                }
+                CircularProgressIndicator()
             }
         }
-    )
+        is Resource.Failure -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Error")
+            }
+        }
+        else -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Error")
+            }
+        }
+    }
+
 }
 
 fun shareTicketInfo(ticketData: String, qrBitmap: Bitmap, context: Context) {
@@ -250,23 +265,4 @@ fun saveQRCodeImage(bitmap: Bitmap, context: Context): Uri {
     }
 
     return imageUri
-}
-
-
-fun generateQRCodeBitmap(qrData: String, context: android.content.Context): ImageBitmap {
-    val writer = QRCodeWriter()
-    val bitMatrix = writer.encode(qrData, BarcodeFormat.QR_CODE, 700, 700)
-    val width = bitMatrix.width
-    val height = bitMatrix.height
-    val bmp = android.graphics.Bitmap.createBitmap(width, height, android.graphics.Bitmap.Config.RGB_565)
-    for (x in 0 until width) {
-        for (y in 0 until height) {
-            bmp.setPixel(
-                x,
-                y,
-                if (bitMatrix[x, y]) android.graphics.Color.BLACK else android.graphics.Color.WHITE
-            )
-        }
-    }
-    return bmp.asImageBitmap()
 }

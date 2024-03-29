@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.parkspace.finder.data.utils.formatTime
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -30,7 +31,9 @@ import javax.inject.Inject
 @HiltViewModel(assistedFactory = BookingViewModel.Factory::class)
 class BookingViewModel @AssistedInject constructor(
     @Assisted private val parkingId: String,
-    private val parkingSpaceRepository: ParkingSpaceRepository
+    private val parkingSpaceRepository: ParkingSpaceRepository,
+    private val bookingDetailRepository: BookingDetailRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _parkingSpace = MutableStateFlow<Resource<ParkingSpace?>?>(null)
@@ -60,6 +63,9 @@ class BookingViewModel @AssistedInject constructor(
     private var _endTimeSelection = MutableStateFlow<TimePickerState>(TimePickerState(LocalTime.now().plusHours(2).hour, LocalTime.now().plusHours(2).minute, true))
     var endTimeSelection: StateFlow<TimePickerState> = _endTimeSelection
 
+    private var _bookingStatus = MutableStateFlow<Resource<String>?>(null)
+    val bookingStatus: StateFlow<Resource<String>?> = _bookingStatus
+
     init {
         viewModelScope.launch {
             _parkingSpace.value = Resource.Loading
@@ -81,13 +87,21 @@ class BookingViewModel @AssistedInject constructor(
         _dateSelection.value = date
     }
 
-    fun onStartTimeSelectionChanged(time: TimePickerState) {
-        Log.d("BookingViewModel", "Time selection changed to $time")
-        _startTimeSelection.value = time
-    }
-
-    fun onEndTimeSelectionChanged(time: TimePickerState) {
-        Log.d("BookingViewModel", "Time selection changed to $time")
-        _endTimeSelection.value = time
+    fun saveBooking() {
+        val space = (parkingSpace.value as Resource.Success<ParkingSpace?>).result
+        val bookingDetails = BookingDetails(
+            startTime = formatTime(startTimeSelection.value),
+            endTime = formatTime(endTimeSelection.value),
+            spotNumber = (1..10000).random().toString(),
+            price = space?.hourlyPrice ?: 0.0,
+            lotId = space?.id ?: "",
+            bookingDate = dateSelection.value.toString(),
+            vehicleType = vehicleSelection.value,
+            userEmail = authRepository.currentUser?.email ?: ""
+        )
+        viewModelScope.launch {
+            _bookingStatus.value = Resource.Loading
+            _bookingStatus.value =  bookingDetailRepository.makeBooking(bookingDetails)
+        }
     }
 }
