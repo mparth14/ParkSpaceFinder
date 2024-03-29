@@ -25,6 +25,7 @@ import com.parkspace.finder.R
 import com.parkspace.finder.data.Resource
 import com.parkspace.finder.navigation.ROUTE_PARKING_TICKET
 import com.parkspace.finder.viewmodel.BookingDetailViewModel
+import kotlinx.coroutines.launch
 import nl.dionsegijn.konfetti.compose.KonfettiView
 
 @Composable
@@ -36,9 +37,16 @@ fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
     val context = LocalContext.current
     var confettiAnimationEnabled by remember { mutableStateOf(false) }
     val mediaPlayer = remember { MediaPlayer.create(context, R.raw.successsound) }
-    DisposableEffect(Unit) {
-        mediaPlayer.start()
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            mediaPlayer.start()
+        }
         confettiAnimationEnabled = true
+    }
+
+    DisposableEffect(Unit) {
         onDispose {
             mediaPlayer.release()
             confettiAnimationEnabled = false

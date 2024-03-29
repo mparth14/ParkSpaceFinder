@@ -99,12 +99,6 @@ fun MapContent(location: LatLng) {
     }
 }
 
-
-//@Composable
-//fun ParkingDetailScreen(navController: NavHostController) {
-//    Text(text = "Parking Detail Screen")
-//}
-
 @Composable
 fun Rating(rating: Int) {
     Row(
