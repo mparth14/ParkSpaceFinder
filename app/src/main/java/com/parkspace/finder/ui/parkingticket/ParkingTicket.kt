@@ -8,31 +8,28 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Directions
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.outlined.Directions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.zxing.BarcodeFormat
-import com.google.zxing.qrcode.QRCodeWriter
-import com.parkspace.finder.data.BookingViewModel
 import com.parkspace.finder.data.Resource
 import com.parkspace.finder.navigation.ROUTE_BROWSE
 import com.parkspace.finder.viewmodel.BookingDetailViewModel
@@ -50,193 +47,194 @@ fun ParkingTicketScreen(navController: NavController, bookingId: String) {
     val context = LocalContext.current
     when (bookingDetail.value) {
         is Resource.Success -> {
-            var details = (bookingDetail.value as Resource.Success).result
-            Scaffold(topBar = {
-                TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black,
-                    navigationIconContentColor = Color.Black,
-                    actionIconContentColor = Color.Black
-                ), title = {
-                    Text(
-                        text = "Parking Ticket",
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 30.dp)
-                    )
-                }, navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                })
-            }, content = {
-                Column(
-                    modifier = Modifier
-                        .padding(it)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Text(
-                        text = "Scan QR Code to Enter",
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Box(
-                        modifier = Modifier
-                            .size(350.dp)
-                            .background(color = Color.White, shape = RoundedCornerShape(8.dp))
-                            .padding(16.dp), contentAlignment = Alignment.Center
-                    ) {
-                        Image(
-                            bitmap = qrCodeBitmap.value!!, contentDescription = "QR Code"
+            val details = (bookingDetail.value as Resource.Success).result
+            Scaffold(
+                topBar = {
+                    CenterAlignedTopAppBar(
+                        title = {
+                            Text(
+                                text = "Parking Ticket",
+                                fontWeight = FontWeight.Bold
+                            )
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                            }
+                        },
+                        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            titleContentColor = MaterialTheme.colorScheme.onBackground
                         )
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                    )
+                },
+                content = { innerPadding ->
+                    Column(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .fillMaxSize()
+                            .background(Color.Transparent)
+                            .padding(horizontal = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            shape = RoundedCornerShape(16.dp),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.White,
+                            )
                         ) {
-                            Text(
-                                text = "Start Time",
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = details.startTime,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "End Time",
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = details.endTime,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "Spot Number",
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = details.spotNumber,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "Price",
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = "${details.price}",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "Parking Lot",
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            when (bookedParkingSpace.value) {
-                                is Resource.Success -> {
-                                    val parkingSpace =
-                                        (bookedParkingSpace.value as Resource.Success).result
-                                    Log.d("ParkingTicket", "Parking Space: ${parkingSpace}")
-                                    Text(
-                                        text = parkingSpace?.name ?: "",
-                                        style = MaterialTheme.typography.bodyLarge
-                                    )
-                                }
-
-                                else -> {
-                                    Text(
-                                        text = "Loading...",
-                                        style = MaterialTheme.typography.bodyLarge
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        Button(onClick = {
-                            val qrData =
-                                "Start Time: ${details.startTime}\n" + "End Time: ${details.endTime}\n" + "Spot Number: ${details.spotNumber}\n" + "Price: ${details.price}\n" + "Lot id: ${details.lotId}\n" + "Booking id: ${details.id}\n"
-                            qrCodeBitmap.value?.let { it1 ->
-                                shareTicketInfo(
-                                    qrData, it1.asAndroidBitmap(), context
+                            Column(
+                                modifier = Modifier.padding(10.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Text(
+                                    text = "Scan QR Code to Enter",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.padding(horizontal = 24.dp)
                                 )
-                            }
-                        }) {
-                            Text("Share")
-                        }
-                        when (bookedParkingSpace.value) {
-                            is Resource.Success -> {
-                                val space = (bookedParkingSpace.value as Resource.Success).result
-                                Button(onClick = {
-                                    val latitude = space?.location?.latitude
-                                    val longitude = space?.location?.longitude
-                                    val gmmIntentUri =
-                                        Uri.parse("google.navigation:q=$latitude,$longitude")
-                                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                                    mapIntent.setPackage("com.google.android.apps.maps")
-                                    context.startActivity(mapIntent)
-                                }) {
-                                    Text("Open in Maps")
-                                }
-                            }
-
-                            else -> {
-                                Button(
-                                    onClick = {}, enabled = false
+                                Spacer(modifier = Modifier.height(8.dp))
+                                qrCodeBitmap.value?.let { Image(
+                                    bitmap = qrCodeBitmap.value!!, contentDescription = "QR Code"
+                                )
+                                } ?: CircularProgressIndicator() // Show a loader while the QR code is null
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(vertical = 16.dp),
+                                    thickness = 1.dp,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                                )
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
                                 ) {
-                                    Text("Open in Maps")
+                                    TimeSlot(title = "Start", time = details.startTime)
+                                    TimeSlot(title = "End", time = details.endTime)
+                                }
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text("The Floor", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                        Text("1st floor") // Use actual data or state variable
+                                    }
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text("Spot", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                        Text(details.spotNumber)
+                                    }
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text("Duration", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                                        Text("2 hours") // Use actual data or state variable
+                                    }
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 8.dp),
+                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                ) {
+                                    OutlinedButton(
+                                        onClick = {
+                                            val qrData =
+                                                "Start Time: ${details.startTime}\n" + "End Time: ${details.endTime}\n" + "Spot Number: ${details.spotNumber}\n" + "Price: ${details.price}\n" + "Lot id: ${details.lotId}\n" + "Booking id: ${details.id}\n"
+                                            qrCodeBitmap.value?.let { it1 ->
+                                                shareTicketInfo(
+                                                    qrData, it1.asAndroidBitmap(), context
+                                                )
+                                            }
+                                        },
+                                        modifier = Modifier.weight(1f),
+                                        shape = RoundedCornerShape(25),
+                                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                                        colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary)
+                                    ) {
+                                        Icon(Icons.Filled.Share, contentDescription = "Share")
+                                        Text(" Share")
+                                    }
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    when (bookedParkingSpace.value) {
+                                        is Resource.Success -> {
+                                            val space =
+                                                (bookedParkingSpace.value as Resource.Success).result
+                                            OutlinedButton(
+                                                onClick = {
+                                                    val latitude = space?.location?.latitude
+                                                    val longitude = space?.location?.longitude
+                                                    val gmmIntentUri =
+                                                        Uri.parse("google.navigation:q=$latitude,$longitude")
+                                                    val mapIntent =
+                                                        Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                                                    mapIntent.setPackage("com.google.android.apps.maps")
+                                                    context.startActivity(mapIntent)
+                                                },
+                                                modifier = Modifier.weight(1f),
+                                                shape = RoundedCornerShape(25),
+                                                border = BorderStroke(
+                                                    1.dp,
+                                                    MaterialTheme.colorScheme.primary
+                                                ),
+                                                colors = ButtonDefaults.outlinedButtonColors(
+                                                    contentColor = MaterialTheme.colorScheme.primary
+                                                )
+                                            ) {
+                                                Icon(
+                                                    Icons.Filled.Directions,
+                                                    contentDescription = "Directions"
+                                                )
+                                                Text(" Directions")
+                                            }
+                                        }
+
+                                        else -> {
+                                            OutlinedButton(
+                                                onClick = { /* TODO: Implement download functionality */ },
+                                                modifier = Modifier.weight(1f),
+                                                shape = RoundedCornerShape(25),
+                                                border = BorderStroke(
+                                                    1.dp,
+                                                    MaterialTheme.colorScheme.primary
+                                                ),
+                                                colors = ButtonDefaults.outlinedButtonColors(
+                                                    contentColor = MaterialTheme.colorScheme.primary
+                                                )
+                                            ) {
+                                                Icon(
+                                                    Icons.Outlined.Directions,
+                                                    contentDescription = "Directions"
+                                                )
+                                                Text(" Directions")
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
-                    Button(onClick = {
-                        navController.navigate(ROUTE_BROWSE){
-                            popUpTo(ROUTE_BROWSE) {
-                                inclusive = true
-                            }
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Button(
+                            onClick = {
+                                    navController.navigate(ROUTE_BROWSE){
+                                        popUpTo(ROUTE_BROWSE) {
+                                        inclusive = true
+                                    }
+                                }
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 10.dp)
+                                .height(50.dp),
+                            shape = RoundedCornerShape(25), // Rounded corners for the button
+                            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                        ) {
+                            Text("Let's Go To Home", color = Color.White)
                         }
-                    }, modifier = Modifier.padding(16.dp).fillMaxWidth()) {
-                        Text(text = "Go to home screen")
                     }
                 }
-            })
+            )
         }
 
         is Resource.Loading -> {
@@ -264,6 +262,19 @@ fun ParkingTicketScreen(navController: NavController, bookingId: String) {
         }
     }
 
+}
+
+@Composable
+fun TimeSlot(title: String, time: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+        Text(
+            time,
+            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Light),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(4.dp)
+        )
+    }
 }
 
 fun shareTicketInfo(ticketData: String, qrBitmap: Bitmap, context: Context) {
