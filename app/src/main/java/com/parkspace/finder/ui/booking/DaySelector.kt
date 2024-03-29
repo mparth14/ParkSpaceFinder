@@ -190,9 +190,3 @@ fun DaySelector(bookingViewModel: BookingViewModel) {
     }
 
 }
-
-@Preview
-@Composable
-fun DaySelectorPreview() {
-    DaySelector(bookingViewModel = BookingViewModel())
-}

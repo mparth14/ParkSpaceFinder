@@ -108,4 +108,19 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
             null
         }
     }
+
+    override suspend fun getParkingSpaceById(id: String): Resource<ParkingSpace?> {
+        return try {
+            val documentSnapshot = db.collection("parking-spaces")
+                .document(id)
+                .get()
+                .await()
+            Log.d("documentSnapshot", documentSnapshot.data.toString())
+            val parkingSpace = documentSnapshot.toObject(ParkingSpace::class.java)
+            Resource.Success(parkingSpace)
+        } catch (e: Exception) {
+            Log.e("ParkingSpaceRepository", "Error getting parking space by id: $id", e)
+            Resource.Failure(e)
+        }
+    }
 }

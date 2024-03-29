@@ -17,12 +17,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.parkspace.finder.data.BookingViewModel
+import com.parkspace.finder.data.bookingViewModel
 import java.util.Date
 
 @Composable
-fun EnterDetailsContent(navController : NavController,parkingId: String, bookingViewModel: BookingViewModel = hiltViewModel()) {
-
+fun EnterDetailsContent(navController : NavController,parkingId: String) {
+    val bookingViewModel = bookingViewModel(parkingId = parkingId)
     Surface(modifier = Modifier
         .fillMaxSize()
         .background(color = MaterialTheme.colorScheme.surface)) {
@@ -32,6 +34,6 @@ fun EnterDetailsContent(navController : NavController,parkingId: String, booking
             DaySelector(bookingViewModel)
             TimeSelection(bookingViewModel)
         }
-        PriceBottomBar()
+        PriceBottomBar(bookingViewModel)
     }
 }

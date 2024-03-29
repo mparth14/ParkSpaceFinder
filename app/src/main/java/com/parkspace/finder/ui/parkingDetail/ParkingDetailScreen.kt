@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -132,6 +134,7 @@ fun ParkingDetailScreen(
     val locationName = remember { mutableStateOf("Loading...") }
 
     LaunchedEffect(key1 = parkingSpaceName) {
+
         // Fetch parking space details when the parkingSpaceName changes
         coroutineScope.launch {
             try {
@@ -152,6 +155,7 @@ fun ParkingDetailScreen(
 //            }
         }
     }
+    val scrollState = rememberScrollState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -187,7 +191,9 @@ fun ParkingDetailScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .verticalScroll(scrollState)
+                ,
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {

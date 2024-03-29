@@ -7,4 +7,6 @@ interface ParkingSpaceRepository {
     suspend fun getParkingSpacesSortedByRating(descending: Boolean): Resource<List<ParkingSpace>>
     suspend fun searchParkingSpaces(query: String): Resource<List<ParkingSpace>>
     suspend fun getParkingSpaceByName(name: String): ParkingSpace?
+
+    suspend fun getParkingSpaceById(id: String): Resource<ParkingSpace?>
 }

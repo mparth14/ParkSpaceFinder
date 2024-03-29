@@ -1,19 +1,56 @@
 package com.parkspace.finder.data
 
+import android.app.Activity
 import android.util.Log
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TimePickerState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
 
 @OptIn(ExperimentalMaterial3Api::class)
-@HiltViewModel
-class BookingViewModel @Inject constructor() : ViewModel() {
+class BookingViewModel @AssistedInject constructor(
+    @Assisted private val parkingId: String,
+    private val parkingSpaceRepository: ParkingSpaceRepository
+) : ViewModel() {
+
+    private val _parkingSpace = MutableStateFlow<Resource<ParkingSpace?>?>(null)
+    val parkingSpace: StateFlow<Resource<ParkingSpace?>?> = _parkingSpace
+    @AssistedFactory
+    interface Factory {
+        fun create(parkingId: String): BookingViewModel
+    }
+
+    companion object {
+        @Suppress("UNCHECKED_CAST")
+        fun provideFactory(
+            assistedFactory: Factory, // this is the Factory interface
+            // declared above
+            parkingId: String
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(parkingId) as T
+            }
+        }
+    }
+
     val vehicleOptions = listOf(
         "SUV",
         "Hatchback",
@@ -35,6 +72,10 @@ class BookingViewModel @Inject constructor() : ViewModel() {
     var endTimeSelection: StateFlow<TimePickerState> = _endTimeSelection
 
     init {
+        viewModelScope.launch {
+            _parkingSpace.value = Resource.Loading
+            _parkingSpace.value  = parkingSpaceRepository.getParkingSpaceById(parkingId)
+        }
         _vehicleSelection.value = vehicleOptions[0]
         _dateSelection.value = LocalDate.now()
         _startTimeSelection.value = TimePickerState(LocalTime.now().hour, LocalTime.now().minute, true)
@@ -60,4 +101,21 @@ class BookingViewModel @Inject constructor() : ViewModel() {
         Log.d("BookingViewModel", "Time selection changed to $time")
         _endTimeSelection.value = time
     }
+}
+
+@EntryPoint
+@InstallIn(ActivityComponent::class)
+interface ViewModelFactoryProvider {
+
+    fun bookingViewModelFactory(): BookingViewModel.Factory
+}
+
+@Composable
+fun bookingViewModel(parkingId: String): BookingViewModel {
+    val factory = EntryPointAccessors.fromActivity(
+        LocalContext.current as Activity,
+        ViewModelFactoryProvider::class.java
+    ).bookingViewModelFactory()
+
+    return viewModel(factory = BookingViewModel.provideFactory(factory, parkingId))
 }

@@ -40,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parkspace.finder.FilterSection
 import com.parkspace.finder.data.AuthViewModel
+import com.parkspace.finder.data.BookingViewModel
 import com.parkspace.finder.data.ParkingSpaceRepository
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
@@ -217,7 +218,6 @@ fun AppNavHost(
             }
             composable(ROUTE_ENTER_BOOKING_DETAIL_SCREEN) {
                 EnterDetailsContent(navController = navController, it.arguments?.getString("parkingId") ?: "0")
-
             }
             composable(ROUTE_FILTER) {
                 FilterSection( parkingSpaceViewModel = parkingSpaceViewModel,navController = navController)
