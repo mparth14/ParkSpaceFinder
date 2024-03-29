@@ -202,7 +202,7 @@ fun ProductCard(
             .padding(horizontal = 5.dp)
             .background(Color.White),
         onClick = {
-            navController.navigate("parking/$productId/book")
+            navController.navigate("parking/$productId")
         }
 
     ) {
@@ -730,7 +730,7 @@ fun BrowseScreen(
                             val parkingSpaceId = space.id
                             // Navigate to parking details page when clicked
 //                            navController.navigate("parking_details/$parkingSpaceName")
-                            navController.navigate("parking/$parkingSpaceId/book")
+                            navController.navigate("parking/$parkingSpaceId")
                         }
 
                     )

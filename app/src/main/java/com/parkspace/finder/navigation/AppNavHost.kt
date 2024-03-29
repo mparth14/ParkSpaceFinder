@@ -162,18 +162,13 @@ fun AppNavHost(
                 HomeScreen(navController = navController, viewModel = viewModel)
             }
             composable(
-                route = "parking_details/{name}",
-                arguments = listOf(navArgument("name") { type = NavType.StringType })
+                route = ROUTE_PARKING_DETAIL,
             ) { backStackEntry ->
-                val parkingSpaceName = backStackEntry.arguments?.getString("name") ?: ""
-                val viewModel: ParkingSpaceViewModel = hiltViewModel()
-                val parkingSpaceRepository: ParkingSpaceRepository = viewModel.repository // Assuming you have a property named repository in ParkingSpaceViewModel
+                val parkingId = backStackEntry.arguments?.getString("parkingId") ?: "0"
 
                 ParkingDetailScreen(
                     navController = navController,
-                    parkingSpaceName = parkingSpaceName,
-                    viewModel = viewModel,
-                    parkingSpaceRepository = parkingSpaceRepository
+                    parkingId = parkingId,
                 )
             }
 
