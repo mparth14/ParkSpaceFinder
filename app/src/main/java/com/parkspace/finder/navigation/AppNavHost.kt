@@ -48,6 +48,7 @@ import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
 import com.parkspace.finder.ui.payment.BookingDetails
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
+import com.parkspace.finder.ui.timerParkingBooking.ParkingTimerScreen
 
 
 sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon: ImageVector?, val title: String) {
@@ -124,6 +125,21 @@ fun AppNavHost(
             }
             composable(ROUTE_PAYMENT) {
                 PaymentScreen(navController = navController)
+            }
+            composable(
+                route = "$ROUTE_PARKING_TIMER/{startTime}/{endTime}/{spotNumber}",
+                arguments = listOf(
+                    navArgument("startTime") { type = NavType.StringType },
+                    navArgument("endTime") { type = NavType.StringType },
+                    navArgument("spotNumber") { type = NavType.StringType }
+                )
+            ) { backStackEntry ->
+                ParkingTimerScreen(
+                    navController = navController,
+                    startTime = backStackEntry.arguments?.getString("startTime") ?: "01:00 PM",
+                    endTime = backStackEntry.arguments?.getString("endTime") ?: "11:00 PM",
+                    spotNumber = backStackEntry.arguments?.getString("spotNumber") ?: "B20"
+                )
             }
             composable(
                 route = "$ROUTE_PAYMENT_SUCCESS/{startTime}/{endTime}/{spotNumber}/{duration}/{price}/{lotName}",
