@@ -54,6 +54,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.firebase:firebase-perf-ktx:20.5.2")
     var compose_version = "1.0.0-beta01"
     implementation("io.coil-kt:coil-compose:1.4.0")
     implementation("androidx.core:core-ktx:1.12.0")

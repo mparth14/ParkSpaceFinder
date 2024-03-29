@@ -34,6 +34,7 @@ import com.parkspace.finder.data.AuthViewModel
 import com.parkspace.finder.ui.theme.*
 import androidx.compose.ui.text.input.ImeAction
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.perf.util.Timer
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import java.util.*
 
@@ -92,7 +93,7 @@ fun ParkingBookingScreen(navController: NavHostController,parkingSpaceViewModel:
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    ,
+                ,
             ) {
                 BasicTextField(
                     value = searchQuery,
