@@ -1,5 +1,7 @@
 package com.parkspace.finder.navigation
 
+
+import NotificationScreen
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -46,13 +48,14 @@ import com.parkspace.finder.ui.auth.SignupScreen
 import com.parkspace.finder.ui.booking.EnterDetailsContent
 import com.parkspace.finder.ui.browse.BrowseScreen
 import com.parkspace.finder.ui.favourite.FavouriteScreen
-import com.parkspace.finder.ui.home.HomeScreen
+
 import com.parkspace.finder.ui.locationPermission.LocationPermissionScreen
 import com.parkspace.finder.ui.onboarding.OnboardingScreen
 import com.parkspace.finder.ui.parkingDetail.ParkingDetailScreen
 import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
+import com.parkspace.finder.ui.home.HomeScreen
 import com.parkspace.finder.ui.search.ParkingBookingScreen
 
 
@@ -153,7 +156,7 @@ fun AppNavHost(
                 FavouriteScreen(context = context, navController = navController)
             }
             composable(Screen.Notifications.route) {
-                NotifactionsScreen()
+                NotificationScreen()
             }
             composable(Screen.Account.route) {
                 HomeScreen(navController = navController, viewModel = viewModel)
