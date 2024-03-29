@@ -22,6 +22,7 @@ import com.parkspace.finder.data.AuthViewModel
 import com.parkspace.finder.navigation.ROUTE_LOGIN
 import com.parkspace.finder.ui.theme.spacing
 
+
 @Composable
 fun HomeScreen(viewModel: AuthViewModel?,navController: NavHostController) {
     val spacing = MaterialTheme.spacing
