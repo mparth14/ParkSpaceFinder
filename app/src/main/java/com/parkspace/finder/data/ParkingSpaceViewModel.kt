@@ -31,8 +31,12 @@ import javax.inject.Inject
 @HiltViewModel
 class ParkingSpaceViewModel @Inject constructor(
     @ApplicationContext context: Context,
-    private val repository: ParkingSpaceRepository
+    val repository: ParkingSpaceRepository
 ) : ViewModel() {
+    suspend fun getParkingSpaceByName(name: String): ParkingSpace? {
+        // Assuming repository provides a function to fetch by name
+        return repository.getParkingSpaceByName(name)
+    }
     private val _parkingSpaces = MutableStateFlow<Resource<List<ParkingSpace>>?>(null)
     val parkingSpaces: StateFlow<Resource<List<ParkingSpace>>?> = _parkingSpaces
     private val _filterOptions = MutableStateFlow(FilterOptions())

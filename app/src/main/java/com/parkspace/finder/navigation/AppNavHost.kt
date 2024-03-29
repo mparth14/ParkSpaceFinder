@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -39,6 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parkspace.finder.FilterSection
 import com.parkspace.finder.data.AuthViewModel
+import com.parkspace.finder.data.ParkingSpaceRepository
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
@@ -193,9 +195,22 @@ fun AppNavHost(
             composable(Screen.Account.route) {
                 HomeScreen(navController = navController, viewModel = viewModel)
             }
-            composable(ROUTE_PARKING_DETAIL) {
-                ParkingDetailScreen(navController = navController)
+            composable(
+                route = "parking_details/{name}",
+                arguments = listOf(navArgument("name") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val parkingSpaceName = backStackEntry.arguments?.getString("name") ?: ""
+                val viewModel: ParkingSpaceViewModel = hiltViewModel()
+                val parkingSpaceRepository: ParkingSpaceRepository = viewModel.repository // Assuming you have a property named repository in ParkingSpaceViewModel
+
+                ParkingDetailScreen(
+                    navController = navController,
+                    parkingSpaceName = parkingSpaceName,
+                    viewModel = viewModel,
+                    parkingSpaceRepository = parkingSpaceRepository
+                )
             }
+
             composable(ROUTE_REQUEST_LOCATION_PERMISSION) {
                 LocationPermissionScreen(navController = navController)
             }
