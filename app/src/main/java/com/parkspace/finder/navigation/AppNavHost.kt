@@ -2,6 +2,8 @@ package com.parkspace.finder.navigation
 
 import android.content.Context
 import android.util.Log
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
@@ -36,12 +38,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.parkspace.finder.FilterSection
 import com.parkspace.finder.data.AuthViewModel
 import com.parkspace.finder.data.ParkingSpaceRepository
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
 import com.parkspace.finder.ui.browse.BrowseScreen
+import com.parkspace.finder.ui.favourite.FavouriteScreen
 import com.parkspace.finder.ui.home.HomeScreen
 import com.parkspace.finder.ui.locationPermission.LocationPermissionScreen
 import com.parkspace.finder.ui.onboarding.OnboardingScreen
@@ -50,6 +54,8 @@ import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
 import com.parkspace.finder.ui.payment.BookingDetails
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
+import com.parkspace.finder.ui.favourite.FavouriteScreen
+import com.parkspace.finder.ui.search.ParkingBookingScreen
 
 
 sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon: ImageVector?, val title: String) {
@@ -59,10 +65,12 @@ sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon:
     object Notifications : Screen("notifications", Icons.Outlined.Notifications, Icons.Filled.Notifications, "Notifications")
     object Account : Screen("account", Icons.Outlined.AccountCircle, Icons.Filled.AccountCircle, "Account")
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavHost(
     viewModel: AuthViewModel,
+    parkingSpaceViewModel: ParkingSpaceViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = ROUTE_ONBOARDING,
@@ -173,13 +181,13 @@ fun AppNavHost(
             }
 
             composable(ROUTE_BROWSE) {
-                BrowseScreen(context = context, navController = navController)
+                BrowseScreen(context  = context, navController = navController, parkingSpaceViewModel = parkingSpaceViewModel)
             }
             composable(Screen.Bookings.route) {
                 BookignsScreen(navController = navController)
             }
             composable(Screen.Favorites.route) {
-                FavoritesScreen()
+                FavouriteScreen(context = context, navController = navController)
             }
             composable(Screen.Notifications.route) {
                 NotifactionsScreen()
@@ -206,6 +214,13 @@ fun AppNavHost(
             composable(ROUTE_REQUEST_LOCATION_PERMISSION) {
                 LocationPermissionScreen(navController = navController)
             }
+            composable(ROUTE_FILTER) {
+                FilterSection( parkingSpaceViewModel = parkingSpaceViewModel,navController = navController)
+            }
+            composable(ROUTE_SEARCH) {
+                ParkingBookingScreen(navController = navController,parkingSpaceViewModel = parkingSpaceViewModel)
+            }
+
         }
     }
 
