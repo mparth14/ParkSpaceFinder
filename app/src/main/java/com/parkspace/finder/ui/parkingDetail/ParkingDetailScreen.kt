@@ -38,8 +38,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.parkspace.finder.R
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.ParkingSpaceRepository
@@ -47,6 +53,49 @@ import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.browse.Rating
 import kotlinx.coroutines.launch
 import java.util.Locale
+
+@Composable
+fun MapContent(location: LatLng) {
+    val context = LocalContext.current
+    var mapView: MapView? by remember { mutableStateOf(null) }
+    var googleMap: GoogleMap? by remember { mutableStateOf(null) }
+
+    LaunchedEffect(location) {
+        val mapViewInstance = MapView(context).apply {
+            getMapAsync { map ->
+                googleMap = map
+                // Add marker to the map
+                googleMap?.addMarker(
+                    MarkerOptions()
+                        .position(location)
+                        .title("Parking Space")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                )
+            }
+        }
+        mapViewInstance.onCreate(null)
+        launch { mapViewInstance.onResume() }
+        mapView = mapViewInstance
+    }
+
+    AndroidView({ mapView!! }) { mapView ->
+        mapView.getMapAsync { map ->
+            googleMap = map
+            // Add marker to the map
+            googleMap?.addMarker(
+                MarkerOptions()
+                    .position(location)
+                    .title("Parking Space")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+            )
+        }
+    }
+}
+
+
+
+
+
 
 //@Composable
 //fun ParkingDetailScreen(navController: NavHostController) {
@@ -192,8 +241,7 @@ fun ParkingDetailScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
-                    .verticalScroll(scrollState)
-                ,
+                    .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
@@ -335,6 +383,7 @@ fun ParkingDetailScreen(
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                     AddressBar(context = LocalContext.current, parkingSpace = space)
+                    //MapContent(location = LatLng(parkingSpace?.location?.latitude ?: 0.0, parkingSpace?.location?.longitude ?: 0.0))
                     Button(
                         onClick = { navController.navigate("ROUTE_BOOKINGS") },
                         modifier = Modifier
