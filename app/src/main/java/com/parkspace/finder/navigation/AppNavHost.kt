@@ -51,6 +51,8 @@ import com.parkspace.finder.ui.auth.SignupScreen
 import com.parkspace.finder.ui.booking.EnterDetailsContent
 import com.parkspace.finder.ui.browse.BrowseScreen
 import com.parkspace.finder.ui.favourite.FavouriteScreen
+import com.parkspace.finder.ui.bookings.ReviewBookingScreen
+import com.parkspace.finder.ui.bookings.BookingDetails
 
 import com.parkspace.finder.ui.locationPermission.LocationPermissionScreen
 import com.parkspace.finder.ui.onboarding.OnboardingScreen
@@ -168,7 +170,23 @@ fun AppNavHost(
                 CompletedBookingScreen(bookingId = bookingId)
             }
             composable(Screen.Favorites.route) {
-                FavouriteScreen(context = context, navController = navController)
+                ReviewBookingScreen(
+                    bookingDetails = BookingDetails(
+                        date = "March 16, 2024",
+                        time = "10:00 AM",
+                        parkingSpace = "Parking Space A",
+                        vehicleType = "HatchBack Sedan",
+                        distance = "0.31 mi",
+                        address = "123 Main Street, City, Country",
+                        paymentMethod = "Credit Card",
+                        paymentAmount = "$100",
+                        paymentTotal = "$100",
+                        redeemedCode = "20% off"
+                    ),
+                    onConfirmClick = {
+                        // Handle the confirmation action here
+                    }
+                )
             }
             composable(Screen.Notifications.route) {
                 NotificationScreen()
