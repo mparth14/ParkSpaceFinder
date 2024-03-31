@@ -17,57 +17,14 @@ ParkSpace was built using the following technologies:
 
 ## Application Sneak Peek
 
-<div style="display: flex; flex-wrap: wrap; justify-content: space-around;">
-    <div style="width: 30%; margin: 10px;">
-        <img src="app/public/screenshots/HomeScreen.png" alt="HomeScreen" style="width: 100%;">
-        <p style="text-align: center;">Home Screen</p>
-    </div>
-    <div style="width: 30%; margin: 10px;">
-        <img src="app/public/screenshots/SearchScreen.png" alt="SearchScreen" style="width: 100%;">
-        <p style="text-align: center;">Search Screen</p>
-    </div>
-    <div style="width: 30%; margin: 10px;">
-        <img src="app/public/screenshots/ParkingDetails.png" alt="ParkingDetails" style="width: 100%;">
-        <p style="text-align: center;">Parking Details</p>
-    </div>
-    <div style="width: 30%; margin: 10px;">
-        <img src="app/public/screenshots/BookingForm.png" alt="BookingForm" style="width: 100%;">
-        <p style="text-align: center;">Booking Form</p>
-    </div>
-    <div style="width: 30%; margin: 10px;">
-        <img src="app/public/screenshots/BookingSummaryScreen.png" alt="BookingSummaryScreen" style="width: 100%;">
-        <p style="text-align: center;">Booking Summary Screen</p>
-    </div>
-    <div style="width: 30%; margin: 10px;">
-        <img src="app/public/screenshots/ParkingTicketScreen.png" alt="ParkingTicketScreen" style="width: 100%;">
-        <p style="text-align: center;">Parking Ticket Screen</p>
-    </div>
-    <div style="width: 30%; margin: 10px;">
-        <img src="app/public/screenshots/NavigationFeature.png" alt="NavigationFeature" style="width: 100%;">
-        <p style="text-align: center;">Navigation Feature</p>
-    </div>
-    <div style="width: 30%; margin: 10px;">
-        <img src="app/public/screenshots/ActiveBookings.png" alt="ActiveBookings" style="width: 100%;">
-        <p style="text-align: center;">Active Bookings Screen</p>
-    </div>
-    <div style="width: 30%; margin: 10px;">
-        <img src="app/public/screenshots/ActiveBookingDetailsScreen.png" alt="ActiveBookingDetailsScreen" style="width: 100%;">
-        <p style="text-align: center;">Active Booking Details Screen</p>
-    </div>
-    <div style="width: 30%; margin: 10px;">
-        <img src="app/public/screenshots/TimerScreen.png" alt="TimerScreen" style="width: 100%;">
-        <p style="text-align: center;">Timer Screen</p>
-    </div>
-    <div style="width: 30%; margin: 10px;">
-        <img src="app/public/screenshots/UserProfileScreen.png" alt="UserProfileScreen" style="width: 100%;">
-        <p style="text-align: center;">User Profile Screen</p>
-    </div>
-    <div style="width: 30%; margin: 10px;">
-        <img src="app/public/screenshots/NotificationsScreen.png" alt="NotificationsScreen" style="width: 100%;">
-        <p style="text-align: center;">Notifications Screen</p>
-    </div>
-    
-</div>
+
+|   |   |   |
+|---|---|---|
+| ![Home Screen](app/public/screenshots/HomeScreen.png){ width=100px } <br> Home Screen | ![Search Screen](app/public/screenshots/SearchScreen.png){ width=100px } <br> Search Screen | ![Parking Details](app/public/screenshots/ParkingDetails.png){ width=100px } <br> Parking Details |
+| ![Booking Form](app/public/screenshots/BookingForm.png){ width=100px } <br> Booking Form | ![Booking Summary Screen](app/public/screenshots/BookingSummaryScreen.png){ width=100px } <br> Booking Summary Screen | ![Parking Ticket Screen](app/public/screenshots/ParkingTicketScreen.png){ width=100px } <br> Parking Ticket Screen |
+| ![Navigation Feature](app/public/screenshots/NavigationFeature.png){ width=100px } <br> Navigation Feature | ![Active Bookings Screen](app/public/screenshots/ActiveBookings.png){ width=100px } <br> Active Bookings Screen | ![Active Booking Details Screen](app/public/screenshots/ActiveBookingDetailsScreen.png){ width=100px } <br> Active Booking Details Screen |
+| ![Timer Screen](app/public/screenshots/TimerScreen.png){ width=100px } <br> Timer Screen | ![User Profile Screen](app/public/screenshots/UserProfileScreen.png){ width=100px } <br> User Profile Screen | ![Notifications Screen](app/public/screenshots/NotificationsScreen.png){ width=100px } <br> Notifications Screen |
+
 
 ## ParkSpace - Build Instructions
 
