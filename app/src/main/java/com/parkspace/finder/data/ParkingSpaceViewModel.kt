@@ -111,7 +111,9 @@ class ParkingSpaceViewModel @Inject constructor(
         if (!_needsLocationPermission.value) {
             startLocationUpdates()
         }
+        _needsLocationPermission
     }
+
 
     fun sortParkingSpaces() {
         _parkingSpaces.value?.let { spaces ->
@@ -193,7 +195,10 @@ class ParkingSpaceViewModel @Inject constructor(
             }
         }
 
-
+        fun setLocationPermissionGranted() {
+            _needsLocationPermission.value = false
+            startLocationUpdates()
+        }
 
 
 

@@ -182,7 +182,7 @@ fun AppNavHost(
             }
 
             composable(ROUTE_REQUEST_LOCATION_PERMISSION) {
-                LocationPermissionScreen(navController = navController)
+                LocationPermissionScreen(navController = navController, parkingSpaceViewModel = parkingSpaceViewModel)
             }
             composable(ROUTE_ENTER_BOOKING_DETAIL_SCREEN) {
                 val parkingId = it.arguments?.getString("parkingId") ?: "0"
