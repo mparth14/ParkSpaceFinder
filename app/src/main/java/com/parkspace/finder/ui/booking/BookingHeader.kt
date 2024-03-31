@@ -22,7 +22,7 @@ import androidx.navigation.NavHostController
 import com.parkspace.finder.R
 
 @Composable
-fun BookingHeader(navController: NavHostController) {
+fun BookingHeader(navController: NavHostController, headerText: String = "Enter Details") {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -34,7 +34,7 @@ fun BookingHeader(navController: NavHostController) {
             )
         }
         Text(
-            text = "Enter Details",
+            text = headerText,
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.align(Alignment.Center),
             fontWeight = FontWeight.Bold
