@@ -1,6 +1,7 @@
 package com.parkspace.finder.ui.timerParkingBooking
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,9 +22,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.parkspace.finder.R
+import com.parkspace.finder.data.Resource
+import com.parkspace.finder.viewmodel.BookingDetailViewModel
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,205 +37,231 @@ import java.util.concurrent.TimeUnit
 @Composable
 fun ParkingTimerScreen(
     navController: NavHostController,
-    startTime: String,
-    endTime: String,
-    spotNumber: String
+    bookingId: String,
 ) {
+    val bookingDetailViewModel =
+        hiltViewModel<BookingDetailViewModel, BookingDetailViewModel.Factory> {
+            it.create(bookingId)
+        }
 
-    val startTimeMillis = convertTimeStringToMillis(startTime)
-    val endTimeMillis = convertTimeStringToMillis(endTime)
-    val totalTimeMillis = if (endTimeMillis > startTimeMillis) {
-        endTimeMillis - startTimeMillis
-    } else {
-        // This case handles when the end time is on the next day.
-        val oneDayMillis = TimeUnit.DAYS.toMillis(1)
-        (endTimeMillis + oneDayMillis) - startTimeMillis
-    }
-
-    var remainingTimeMillis by remember { mutableStateOf(totalTimeMillis) }
-    val totalTime = String.format("%02d hours", TimeUnit.MILLISECONDS.toHours(totalTimeMillis))
-
-    LaunchedEffect(key1 = Unit) { // Using Unit for simplicity; consider using proper keys for production
-        while (true) {
-            val nowMillis = System.currentTimeMillis()
-            remainingTimeMillis = maxOf(0, endTimeMillis - nowMillis)
-
-            if (remainingTimeMillis <= 0) {
-                break
+    val bookingDetails = bookingDetailViewModel.bookingDetail.collectAsState()
+    val parkingSpace = bookingDetailViewModel.bookedParkingSpace.collectAsState()
+    when (bookingDetails.value) {
+        is Resource.Success -> {
+            val bookingDetail = (bookingDetails.value as Resource.Success).result
+            val startTimeMillis = convertTimeStringToMillis(bookingDetail.startTime)
+            val endTimeMillis = convertTimeStringToMillis(bookingDetail.endTime)
+            val totalTimeMillis = if (endTimeMillis > startTimeMillis) {
+                endTimeMillis - startTimeMillis
+            } else {
+                // This case handles when the end time is on the next day.
+                val oneDayMillis = TimeUnit.DAYS.toMillis(1)
+                (endTimeMillis + oneDayMillis) - startTimeMillis
             }
 
-            delay(1000) // Refresh every second
-        }
-    }
+            var remainingTimeMillis by remember { mutableStateOf(totalTimeMillis) }
+            val totalTime =
+                String.format("%02d hours", TimeUnit.MILLISECONDS.toHours(totalTimeMillis))
 
+            LaunchedEffect(key1 = Unit) { // Using Unit for simplicity; consider using proper keys for production
+                while (true) {
+                    val nowMillis = System.currentTimeMillis()
+                    remainingTimeMillis = maxOf(0, endTimeMillis - nowMillis)
 
-    val remainingTime = calculateRemainingTime(remainingTimeMillis)
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Parking Timer") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    if (remainingTimeMillis <= 0) {
+                        break
                     }
-                }
-            )
-        },
-        content = {
-            // Parking details content
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = Color.LightGray, shape = RoundedCornerShape(8.dp))
-                    .padding(6.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box (
-                    modifier = Modifier
-                        .size(400.dp)
-                        .padding(0.dp),
-                    contentAlignment = Alignment.Center
-                ){
-                    // Draw countdown ring
-                    CountdownRing(
-                        remainingTimeMillis = remainingTimeMillis,
-                        totalTimeMillis = endTimeMillis - convertTimeStringToMillis(startTime)
-                    )
-                    // Image in the center
-                    Image(
-                        painter = painterResource(id = R.drawable.car_timer), // Replace with your image resource
-                        contentDescription = "Center Image",
-                        modifier = Modifier.size(100.dp) // Adjust size as needed
-                    )
-                }
-                // Display remaining time
-                Text(
-                    text = remainingTime,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(top = 10.dp), // Add padding if needed
-                    style = MaterialTheme.typography.headlineLarge
-                )
 
-                // Display remaining time label
-                Text(
-                    text = "Remaining parking time",
-                    modifier = Modifier.padding(bottom = 20.dp), // Add padding if needed
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                    delay(1000) // Refresh every second
+                }
+            }
 
-                // second box
-                Box(
-                    modifier = Modifier
-                        .size(width = 360.dp, height = 200.dp)
-                        .background(color = Color.White, shape = RoundedCornerShape(8.dp))
-                        .padding(10.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column {
-                        Row {
-                            Text(
-                                text = "Spot $spotNumber",
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(end = 16.dp), // Add spacing between texts
-                                style = MaterialTheme.typography.titleLarge
+
+            val remainingTime = calculateRemainingTime(remainingTimeMillis)
+
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text(text = "Parking Timer") },
+                        navigationIcon = {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                            }
+                        }
+                    )
+                },
+                content = {
+                    // Parking details content
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = Color.LightGray, shape = RoundedCornerShape(8.dp))
+                            .padding(6.dp),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(400.dp)
+                                .padding(0.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            // Draw countdown ring
+                            CountdownRing(
+                                remainingTimeMillis = remainingTimeMillis,
+                                totalTimeMillis = totalTimeMillis
+                            )
+                            // Image in the center
+                            Image(
+                                painter = painterResource(id = R.drawable.car_timer), // Replace with your image resource
+                                contentDescription = "Center Image",
+                                modifier = Modifier.size(100.dp) // Adjust size as needed
                             )
                         }
-                        Spacer(modifier = Modifier.height(30.dp))
-                        Row(
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
+                        // Display remaining time
+                        Text(
+                            text = remainingTime,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .padding(top = 10.dp), // Add padding if needed
+                            style = MaterialTheme.typography.headlineLarge
+                        )
+
+                        // Display remaining time label
+                        Text(
+                            text = "Remaining parking time",
+                            modifier = Modifier.padding(bottom = 20.dp), // Add padding if needed
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+
+                        // second box
+                        Box(
+                            modifier = Modifier
+                                .size(width = 360.dp, height = 200.dp)
+                                .background(color = Color.White, shape = RoundedCornerShape(8.dp))
+                                .padding(10.dp),
+                            contentAlignment = Alignment.Center
                         ) {
-                            // First column
                             Column {
                                 Row {
                                     Text(
-                                        text = "Start Time:",
-                                        modifier = Modifier.padding(end = 16.dp), // Add spacing between texts
-                                        style = MaterialTheme.typography.bodyLarge
-                                    )
-                                }
-                                Row {
-                                    Text(
-                                        text = startTime,
+                                        text = "Spot ${bookingDetail.spotNumber}",
                                         fontWeight = FontWeight.Bold,
                                         modifier = Modifier.padding(end = 16.dp), // Add spacing between texts
-                                        style = MaterialTheme.typography.bodyLarge
+                                        style = MaterialTheme.typography.titleLarge
                                     )
                                 }
-                            }
-                            // Second column
-                            Column {
-                                Row {
-                                    Box(
-                                        modifier = Modifier
-                                            .padding(2.dp) // Add padding around the text
-                                            .border(
-                                                2.dp,
-                                                MaterialTheme.colorScheme.primary,
-                                                RoundedCornerShape(16.dp)
-                                            ) // Add border with purple color and rounded corners
-                                    ) {
-                                        Text(
-                                            text = totalTime,
-                                            modifier = Modifier.padding(6.dp), // Add padding inside the border
-                                            style = MaterialTheme.typography.bodyLarge
-                                        )
+                                Spacer(modifier = Modifier.height(30.dp))
+                                Row(
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    // First column
+                                    Column {
+                                        Row {
+                                            Text(
+                                                text = "Start Time:",
+                                                modifier = Modifier.padding(end = 16.dp), // Add spacing between texts
+                                                style = MaterialTheme.typography.bodyLarge
+                                            )
+                                        }
+                                        Row {
+                                            Text(
+                                                text = bookingDetail.startTime,
+                                                fontWeight = FontWeight.Bold,
+                                                modifier = Modifier.padding(end = 16.dp), // Add spacing between texts
+                                                style = MaterialTheme.typography.bodyLarge
+                                            )
+                                        }
+                                    }
+                                    // Second column
+                                    Column {
+                                        Row {
+                                            Box(
+                                                modifier = Modifier
+                                                    .padding(2.dp) // Add padding around the text
+                                                    .border(
+                                                        2.dp,
+                                                        MaterialTheme.colorScheme.primary,
+                                                        RoundedCornerShape(16.dp)
+                                                    ) // Add border with purple color and rounded corners
+                                            ) {
+                                                Text(
+                                                    text = totalTime,
+                                                    modifier = Modifier.padding(6.dp), // Add padding inside the border
+                                                    style = MaterialTheme.typography.bodyLarge
+                                                )
+                                            }
+                                        }
+                                    }
+                                    // Third column
+                                    Column {
+                                        Row {
+                                            Text(
+                                                text = "End Time:",
+                                                modifier = Modifier.padding(end = 16.dp), // Add spacing between texts
+                                                style = MaterialTheme.typography.bodyLarge
+                                            )
+                                        }
+                                        Row {
+                                            Text(
+                                                text = bookingDetail.endTime,
+                                                fontWeight = FontWeight.Bold,
+                                                modifier = Modifier.padding(end = 16.dp), // Add spacing between texts
+                                                style = MaterialTheme.typography.bodyLarge
+                                            )
+                                        }
                                     }
                                 }
                             }
-                            // Third column
-                            Column {
-                                Row {
-                                    Text(
-                                        text = "End Time:",
-                                        modifier = Modifier.padding(end = 16.dp), // Add spacing between texts
-                                        style = MaterialTheme.typography.bodyLarge
-                                    )
-                                }
-                                Row {
-                                    Text(
-                                        text = endTime,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.padding(end = 16.dp), // Add spacing between texts
-                                        style = MaterialTheme.typography.bodyLarge
-                                    )
-                                }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .size(width = 360.dp, height = 200.dp)
+                                .padding(10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Button(
+                                onClick = { },
+                                shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier.size(width = 150.dp, height = 50.dp)
+                            ) {
+                                Text("Extend Time")
+                            }
+                            Spacer(modifier = Modifier.width(7.dp)) // Add space between buttons
+                            Button(
+                                onClick = { },
+                                shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier.size(width = 150.dp, height = 50.dp)
+                            ) {
+                                Text("End Parking")
                             }
                         }
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .size(width = 360.dp, height = 200.dp)
-                        .padding(10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ){
-                    Button(onClick = {  },
-                        shape = RoundedCornerShape(10.dp),
-                        modifier = Modifier.size(width = 150.dp, height = 50.dp)) {
-                        Text("Extend Time")
-                    }
-                    Spacer(modifier = Modifier.width(7.dp)) // Add space between buttons
-                    Button(onClick = { },
-                        shape = RoundedCornerShape(10.dp),
-                        modifier = Modifier.size(width = 150.dp, height = 50.dp)
-                    ) {
-                        Text("End Parking")
-                    }
-                }
 
-            }
+                    }
+                }
+            )
         }
-    )
+
+        is Resource.Loading -> {
+            Text(text = "Loading...")
+        }
+
+        is Resource.Failure -> {
+            Text(text = "Error")
+        }
+
+        else -> {
+            Text(text = "Error")
+        }
+    }
 }
 
 @Composable
 fun CountdownRing(remainingTimeMillis: Long, totalTimeMillis: Long) {
     val progress = (totalTimeMillis - remainingTimeMillis).toFloat() / totalTimeMillis.toFloat()
+    Log.d("CountdownRing", "Progress: $progress, Remaining: $remainingTimeMillis, Total: $totalTimeMillis")
     val strokeWidth = 15.dp
     val remainingColor = MaterialTheme.colorScheme.primary // Color for the remaining time
     val elapsedColor = Color.Gray // Color for the elapsed time
@@ -242,18 +272,18 @@ fun CountdownRing(remainingTimeMillis: Long, totalTimeMillis: Long) {
 
         // Draw the elapsed time arc (in grey)
         drawArc(
-            color = elapsedColor,
+            color = remainingColor,
             startAngle = startAngle,
-            sweepAngle = fullCircle * progress,
+            sweepAngle = fullCircle,
             useCenter = false,
             style = Stroke(width = strokeWidth.toPx())
         )
 
         // Draw the remaining time arc (in green)
         drawArc(
-            color = remainingColor,
-            startAngle = startAngle + (fullCircle * progress),
-            sweepAngle = fullCircle * (1 - progress),
+            color = elapsedColor,
+            startAngle = startAngle,
+            sweepAngle = -fullCircle * progress,
             useCenter = false,
             style = Stroke(width = strokeWidth.toPx())
         )
@@ -289,15 +319,4 @@ fun convertTimeStringToMillis(timeString: String): Long {
     }
 
     return parsedCalendar.timeInMillis
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewParkingTimerScreen() {
-    ParkingTimerScreen(
-        navController = rememberNavController(),
-        startTime = "01:00 PM",
-        endTime = "12:00 AM",
-        spotNumber = "B20"
-    )
 }

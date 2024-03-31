@@ -404,11 +404,3 @@ fun ParkingDetailScreen(
         }
     )
 }
-@Preview
-@Composable
-fun PreviewParkingDetailScreen() {
-    ParkingDetailScreen(
-        navController = rememberNavController(),
-        parkingSpaceName = "Sample Parking Space"
-    )
-}

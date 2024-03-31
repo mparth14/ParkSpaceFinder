@@ -55,6 +55,7 @@ import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
 import com.parkspace.finder.ui.home.HomeScreen
 import com.parkspace.finder.ui.search.ParkingBookingScreen
+import com.parkspace.finder.ui.timerParkingBooking.ParkingTimerScreen
 
 
 sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon: ImageVector?, val title: String) {
@@ -198,6 +199,10 @@ fun AppNavHost(
             }
             composable(ROUTE_SEARCH) {
                 ParkingBookingScreen(navController = navController,parkingSpaceViewModel = parkingSpaceViewModel)
+            }
+            composable(ROUTE_PARKING_TIMER){
+                val bookingId = it.arguments?.getString("bookingId") ?: "0"
+                ParkingTimerScreen(navController = navController, bookingId)
             }
 
         }
