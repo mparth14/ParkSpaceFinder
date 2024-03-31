@@ -170,24 +170,7 @@ fun AppNavHost(
                 CompletedBookingScreen(bookingId = bookingId)
             }
             composable(Screen.Favorites.route) {
-                ReviewBookingScreen(
-                    navController = navController,
-                    bookingDetails = BookingDetails(
-                        date = "March 16, 2024",
-                        time = "10:00 AM",
-                        parkingSpace = "Parking Space A",
-                        vehicleType = "HatchBack Sedan",
-                        distance = "0.31 mi",
-                        address = "123 Main Street, City, Country",
-                        paymentMethod = "Credit Card",
-                        paymentAmount = "$100",
-                        paymentTotal = "$100",
-                        redeemedCode = "20% off"
-                    ),
-                    onConfirmClick = {
-                        // Handle the confirmation action here
-                    }
-                )
+                FavouriteScreen(context = context, navController = navController)
             }
             composable(Screen.Notifications.route) {
                 NotificationScreen()
