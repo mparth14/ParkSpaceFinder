@@ -18,6 +18,12 @@ import androidx.navigation.NavHostController
 import com.parkspace.finder.data.BookingViewModel
 import com.parkspace.finder.data.utils.isStartTimeBeforeEndTime
 
+/**
+ * Composable function for displaying the content of entering booking details.
+ *
+ * @param navController: NavHostController for navigation.
+ * @param parkingId: Identifier for the parking.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EnterDetailsContent(

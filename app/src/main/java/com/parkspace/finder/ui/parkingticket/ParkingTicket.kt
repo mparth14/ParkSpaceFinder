@@ -1,5 +1,8 @@
 package com.parkspace.finder.ui.parkingticket
 
+/*
+ * This file contains composable functions and utility methods related to the parking ticket screen.
+ */
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
@@ -34,6 +37,11 @@ import com.parkspace.finder.data.Resource
 import com.parkspace.finder.navigation.ROUTE_BROWSE
 import com.parkspace.finder.viewmodel.BookingDetailViewModel
 
+/**
+ * Composable function for displaying the parking ticket screen.
+ * @param navController The navigation controller used for navigation.
+ * @param bookingId The ID of the booking.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ParkingTicketScreen(navController: NavController, bookingId: String) {
@@ -264,6 +272,11 @@ fun ParkingTicketScreen(navController: NavController, bookingId: String) {
 
 }
 
+/**
+ * Composable function for displaying a time slot.
+ * @param title The title of the time slot.
+ * @param time The time value.
+ */
 @Composable
 fun TimeSlot(title: String, time: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -277,6 +290,12 @@ fun TimeSlot(title: String, time: String) {
     }
 }
 
+/**
+ * Function to share ticket information including QR code.
+ * @param ticketData The ticket information to be shared.
+ * @param qrBitmap The QR code bitmap to be shared.
+ * @param context The context.
+ */
 fun shareTicketInfo(ticketData: String, qrBitmap: Bitmap, context: Context) {
     val resolver: ContentResolver = context.contentResolver
     val qrImageUri = saveQRCodeImage(qrBitmap, context)
@@ -292,6 +311,12 @@ fun shareTicketInfo(ticketData: String, qrBitmap: Bitmap, context: Context) {
     context.startActivity(shareIntent)
 }
 
+/**
+ * Function to save a QR code image to external storage and return its URI.
+ * @param bitmap The QR code bitmap.
+ * @param context The context.
+ * @return The URI of the saved QR code image.
+ */
 fun saveQRCodeImage(bitmap: Bitmap, context: Context): Uri {
     val contentValues = ContentValues().apply {
         put(MediaStore.MediaColumns.DISPLAY_NAME, "QR_Code")

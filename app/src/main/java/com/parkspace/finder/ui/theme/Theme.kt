@@ -63,6 +63,9 @@ import com.parkspace.finder.ui.theme.md_theme_light_tertiary
 import com.parkspace.finder.ui.theme.md_theme_light_tertiaryContainer
 import androidx.compose.ui.viewinterop.AndroidView
 
+/**
+ * Provides light color scheme for the app.
+ */
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
@@ -93,7 +96,9 @@ private val LightColors = lightColorScheme(
     surfaceTint = md_theme_light_surfaceTint,
 )
 
-
+/**
+ * Provides dark color scheme for the app.
+ */
 private val DarkColors = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
@@ -124,12 +129,21 @@ private val DarkColors = darkColorScheme(
     surfaceTint = md_theme_dark_surfaceTint,
 )
 
+/**
+ * Custom shapes for the app.
+ */
 val CustomShapes = Shapes(
     small = RoundedCornerShape(4.dp),
     medium = RoundedCornerShape(8.dp), // Define medium shape
     large = RoundedCornerShape(12.dp)
 )
 
+/**
+ * Composable function to apply the new pickers theme.
+ * @param darkTheme Boolean value to indicate if dark theme is enabled.
+ * @param dynamicColor Boolean value to indicate if dynamic color is enabled.
+ * @param content The composable content.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewPickersTheme(
@@ -164,6 +178,11 @@ fun NewPickersTheme(
     )
 }
 
+/**
+ * Composable function to apply the ParkSpaceFinder theme.
+ * @param useDarkTheme Boolean value to indicate if dark theme is enabled.
+ * @param content The composable content.
+ */
 @Composable
 fun ParkSpaceFinderTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),

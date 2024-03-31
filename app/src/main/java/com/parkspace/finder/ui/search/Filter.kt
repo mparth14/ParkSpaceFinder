@@ -42,7 +42,12 @@ import androidx.navigation.NavController
 import com.parkspace.finder.data.FilterOptions
 import com.parkspace.finder.data.ParkingSpaceViewModel
 
-
+/**
+ * Composable function for displaying the filter section.
+ *
+ * @param parkingSpaceViewModel ViewModel for managing parking space data.
+ * @param navController NavController for navigating between composables.
+ */
 @Composable
 fun FilterSection(parkingSpaceViewModel: ParkingSpaceViewModel,
                   navController: NavController) {
@@ -203,6 +208,12 @@ fun FilterSection(parkingSpaceViewModel: ParkingSpaceViewModel,
     }
 
 
+/**
+ * Composable function for displaying the popularity filter section.
+ *
+ * @param popularityFilter Selected popularity filter option.
+ * @param onPopularityFilterChange Callback for changing the popularity filter.
+ */
 @Composable
 fun FilterSection(
     popularityFilter: PopularityFilter,
@@ -219,6 +230,12 @@ fun FilterSection(
     }
 }
 
+/**
+ * Composable function for displaying the radio buttons for popularity filter options.
+ *
+ * @param popularityFilter Selected popularity filter option.
+ * @param onPopularityFilterChange Callback for changing the popularity filter.
+ */
 @Composable
 fun PopularityFilterRadioButtons(
     popularityFilter: PopularityFilter,
@@ -258,6 +275,11 @@ fun PopularityFilterRadioButtons(
     }
 }
 
+/**
+ * Enum class representing popularity filter options.
+ *
+ * @param displayName Display name of the filter option.
+ */
 enum class PopularityFilter(val displayName: String) {
     STAR_RATING_HIGHEST_FIRST("Star Rating (highest first)"),
     STAR_RATING_LOWEST_FIRST("Star Rating (lowest first)"),
@@ -265,6 +287,12 @@ enum class PopularityFilter(val displayName: String) {
     PRICE_HIGHEST_FIRST("Price (highest first)")
 }
 
+/**
+ * Composable function for displaying the distance filter section.
+ *
+ * @param selectedDistance Selected distance filter option.
+ * @param onDistanceSelected Callback for changing the selected distance.
+ */
 @Composable
 fun DistanceFilterSection(
     selectedDistance: String,
@@ -339,7 +367,6 @@ fun DistanceFilterSection(
 
     }
 }
-
 @Composable
 fun DistanceChip(
     distance: String,
@@ -422,6 +449,12 @@ fun MyRangeSlider(priceRange: ClosedFloatingPointRange<Float> = 0f..100f, onRang
     }
 }
 
+/**
+ * Composable function for displaying the duration picker.
+ *
+ * @param duration Current selected duration option.
+ * @param onDurationChange Callback for changing the duration option.
+ */
 @Composable
 fun DurationPicker(
     duration: String,
@@ -511,6 +544,15 @@ fun DurationPicker(
         }
     }
 }
+
+/**
+ * Composable function for displaying the star rating selector.
+ *
+ * @param rating Current selected star rating.
+ * @param maxRating Maximum rating value.
+ * @param onRatingSelected Callback for changing the star rating.
+ * @param modifier Modifier for customizing the layout.
+ */
 @Composable
 fun StarSelector(
     rating: Int,
@@ -561,9 +603,3 @@ fun StarSelector(
             }
         }
     }
-
-
-
-
-
-

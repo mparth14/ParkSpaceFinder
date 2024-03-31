@@ -20,6 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
+/**
+ * Composable function for displaying a custom time picker dialog.
+ *
+ * @param title: Title of the dialog.
+ * @param onCancel: Callback for when the dialog is dismissed.
+ * @param onConfirm: Callback for when the "OK" button is clicked.
+ * @param toggle: Composable function to toggle additional content.
+ * @param content: Content of the dialog.
+ */
 @Composable
 fun TimePickerDialog(
     title: String = "Select Time",

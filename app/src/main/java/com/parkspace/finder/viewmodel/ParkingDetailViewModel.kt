@@ -13,6 +13,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel responsible for managing parking space detail.
+ *
+ * @property parkingId ID of the parking space.
+ * @property parkingSpaceRepository Repository for accessing parking space data.
+ */
 @HiltViewModel(assistedFactory = ParkingDetailViewModel.Factory::class)
 class ParkingDetailViewModel @AssistedInject constructor(
     @Assisted private val parkingId: String,

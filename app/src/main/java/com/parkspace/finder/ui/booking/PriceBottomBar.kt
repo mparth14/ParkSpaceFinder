@@ -27,7 +27,12 @@ import com.parkspace.finder.data.Resource
 import com.parkspace.finder.data.utils.calculateDurationInHours
 import com.parkspace.finder.data.utils.formatTime
 
-
+/**
+ * Composable function for displaying the price bottom bar in the booking screen.
+ *
+ * @param navController: NavController for navigation.
+ * @param bookingViewModel: ViewModel for booking data.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriceBottomBar(navController: NavController, bookingViewModel: BookingViewModel) {

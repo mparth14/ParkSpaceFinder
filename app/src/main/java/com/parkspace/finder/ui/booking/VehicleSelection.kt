@@ -29,6 +29,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.parkspace.finder.data.BookingViewModel
 
+/**
+ * Composable function for selecting the vehicle type for booking.
+ *
+ * @param bookingViewModel: ViewModel for managing booking data.
+ */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun VehicleSelection(bookingViewModel: BookingViewModel) {

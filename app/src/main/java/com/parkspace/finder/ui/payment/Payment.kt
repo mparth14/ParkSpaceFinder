@@ -1,5 +1,8 @@
 package com.parkspace.finder.ui.payment
 
+/*
+ * This file contains composable functions related to the payment UI.
+ */
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.*
@@ -20,7 +23,12 @@ import androidx.navigation.NavHostController
 import com.parkspace.finder.data.BookingViewModel
 import com.parkspace.finder.data.Resource
 
-
+/**
+ * Composable function for the payment screen.
+ * @param navController NavHostController to handle navigation
+ * @param parkingId ID of the parking space
+ * @param backStackEntry NavBackStackEntry to track back stack
+ */
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -157,6 +165,15 @@ fun PaymentScreen(navController: NavHostController, parkingId: String, backStack
     }
 }
 
+/**
+ * Composable function for a payment text field.
+ * @param label Label for the text field
+ * @param placeholder Placeholder text for the text field
+ * @param text Current value of the text field
+ * @param onTextChanged Lambda function to handle text changes
+ * @param modifier Modifier for the text field
+ * @param keyboardType Keyboard type for the text field
+ */
 @Composable
 fun PaymentTextField(
     label: String,

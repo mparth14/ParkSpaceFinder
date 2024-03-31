@@ -15,6 +15,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel responsible for managing data related to all bookings and parking spaces.
+ *
+ * @property bookingDetailRepository Repository for accessing booking details data.
+ * @property authRepository Repository for authentication related operations.
+ * @property parkingSpaceRepository Repository for accessing parking space data.
+ */
 @HiltViewModel
 class AllBookingsDetailViewModel @Inject constructor(
     private val bookingDetailRepository: BookingDetailRepository,

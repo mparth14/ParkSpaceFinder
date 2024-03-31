@@ -38,9 +38,12 @@ import com.google.firebase.perf.util.Timer
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import java.util.*
 
-
-
-
+/**
+ * Composable function for displaying the parking booking screen.
+ *
+ * @param navController NavController for navigating between composables.
+ * @param parkingSpaceViewModel ViewModel for managing parking space data.
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -49,6 +49,11 @@ object PresentOrFutureSelectableDates : SelectableDates {
     }
 }
 
+/**
+ * Composable function for selecting the day of booking.
+ *
+ * @param bookingViewModel: ViewModel for booking data.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DaySelector(bookingViewModel: BookingViewModel) {

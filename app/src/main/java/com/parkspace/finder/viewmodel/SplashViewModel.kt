@@ -14,6 +14,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for managing splash screen logic.
+ *
+ * @property dataStoreRepository Repository for accessing data store.
+ */
 class SplashViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository
 ) : ViewModel(){

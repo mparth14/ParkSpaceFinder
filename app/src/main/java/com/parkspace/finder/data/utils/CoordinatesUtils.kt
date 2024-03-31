@@ -1,3 +1,6 @@
+/**
+ * Utility functions for handling geographical calculations and operations.
+ */
 package com.parkspace.finder.data.utils
 
 import android.content.Context
@@ -13,7 +16,17 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 
+/**
+ * Converts degrees to radians.
+ */
 fun Double.toRadians() = this * (Math.PI / 180)
+
+/**
+ * Calculates the distance between two geographical points using the Haversine formula.
+ * @param start The starting point (latitude, longitude).
+ * @param end The ending point (latitude, longitude).
+ * @return The distance between the two points in kilometers.
+ */
 fun distanceBetween(start: LatLng, end: LatLng): Double {
     val earthRadius = 6371 // Approx Earth radius in KM
 
@@ -31,6 +44,12 @@ fun distanceBetween(start: LatLng, end: LatLng): Double {
     return earthRadius * c
 }
 
+/**
+ * Retrieves the address from a given latitude and longitude using the device's Geocoder.
+ * @param context The context of the application.
+ * @param latLng The latitude and longitude as a GeoPoint object.
+ * @return The address corresponding to the given latitude and longitude.
+ */
 fun getAddressesFromLatLng(context: Context, latLng: GeoPoint ): String {
     val geocoder = Geocoder(context, Locale.getDefault())
     return try {

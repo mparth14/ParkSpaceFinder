@@ -1,3 +1,6 @@
+/**
+ * View model class responsible for managing authentication related UI states and interactions.
+ */
 package com.parkspace.finder.data
 
 import androidx.compose.runtime.mutableStateOf
@@ -28,8 +31,11 @@ class AuthViewModel @Inject constructor(
     var signupUIState = mutableStateOf(SignupUIState())
     var loginUIState = mutableStateOf(LoginUIState())
 
+    /**
+     * Retrieves the current authenticated user.
+     */
     val currentUser: FirebaseUser?
-    get() = repository.currentUser
+        get() = repository.currentUser
 
     init {
         viewModelScope.launch {
@@ -41,6 +47,10 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Handles the signup UI events.
+     * @param uiEvent The UI event to handle.
+     */
     fun onSignupEvent(uiEvent: SignupUIEvent){
         when(uiEvent){
             is SignupUIEvent.NameChanged -> {
@@ -61,6 +71,10 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Handles the login UI events.
+     * @param uiEvent The UI event to handle.
+     */
     fun onLoginEvent(uiEvent: LoginUIEvent){
         when(uiEvent){
             is LoginUIEvent.EmailChanged -> {
@@ -78,22 +92,30 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Initiates the login process.
+     */
     private fun login() = viewModelScope.launch {
         _loginFlow.value = Resource.Loading
         val result = repository.login(loginUIState.value.email, loginUIState.value.password)
         _loginFlow.value = result
     }
+
+    /**
+     * Initiates the signup process.
+     */
     private fun signup() = viewModelScope.launch {
         _signupFlow.value = Resource.Loading
         val result = repository.signup(signupUIState.value.email, signupUIState.value.password, signupUIState.value.name)
         _signupFlow.value = result
     }
 
+    /**
+     * Logs out the current user.
+     */
     fun logout() {
         repository.logout()
         _loginFlow.value = null
         _signupFlow.value = null
     }
-
-
 }

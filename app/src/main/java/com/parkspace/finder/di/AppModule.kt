@@ -17,24 +17,46 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@InstallIn(SingletonComponent::class)
+/**
+ * Dagger module for providing application-wide dependencies.
+ */
 @Module
+@InstallIn(SingletonComponent::class)
 class AppModule {
+    /**
+     * Provides an instance of FirebaseAuth.
+     */
     @Provides
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
+    /**
+     * Provides the implementation of AuthRepository.
+     */
     @Provides
     fun provideAuthRepository(impl: AuthRepositoryImpl): AuthRepository = impl
 
+    /**
+     * Provides an instance of FirebaseFirestore.
+     */
     @Provides
     fun provideFirebaseFirestore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    /**
+     * Provides the implementation of ParkingSpaceRepository.
+     */
     @Provides
     fun provideParkingSpaceRepository(impl: ParkingSpaceRepositoryImpl): ParkingSpaceRepository = impl
 
+    /**
+     * Provides an instance of DataStoreRepository.
+     */
     @Provides
     @Singleton
     fun provideDataStoreRepository(@ApplicationContext context: Context): DataStoreRepository = DataStoreRepository(context)
 
+    /**
+     * Provides the implementation of BookingDetailRepository.
+     */
     @Provides
     fun provideBookingDetailRepository(impl: BookingDetailRepositoryImpl): BookingDetailRepository = impl
 }

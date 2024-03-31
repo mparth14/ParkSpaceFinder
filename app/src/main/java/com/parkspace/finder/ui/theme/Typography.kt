@@ -10,6 +10,8 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.sp
 import com.parkspace.finder.R
 
+// Define the Poppins font family using the provided font resources
+
 private val Poppins = FontFamily(
     Font(R.font.poppins_regular),
     Font(R.font.poppins_bold),
@@ -21,6 +23,7 @@ private val Poppins = FontFamily(
     Font(R.font.poppins_black)
 )
 
+// Define the default text style with Poppins font family
 @Suppress("DEPRECATION")
 val defaultTextStyle = TextStyle(
     fontFamily = Poppins,
@@ -33,6 +36,7 @@ val defaultTextStyle = TextStyle(
     )
 )
 
+// Define app typography using the default text style
 val AppTypography = Typography(
     displayLarge = defaultTextStyle.copy(
         fontSize = 57.sp, lineHeight = 64.sp, letterSpacing = (-0.25).sp

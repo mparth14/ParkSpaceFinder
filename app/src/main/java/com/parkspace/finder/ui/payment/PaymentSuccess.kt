@@ -1,5 +1,8 @@
 package com.parkspace.finder.ui.payment
 
+/*
+ * This file contains the composable function for the payment success screen.
+ */
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
@@ -28,6 +31,11 @@ import com.parkspace.finder.viewmodel.BookingDetailViewModel
 import kotlinx.coroutines.launch
 import nl.dionsegijn.konfetti.compose.KonfettiView
 
+/**
+ * Composable function for the payment success screen.
+ * @param navController NavController to handle navigation
+ * @param bookingId ID of the booking
+ */
 @Composable
 fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
     val bookingDetailViewModel = hiltViewModel<BookingDetailViewModel, BookingDetailViewModel.Factory> {

@@ -1,5 +1,9 @@
 package com.parkspace.finder.ui.onboarding
 
+/*
+ * This file contains composable functions for the onboarding screen, including the OnboardingScreen,
+ * PagerScreen, FinishButton, and preview functions.
+ */
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -38,6 +42,11 @@ import androidx.navigation.NavHostController
 import com.parkspace.finder.navigation.ROUTE_LOGIN
 import com.parkspace.finder.viewmodel.OnboardingViewModel
 
+/**
+ * Composable function for the onboarding screen.
+ * @param navController Navigation controller for navigating to the next screen.
+ * @param onboardingViewModel View model for managing the onboarding state.
+ */
 @OptIn(ExperimentalFoundationApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun OnboardingScreen(navController: NavHostController,
@@ -84,6 +93,10 @@ fun OnboardingScreen(navController: NavHostController,
     }
 }
 
+/**
+ * Composable function for displaying individual onboarding pages.
+ * @param onBoardingPage Onboarding page data.
+ */
 @Composable
 fun PagerScreen(onBoardingPage: OnboardingPage) {
     Column(
@@ -120,6 +133,12 @@ fun PagerScreen(onBoardingPage: OnboardingPage) {
     }
 }
 
+/**
+ * Composable function for the finish button.
+ * @param modifier Modifier for styling.
+ * @param pagerState PagerState for tracking current page.
+ * @param onClick Callback for button click.
+ */
 @OptIn(ExperimentalFoundationApi::class)
 @ExperimentalAnimationApi
 @Composable
@@ -150,6 +169,9 @@ fun FinishButton(
     }
 }
 
+/**
+ * Preview function for the first onboarding screen.
+ */
 @Composable
 @Preview(showBackground = true)
 fun FirstOnBoardingScreenPreview() {
@@ -158,7 +180,9 @@ fun FirstOnBoardingScreenPreview() {
     }
 }
 
-
+/**
+ * Preview function for the second onboarding screen.
+ */
 @Composable
 @Preview(showBackground = true)
 fun SecondOnBoardingScreenPreview() {
@@ -167,6 +191,9 @@ fun SecondOnBoardingScreenPreview() {
     }
 }
 
+/**
+ * Preview function for the third onboarding screen.
+ */
 @Composable
 @Preview(showBackground = true)
 fun ThirdOnBoardingScreenPreview() {

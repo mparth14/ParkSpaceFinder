@@ -1,4 +1,6 @@
-
+/*
+ * This file contains the NotificationScreen composable function and its related NotificationCard composable function.
+ */
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,9 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlin.random.Random
 
+/*
+ * Composable function to display a list of notifications.
+ */
 @Composable
 fun NotificationScreen() {
     Column(
@@ -56,6 +60,13 @@ fun NotificationScreen() {
     }
 }
 
+/*
+ * Composable function to display a notification card.
+ *
+ * @param title: The title of the notification.
+ * @param subtitle: The subtitle of the notification.
+ * @param timestamp: The timestamp of the notification.
+ */
 @Composable
 fun NotificationCard(title: String, subtitle: String, timestamp: String) {
     Card(

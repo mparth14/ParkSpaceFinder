@@ -1,5 +1,8 @@
 package com.parkspace.finder.ui.home
 
+/*
+ * This file contains the UI components for the home screen.
+ */
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,14 +23,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -53,6 +52,12 @@ import com.parkspace.finder.navigation.ROUTE_LOGIN
 import com.parkspace.finder.navigation.ROUTE_NOTIFICATIONS
 import com.parkspace.finder.navigation.ROUTE_SIGNUP
 
+/*
+ * Composable function to display the home screen.
+ *
+ * @param viewModel: The view model for authentication.
+ * @param navController: The navigation controller.
+ */
 @Composable
 fun HomeScreen(viewModel: AuthViewModel?, navController: NavController?) {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -403,6 +408,3 @@ fun HomeScreen(viewModel: AuthViewModel?, navController: NavController?) {
 
     }
 }
-
-
-

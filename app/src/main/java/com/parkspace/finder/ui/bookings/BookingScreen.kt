@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
@@ -20,15 +18,19 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.parkspace.finder.R
 import com.parkspace.finder.data.BookingDetails
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.Resource
-import com.parkspace.finder.data.utils.checkIfDateTimeIsInPast
 import com.parkspace.finder.navigation.ROUTE_BOOKING_DETAIL
-import com.parkspace.finder.ui.bookings.BookingItem
 import com.parkspace.finder.viewmodel.AllBookingsDetailViewModel
 
+/**
+ * Composable function for the booking screen.
+ * Displays a list of bookings categorized as active or completed.
+ *
+ * @param navController Navigation controller used for navigating to other destinations.
+ * @param allBookingsDetailViewModel View model for managing all booking details.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookingScreen(navController: NavController, allBookingsDetailViewModel: AllBookingsDetailViewModel = hiltViewModel()) {
@@ -97,6 +99,13 @@ fun BookingScreen(navController: NavController, allBookingsDetailViewModel: AllB
     }
 }
 
+/**
+ * Composable function for displaying a list of booking items.
+ *
+ * @param bookingItems List of booking details to display.
+ * @param navController Navigation controller for navigating to booking detail screen.
+ * @param parkingSpaces Map of parking spaces.
+ */
 @Composable
 fun BookingList(bookingItems: List<BookingDetails>, navController: NavController, parkingSpaces: Map<String, ParkingSpace>) {
     LazyColumn(contentPadding = PaddingValues(all = 8.dp)) {
@@ -110,6 +119,13 @@ fun BookingList(bookingItems: List<BookingDetails>, navController: NavController
     }
 }
 
+/**
+ * Composable function for displaying a card representing a booking item.
+ *
+ * @param booking Booking details to display.
+ * @param parkingSpaces Map of parking spaces.
+ * @param onClick Callback function for handling click event on the card.
+ */
 @Composable
 fun BookingItemCard(booking: BookingDetails, parkingSpaces: Map<String, ParkingSpace>, onClick: () -> Unit) {
     val parkingSpace = parkingSpaces[booking.lotId]
@@ -190,6 +206,11 @@ fun BookingItemCard(booking: BookingDetails, parkingSpaces: Map<String, ParkingS
     )
 }
 
+/**
+ * Composable function for displaying a badge representing booking status.
+ *
+ * @param status Booking status (e.g., Confirmed, Cancelled).
+ */
 @Composable
 fun BookingStatusBadge(status: String) {
     val backgroundColor = when (status) {

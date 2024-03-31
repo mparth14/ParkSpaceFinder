@@ -1,7 +1,9 @@
 package com.parkspace.finder.ui.theme
 
 import androidx.compose.ui.graphics.Color
-
+/**
+ * Theme colors for the light mode.
+ */
 //val md_theme_light_primary = Color(0xFF006492)
 val md_theme_light_primary = Color(0xFF7C77F7)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
@@ -35,6 +37,9 @@ val md_theme_light_onSecondarySurface = Color(0xFFFFFFFF)
 val md_theme_light_onSecondarySurfaceTint = Color(0xFF7F67F9)
 val md_theme_light_switchColor = Color(0xffa2e665)
 
+/**
+ * Theme colors for the dark mode.
+ */
 val md_theme_dark_primary = Color(0xFF8BCEFF)
 val md_theme_dark_onPrimary = Color(0xFF00344E)
 val md_theme_dark_primaryContainer = Color(0xFF004B6F)
