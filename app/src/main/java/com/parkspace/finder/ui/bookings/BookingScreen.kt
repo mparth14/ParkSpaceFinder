@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.*
@@ -16,85 +17,102 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import com.parkspace.finder.R
+import com.parkspace.finder.data.BookingDetails
+import com.parkspace.finder.data.ParkingSpace
+import com.parkspace.finder.data.Resource
+import com.parkspace.finder.data.utils.checkIfDateTimeIsInPast
+import com.parkspace.finder.navigation.ROUTE_BOOKING_DETAIL
 import com.parkspace.finder.ui.bookings.BookingItem
+import com.parkspace.finder.viewmodel.AllBookingsDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookingScreen(navController: NavController) {
+fun BookingScreen(navController: NavController, allBookingsDetailViewModel: AllBookingsDetailViewModel = hiltViewModel()) {
     var selectedTab by remember { mutableIntStateOf(0) }
 
+    val bookings = allBookingsDetailViewModel.bookings.collectAsState();
+    val parkingSpaces = allBookingsDetailViewModel.parkingSpaces.collectAsState();
     val tabs = listOf("Active", "Completed")
-    val bookingItems = listOf(
-        BookingItem("1", "Blue Skies Parking", "Monday, October 24", "8:00 AM - 12:00 PM", "$60", "Confirmed"),
-        BookingItem("2", "North Cerulean District", "Saturday, October 22", "8:00 AM - 7:00 PM", "$24", "Completed"),
-        BookingItem("3", "Splitter Garage", "Friday, October 21", "8:00 AM - 4:00 PM", "$45", "Cancelled"),
-        BookingItem("4", "Park It Down", "Wednesday, October 19", "8:00 AM - 12:00 PM", "$34", "Completed"),
-        BookingItem("5", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed"),
-        BookingItem("6", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Cancelled"),
-        BookingItem("7", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed"),
-        BookingItem("8", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Cancelled"),
-        BookingItem("9", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed"),
-        BookingItem("10", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Cancelled"),
-        BookingItem("11", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed"),
-        BookingItem("12", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Cancelled"),
-        BookingItem("13", "Jester Park", "Tuesday, October 18", "8:00 AM - 11:00 AM", "$64", "Confirmed")
-    )
-    Scaffold(
-        topBar = {
-            TopAppBar(title = { Text("Bookings",style = MaterialTheme.typography.headlineLarge.copy(
-                fontWeight = FontWeight.ExtraBold
-            )) })
-        }
-    ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            TabRow(selectedTabIndex = selectedTab) {
-                tabs.forEachIndexed { index, title ->
-                    Tab(
-                        selected = selectedTab == index,
-                        onClick = { selectedTab = index },
-                        text = { Text(title, color = if (selectedTab == index) Color.Black else Color.Gray, fontWeight = FontWeight.Bold) }
-                    )
+    when(bookings.value){
+        is Resource.Success -> {
+            val bookingItems = (bookings.value as Resource.Success<List<BookingDetails>>).result
+            Log.d("BookingScreen", bookingItems.toString())
+            val parkingSpaceMap = if(parkingSpaces.value is Resource.Success) {
+                (parkingSpaces.value as Resource.Success<Map<String, ParkingSpace>>).result
+            } else {
+                emptyMap()
+            }
+            Scaffold(
+                topBar = {
+                    TopAppBar(title = {
+                        Text(
+                            "Bookings", style = MaterialTheme.typography.headlineLarge.copy(
+                                fontWeight = FontWeight.ExtraBold
+                            )
+                        )
+                    })
+                }
+            ) { innerPadding ->
+                Column(modifier = Modifier.padding(innerPadding)) {
+                    TabRow(selectedTabIndex = selectedTab) {
+                        tabs.forEachIndexed { index, title ->
+                            Tab(
+                                selected = selectedTab == index,
+                                onClick = { selectedTab = index },
+                                text = {
+                                    Text(
+                                        title,
+                                        color = if (selectedTab == index) Color.Black else Color.Gray,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            )
+                        }
+                    }
+                    val filteredBookings = when (selectedTab) {
+                        0 -> bookingItems.filter { it.status == "Confirmed" || it.status == "Cancelled" }
+                        else -> bookingItems.filter { it.status == "Completed" }
+                    }
+
+                    BookingList(bookingItems = filteredBookings, navController, parkingSpaceMap)
                 }
             }
-            val filteredBookings = when (selectedTab) {
-                0 -> bookingItems.filter { it.status == "Confirmed" || it.status == "Cancelled" }
-                else -> bookingItems.filter { it.status == "Completed" }
-            }
-
-            BookingList(bookingItems = filteredBookings, navController)
         }
+        is Resource.Loading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
+        is Resource.Failure -> {
+            Text("Failed to load bookings")
+        }
+        else -> {
+            Text("No bookings found")
+        }
+
     }
 }
 
 @Composable
-fun BookingList(bookingItems: List<BookingItem>, navController: NavController) {
+fun BookingList(bookingItems: List<BookingDetails>, navController: NavController, parkingSpaces: Map<String, ParkingSpace>) {
     LazyColumn(contentPadding = PaddingValues(all = 8.dp)) {
         items(bookingItems) { booking ->
-            BookingItemCard(booking = booking) {
+            BookingItemCard(booking = booking, parkingSpaces = parkingSpaces) {
                 // Determine the navigation action based on the booking status
-                when (booking.status) {
-                    "Confirmed" -> {
-                        // Navigate to the detailed screen for active bookings
-                        navController.navigate("activeBookingScreen/${booking.id}")
-                    }
-                    "Completed" -> {
-                        // Navigate to the detailed screen for completed bookings
-                        navController.navigate("completedBookingScreen/${booking.id}")
-                    }
-                    else -> {
-                        // Navigate to the detailed screen for cancelled bookings
-                        navController.navigate("cancelledBookingScreen/${booking.id}")
-                    }
-                }
+                navController.navigate(ROUTE_BOOKING_DETAIL.replace("{bookingId}", booking.id
+                    ?: ""))
             }
         }
     }
 }
 
 @Composable
-fun BookingItemCard(booking: BookingItem, onClick: () -> Unit) {
+fun BookingItemCard(booking: BookingDetails, parkingSpaces: Map<String, ParkingSpace>, onClick: () -> Unit) {
+    val parkingSpace = parkingSpaces[booking.lotId]
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -113,7 +131,7 @@ fun BookingItemCard(booking: BookingItem, onClick: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_background), // Replace with actual image resource
+                    painter = rememberAsyncImagePainter(parkingSpace?.imageURL), // Replace with actual image resource
                     contentDescription = "Booking Image",
                     modifier = Modifier
                         .size(88.dp)
@@ -131,26 +149,26 @@ fun BookingItemCard(booking: BookingItem, onClick: () -> Unit) {
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = booking.title,
+                            text = parkingSpace?.name ?: "",
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text = booking.price,
+                            text = booking.price.toString(),
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = booking.date,
+                        text = booking.bookingDate,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = booking.time,
+                        text = booking.startTime + " - " + booking.endTime,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -194,12 +212,3 @@ fun BookingStatusBadge(status: String) {
         )
     }
 }
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun DefaultPreview() {
-//    MaterialTheme {
-//        BookingScreen(navController = navController)
-//    }
-//}

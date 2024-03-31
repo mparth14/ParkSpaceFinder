@@ -1,10 +1,12 @@
 package com.parkspace.finder.ui.payment
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,9 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.parkspace.finder.R
 import com.parkspace.finder.data.Resource
 import com.parkspace.finder.navigation.ROUTE_PARKING_TICKET
 import com.parkspace.finder.viewmodel.BookingDetailViewModel
+import kotlinx.coroutines.launch
+import nl.dionsegijn.konfetti.compose.KonfettiView
 
 @Composable
 fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
@@ -30,8 +35,26 @@ fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
     }
     val bookedParkingSpace = bookingDetailViewModel.bookedParkingSpace.collectAsState()
     val context = LocalContext.current
+    var confettiAnimationEnabled by remember { mutableStateOf(false) }
+    val mediaPlayer = remember { MediaPlayer.create(context, R.raw.successsound) }
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            mediaPlayer.start()
+        }
+        confettiAnimationEnabled = true
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            mediaPlayer.release()
+            confettiAnimationEnabled = false
+        }
+    }
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary),
         contentAlignment = Alignment.Center
     ) {
@@ -89,6 +112,7 @@ fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
                 )
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(
+                    shape = RoundedCornerShape(25),
                     onClick = {
                         navController.navigate(ROUTE_PARKING_TICKET.replace("{bookingId}", bookingId))
                     }
@@ -100,6 +124,7 @@ fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
                     is Resource.Success -> {
                         val space = (bookedParkingSpace.value as Resource.Success).result
                         Button(
+                            shape = RoundedCornerShape(25),
                             onClick = {
                                 val latitude = space?.location?.latitude
                                 val longitude = space?.location?.longitude
@@ -124,6 +149,12 @@ fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
                     }
                 }
             }
+        }
+        if (confettiAnimationEnabled) {
+            KonfettiView(
+                modifier = Modifier.fillMaxSize(),
+                parties = KonfettiViewModel()
+            )
         }
     }
 }

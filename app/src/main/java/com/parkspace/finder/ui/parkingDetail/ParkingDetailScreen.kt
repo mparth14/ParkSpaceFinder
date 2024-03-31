@@ -99,12 +99,6 @@ fun MapContent(location: LatLng) {
     }
 }
 
-
-//@Composable
-//fun ParkingDetailScreen(navController: NavHostController) {
-//    Text(text = "Parking Detail Screen")
-//}
-
 @Composable
 fun Rating(rating: Int) {
     Row(
@@ -317,7 +311,7 @@ fun ParkingDetailScreen(
                                 .fillMaxWidth(),
                             //colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
                         ) {
-                            Text(text = "Book Now")
+                            Text(text = "Book Now", color = Color.White)
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         // Facilities section
@@ -340,6 +334,26 @@ fun ParkingDetailScreen(
                             FacilityItem(name = "Automated Tickets")
                             Spacer(modifier = Modifier.width(8.dp))
                             FacilityItem(name = "Parking Assistance")
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Location",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                        AddressBar(context = LocalContext.current, parkingSpace = space!!)
+                        Button (
+                            onClick = {
+                                var gmmIntentUri = "google.navigation:q=${space.location.latitude},${space.location.longitude}"
+                                var mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(gmmIntentUri))
+                                mapIntent.setPackage("com.google.android.apps.maps")
+                                context.startActivity(mapIntent)
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                        ) {
+                            Text(text = "Get Directions", color = Color.White)
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         // Working Hours section
@@ -394,25 +408,7 @@ fun ParkingDetailScreen(
                             text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis mauris vel odio ultricies condimentum. Nullam efficitur quam at est blandit, ac bibendum nulla sagittis. Mauris id quam et velit fermentum consectetur.",
                             modifier = Modifier.padding(top = 8.dp)
                         )
-                        Text(
-                            text = "Location",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
-                        AddressBar(context = LocalContext.current, parkingSpace = space!!)
-                        Button (
-                            onClick = {
-                                var gmmIntentUri = "google.navigation:q=${space.location.latitude},${space.location.longitude}"
-                                var mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(gmmIntentUri))
-                                mapIntent.setPackage("com.google.android.apps.maps")
-                                context.startActivity(mapIntent)
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                        ) {
-                            Text(text = "Get Directions")
-                        }
+
 
                     }
                     is Resource.Loading -> {

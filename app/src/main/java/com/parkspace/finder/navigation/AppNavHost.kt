@@ -31,20 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.parkspace.finder.FilterSection
 import com.parkspace.finder.data.AuthViewModel
-import com.parkspace.finder.ui.bookings.ActiveBookingScreen
-import com.parkspace.finder.ui.bookings.CancelledBookingScreen
-import com.parkspace.finder.ui.bookings.CompletedBookingScreen
-import com.parkspace.finder.data.ParkingSpaceRepository
+import com.parkspace.finder.ui.bookings.BookingDetailsScreen
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
@@ -65,11 +59,11 @@ import com.parkspace.finder.ui.search.ParkingBookingScreen
 
 
 sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon: ImageVector?, val title: String) {
-    object Browse : Screen("browse", Icons.Outlined.Search, Icons.Filled.Search, "Browse")
-    object Bookings : Screen("bookings", Icons.Outlined.Info, Icons.Filled.Info, "Bookings")
-    object Favorites : Screen("favorites", Icons.Outlined.Favorite, Icons.Filled.Favorite,"Favorite")
-    object Notifications : Screen("notifications", Icons.Outlined.Notifications, Icons.Filled.Notifications, "Notifications")
-    object Account : Screen("account", Icons.Outlined.AccountCircle, Icons.Filled.AccountCircle, "Account")
+    object Browse : Screen(ROUTE_BROWSE, Icons.Outlined.Search, Icons.Filled.Search, "Browse")
+    object Bookings : Screen(ROUTE_BOOKINGS, Icons.Outlined.Info, Icons.Filled.Info, "Bookings")
+    object Favorites : Screen(ROUTE_FAVORITES, Icons.Outlined.Favorite, Icons.Filled.Favorite,"Favorite")
+    object Notifications : Screen(ROUTE_NOTIFICATIONS, Icons.Outlined.Notifications, Icons.Filled.Notifications, "Notifications")
+    object Account : Screen(ROUTE_ACCOUNT, Icons.Outlined.AccountCircle, Icons.Filled.AccountCircle, "Account")
 }
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -154,20 +148,20 @@ fun AppNavHost(
             composable(ROUTE_BROWSE) {
                 BrowseScreen(context  = context, navController = navController, parkingSpaceViewModel = parkingSpaceViewModel)
             }
-            composable(Screen.Bookings.route) {
+            composable(ROUTE_BOOKINGS) {
                 BookingScreen(navController = navController)
             }
-            composable("activeBookingScreen/{bookingId}") { backStackEntry ->
-                val bookingId = backStackEntry.arguments?.getString("bookingId")
-                ActiveBookingScreen(bookingId = bookingId)
+            composable(ROUTE_BOOKING_DETAIL) { backStackEntry ->
+                val bookingId = backStackEntry.arguments?.getString("bookingId") ?: "0"
+                BookingDetailsScreen(navController = navController, bookingId = bookingId)
             }
             composable("cancelledBookingScreen/{bookingId}") { backStackEntry ->
                 val bookingId = backStackEntry.arguments?.getString("bookingId")
-                CancelledBookingScreen(bookingId = bookingId)
+//                CancelledBookingScreen(bookingId = bookingId)
             }
             composable("completedBookingScreen/{bookingId}") { backStackEntry ->
                 val bookingId = backStackEntry.arguments?.getString("bookingId")
-                CompletedBookingScreen(bookingId = bookingId)
+//                CompletedBookingScreen(bookingId = bookingId)
             }
             composable(Screen.Favorites.route) {
                 FavouriteScreen(context = context, navController = navController)
@@ -190,7 +184,7 @@ fun AppNavHost(
             }
 
             composable(ROUTE_REQUEST_LOCATION_PERMISSION) {
-                LocationPermissionScreen(navController = navController)
+                LocationPermissionScreen(navController = navController, parkingSpaceViewModel = parkingSpaceViewModel)
             }
             composable(ROUTE_ENTER_BOOKING_DETAIL_SCREEN) {
                 val parkingId = it.arguments?.getString("parkingId") ?: "0"
