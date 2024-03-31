@@ -182,6 +182,7 @@ fun ParkingSpotRow(
 @Composable
 fun ProductCard(
     price: String,
+    productId: String,
     productName: String,
     productDescription: String,
     productLocation: String,
@@ -201,7 +202,7 @@ fun ProductCard(
             .padding(horizontal = 5.dp)
             .background(Color.White),
         onClick = {
-            navController.navigate("parking_details/${productName}")
+            navController.navigate("parking/$productId")
         }
 
     ) {
@@ -720,14 +721,16 @@ fun BrowseScreen(
 
                     ProductCard(
                         price = space.hourlyPrice.toString(),
+                        productId = space.id,
                         productName = space.name,
                         productDescription = space.imageURL,
                         productLocation = String.format("%.2f", space.distanceFromCurrentLocation),
                         navController = navController,
                         onItemClick = {
-                            val parkingSpaceName = space.name
+                            val parkingSpaceId = space.id
                             // Navigate to parking details page when clicked
-                            navController.navigate("parking_details/$parkingSpaceName")
+//                            navController.navigate("parking_details/$parkingSpaceName")
+                            navController.navigate("parking/$parkingSpaceId")
                         }
 
                     )

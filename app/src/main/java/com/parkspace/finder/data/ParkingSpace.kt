@@ -4,6 +4,7 @@ import com.google.firebase.firestore.GeoPoint
 
 
 data class ParkingSpace(
+    var id: String = "",
     val name: String = "",
     val imageURL: String = "",
     val hourlyPrice: Double = 0.0,

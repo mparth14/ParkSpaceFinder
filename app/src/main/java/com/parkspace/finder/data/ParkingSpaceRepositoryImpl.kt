@@ -12,11 +12,16 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
     override suspend fun getParkingSpaces(): Resource<List<ParkingSpace>> {
         return try {
             val snapshot = db.collection("parking-spaces").get().await()
-            Log.d("ParkingSpaceRepositoryImpl", snapshot.toString())
-            snapshot.documents.forEach {
-                Log.d("ParkingSpaceRepositoryImpl", it.data.toString())
+            val parkingSpaces = snapshot.documents.mapNotNull { document ->
+                Log.d("ParkingSpaceRepositoryImpl", document.data.toString())
+                try {
+                    document.toObject(ParkingSpace::class.java)?.apply {
+                        id = document.id // Set the document ID here
+                    }
+                } catch (e: Exception) {
+                    null
+                }
             }
-            val parkingSpaces = snapshot.toObjects(ParkingSpace::class.java)
             Resource.Success(parkingSpaces)
         } catch (e: Exception) {
             Log.d("error", e.toString())
@@ -100,6 +105,24 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Log.e("ParkingSpaceRepository", "Error getting parking space by name: $name", e)
             null
+        }
+    }
+
+    override suspend fun getParkingSpaceById(id: String): Resource<ParkingSpace?> {
+        return try {
+            Log.d("ParkingSpaceRepositoryImpl", "Getting parking space by id: $id")
+            val documentSnapshot = db.collection("parking-spaces")
+                .document(id)
+                .get()
+                .await()
+            Log.d("ParkingSpaceRepositoryImpl", documentSnapshot.toString())
+            val parkingSpace = documentSnapshot.toObject(ParkingSpace::class.java)?.apply {
+                this.id = documentSnapshot.id // Set the document ID here
+            }
+            Resource.Success(parkingSpace)
+        } catch (e: Exception) {
+            Log.e("ParkingSpaceRepository", "Error getting parking space by id: $id", e)
+            Resource.Failure(e)
         }
     }
 }
