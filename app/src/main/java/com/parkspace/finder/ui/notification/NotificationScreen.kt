@@ -24,7 +24,7 @@ import kotlin.random.Random
  * Composable function to display a list of notifications.
  */
 @Composable
-fun NotificationScreen(notifications: List<String>){
+fun NotificationScreen(notifications: List<String>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -36,7 +36,15 @@ fun NotificationScreen(notifications: List<String>){
             style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        // Random notifications
+        // Display existing notifications
+        notifications.forEach { notification ->
+            NotificationCard(
+                title = notification,
+                subtitle = "Subtitle placeholder",
+                timestamp = "Timestamp placeholder"
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
         repeat(Random.nextInt(4, 6)) {
             val notificationType = Random.nextInt(1, 4)
             val title = when (notificationType) {
@@ -59,6 +67,41 @@ fun NotificationScreen(notifications: List<String>){
         }
     }
 }
+//fun NotificationScreen(notifications: List<String>){
+//    Column(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .background(Color.White)
+//            .padding(16.dp)
+//    ) {
+//        Text(
+//            text = "Notifications",
+//            style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+//            modifier = Modifier.padding(bottom = 16.dp)
+//        )
+//        // Random notifications
+//        repeat(Random.nextInt(4, 6)) {
+//            val notificationType = Random.nextInt(1, 4)
+//            val title = when (notificationType) {
+//                1 -> "Your booking is confirmed"
+//                2 -> "Payment was successful"
+//                else -> "Payment failed"
+//            }
+//            val subtitle = when (notificationType) {
+//                1 -> "Your parking slot is reserved."
+//                2 -> "Amount of $${Random.nextInt(10, 100)} has been deducted."
+//                else -> "Please check your payment details and try again."
+//            }
+//            val timestamp = "${Random.nextInt(1, 24)} hours ago"
+//            NotificationCard(
+//                title = title,
+//                subtitle = subtitle,
+//                timestamp = timestamp
+//            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//        }
+//    }
+//}
 
 /*
  * Composable function to display a notification card.
@@ -67,6 +110,30 @@ fun NotificationScreen(notifications: List<String>){
  * @param subtitle: The subtitle of the notification.
  * @param timestamp: The timestamp of the notification.
  */
+@Composable
+fun PaymentSuccessNotification(notifications: List<String>) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp)
+    ) {
+        Text(
+            text = "Payment Success",
+            style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        // Display existing notifications
+        notifications.forEach { notification ->
+            NotificationCard(
+                title = notification,
+                subtitle = "Subtitle placeholder",
+                timestamp = "Timestamp placeholder"
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
 @Composable
 fun NotificationCard(title: String, subtitle: String, timestamp: String) {
     Card(

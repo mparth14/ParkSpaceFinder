@@ -3,6 +3,7 @@ package com.parkspace.finder.ui.payment
 /*
  * This file contains the composable function for the payment success screen.
  */
+import PaymentSuccessNotification
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
@@ -26,6 +27,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -78,7 +80,10 @@ fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
             confettiAnimationEnabled = false
         }
     }
+    val notifications = remember { mutableStateListOf<String>() }
     SetBookingConfirmationNotification(context = LocalContext.current)
+    notifications.add("Payment was successful")
+    PaymentSuccessNotification(notifications = notifications)
     Box(
         modifier = Modifier
             .fillMaxSize()
