@@ -8,6 +8,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel responsible for managing onboarding state.
+ *
+ * @property dataStoreRepository Repository for accessing data store.
+ */
 @HiltViewModel
 class OnboardingViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository

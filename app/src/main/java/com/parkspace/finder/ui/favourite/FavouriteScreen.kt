@@ -1,5 +1,8 @@
 package com.parkspace.finder.ui.favourite
 
+/*
+ * This file contains UI components related to the favourite screen.
+ */
 import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -53,7 +56,14 @@ import coil.compose.rememberImagePainter
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.data.Resource
 
-
+/*
+ * Composable function to display a product card.
+ *
+ * @param price: The price of the product.
+ * @param productName: The name of the product.
+ * @param productImage: The URL of the product image.
+ * @param productDescription: The description of the product.
+ */
 @Composable
 fun ProductCard(
     price: String,
@@ -202,6 +212,13 @@ fun ProductCard(
     }
 }
 
+/*
+ * Composable function to display the favourite screen.
+ *
+ * @param context: The context of the screen.
+ * @param favouritescreenViewModel: The view model for favourite screen.
+ * @param navController: Nav controller for navigation.
+ */
 @Composable
 fun FavouriteScreen(context: Context, favouritescreenViewModel: ParkingSpaceViewModel = hiltViewModel(), navController: NavHostController) {
     val spacing = MaterialTheme.spacing

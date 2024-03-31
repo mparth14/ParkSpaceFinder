@@ -15,6 +15,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.parkspace.finder.data.BookingViewModel
 
+/**
+ * Composable function for displaying the content of entering booking details.
+ *
+ * @param navController: NavHostController for navigation.
+ * @param parkingId: Identifier for the parking.
+ */
 @Composable
 fun EnterDetailsContent(
     navController: NavHostController, parkingId: String,

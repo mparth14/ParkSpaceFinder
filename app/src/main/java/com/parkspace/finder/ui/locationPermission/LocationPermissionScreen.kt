@@ -1,11 +1,11 @@
 package com.parkspace.finder.ui.locationPermission
 
-import android.content.res.Resources.Theme
+/*
+ * This file contains the UI components for the location permission screen.
+ */
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,15 +29,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.parkspace.finder.R
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.navigation.ROUTE_BROWSE
 
+/*
+ * Composable function to display the location permission screen.
+ *
+ * @param navController: The navigation controller.
+ * @param parkingSpaceViewModel: The view model for parking spaces.
+ */
 @Composable
 fun LocationPermissionScreen(navController: NavHostController, parkingSpaceViewModel: ParkingSpaceViewModel) {
     val context = LocalContext.current

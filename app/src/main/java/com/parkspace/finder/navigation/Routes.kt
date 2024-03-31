@@ -1,5 +1,8 @@
 package com.parkspace.finder.navigation
 
+/**
+ * Routes used for navigation in the application.
+ */
 const val ROUTE_LOGIN = "login"
 const val ROUTE_SIGNUP = "signup"
 const val ROUTE_HOME = "home"

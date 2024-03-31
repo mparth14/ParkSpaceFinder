@@ -49,6 +49,13 @@ import com.parkspace.finder.navigation.ROUTE_HOME
 import com.parkspace.finder.navigation.ROUTE_LOGIN
 import com.parkspace.finder.ui.theme.spacing
 
+
+/**
+ * Composable function for the sign-up screen.
+ *
+ * @param viewModel: Instance of AuthViewModel for handling authentication-related operations.
+ * @param navController: NavHostController for navigating between composables.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignupScreen(viewModel: AuthViewModel?, navController: NavHostController) {

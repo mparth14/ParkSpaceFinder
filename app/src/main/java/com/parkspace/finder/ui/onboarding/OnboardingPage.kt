@@ -1,8 +1,14 @@
 package com.parkspace.finder.ui.onboarding
 
+/*
+ * This file contains the definition of the OnboardingPage sealed class and its subclasses.
+ */
 import androidx.annotation.DrawableRes
 import com.parkspace.finder.R
 
+/*
+ * Sealed class representing different onboarding pages.
+ */
 sealed class OnboardingPage(
     @DrawableRes
     val image: Int,

@@ -6,9 +6,17 @@ import com.google.firebase.firestore.Query
 import com.parkspace.finder.data.utils.await
 import javax.inject.Inject
 
+/**
+ * Implementation of [ParkingSpaceRepository].
+ */
 class ParkingSpaceRepositoryImpl @Inject constructor(
     private val db: FirebaseFirestore
 ) : ParkingSpaceRepository {
+
+    /**
+     * Retrieves all parking spaces.
+     * @return A resource representing the result of the operation.
+     */
     override suspend fun getParkingSpaces(): Resource<List<ParkingSpace>> {
         return try {
             val snapshot = db.collection("parking-spaces").get().await()
@@ -28,6 +36,11 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
+
+    /**
+     * Retrieves parking spaces sorted by price from high to low.
+     * @return A resource representing the result of the operation.
+     */
     override suspend fun getParkingSpacesSortedByPriceHighToLow(): Resource<List<ParkingSpace>> {
         return try {
             val snapshot = db.collection("parking-spaces")
@@ -41,6 +54,10 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Retrieves parking spaces sorted by price from low to high.
+     * @return A resource representing the result of the operation.
+     */
     override suspend fun getParkingSpacesSortedByPriceLowToHigh(): Resource<List<ParkingSpace>> {
         return try {
             val snapshot = db.collection("parking-spaces")
@@ -53,6 +70,12 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
             Resource.Failure(e)
         }
     }
+
+    /**
+     * Retrieves parking spaces sorted by rating.
+     * @param descending Whether to sort in descending order.
+     * @return A resource representing the result of the operation.
+     */
     override suspend fun getParkingSpacesSortedByRating(descending: Boolean): Resource<List<ParkingSpace>> {
         return try {
             val snapshot = db.collection("parking-spaces")
@@ -66,6 +89,11 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Searches for parking spaces based on a query.
+     * @param query The search query.
+     * @return A resource representing the result of the operation.
+     */
     override suspend fun searchParkingSpaces(query: String): Resource<List<ParkingSpace>> {
         return try {
             val trimmedQuery = query.trim().lowercase() // Trim and convert to lowercase
@@ -87,8 +115,11 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
         }
     }
 
-
-
+    /**
+     * Retrieves a parking space by its name.
+     * @param name The name of the parking space.
+     * @return The parking space if found, or null otherwise.
+     */
     override suspend fun getParkingSpaceByName(name: String): ParkingSpace? {
         return try {
             val querySnapshot = db.collection("parking-spaces")
@@ -108,6 +139,11 @@ class ParkingSpaceRepositoryImpl @Inject constructor(
         }
     }
 
+    /**
+     * Retrieves a parking space by its ID.
+     * @param id The ID of the parking space.
+     * @return A resource representing the result of the operation.
+     */
     override suspend fun getParkingSpaceById(id: String): Resource<ParkingSpace?> {
         return try {
             Log.d("ParkingSpaceRepositoryImpl", "Getting parking space by id: $id")

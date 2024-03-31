@@ -1,12 +1,10 @@
 package com.parkspace.finder.ui.browse
 
-import android.media.Rating
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,18 +19,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.parkspace.finder.R
 import com.parkspace.finder.data.ParkingSpace
-import com.parkspace.finder.navigation.ROUTE_BROWSE
-import com.parkspace.finder.navigation.ROUTE_PARKING_DETAIL
 
+/*
+ * Composable function to display a rating view.
+ *
+ * @param rating: The rating value.
+ */
 @Composable
 fun Rating(rating: Int) {
     Row(
@@ -49,7 +47,13 @@ fun Rating(rating: Int) {
     }
 }
 
-
+/*
+ * Composable function to display a parking lot item.
+ *
+ * @param navController: Nav controller for navigation.
+ * @param parkingSpace: ParkingSpace object representing the parking lot.
+ * @param onItemClick: Callback when the parking lot item is clicked.
+ */
 @Composable
 fun ParkingLotItem(navController: NavController, parkingSpace: ParkingSpace, onItemClick: () -> Unit) {
     Card(

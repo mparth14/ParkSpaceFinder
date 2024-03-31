@@ -24,7 +24,12 @@ import com.parkspace.finder.data.BookingViewModel
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.Resource
 
-
+/**
+ * Composable function for displaying the price bottom bar in the booking screen.
+ *
+ * @param navController: NavController for navigation.
+ * @param bookingViewModel: ViewModel for booking data.
+ */
 @Composable
 fun PriceBottomBar(navController: NavController, bookingViewModel: BookingViewModel) {
     val parkingSpace = bookingViewModel.parkingSpace.collectAsState()

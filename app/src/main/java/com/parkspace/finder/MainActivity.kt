@@ -20,6 +20,11 @@ import com.parkspace.finder.viewmodel.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+/**
+ * MainActivity serves as the entry point for the application.
+ * It initializes the application's splash screen, sets up the navigation host,
+ * and handles the UI logic based on the current state of the app.
+ */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 

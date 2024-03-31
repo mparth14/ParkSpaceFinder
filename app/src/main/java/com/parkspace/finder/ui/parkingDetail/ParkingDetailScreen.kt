@@ -61,6 +61,15 @@ import com.parkspace.finder.viewmodel.ParkingDetailViewModel
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+/*
+ * This file contains composable functions for displaying details of a parking space.
+ */
+
+
+/**
+ * Composable function for displaying a map with a marker at the given location.
+ * @param location The latitude and longitude of the location to be marked on the map.
+ */
 @Composable
 fun MapContent(location: LatLng) {
     val context = LocalContext.current
@@ -99,6 +108,10 @@ fun MapContent(location: LatLng) {
     }
 }
 
+/**
+ * Composable function for displaying a star rating.
+ * @param rating The rating value to be displayed.
+ */
 @Composable
 fun Rating(rating: Int) {
     Row(
@@ -115,6 +128,10 @@ fun Rating(rating: Int) {
     }
 }
 
+/**
+ * Composable function for displaying a facility item.
+ * @param name The name of the facility.
+ */
 @Composable
 fun FacilityItem(name: String) {
     Surface(
@@ -130,6 +147,11 @@ fun FacilityItem(name: String) {
     }
 }
 
+/**
+ * Composable function for displaying the address bar with a location icon.
+ * @param context The context used to fetch the address.
+ * @param parkingSpace The parking space object containing location information.
+ */
 @Composable
 fun AddressBar(context: Context, parkingSpace: ParkingSpace) {
     val address = getAddressFromLocation(
@@ -159,6 +181,13 @@ fun AddressBar(context: Context, parkingSpace: ParkingSpace) {
     }
 }
 
+/**
+ * Function to fetch the address from a location using geocoding.
+ * @param context The context used to fetch the address.
+ * @param latitude The latitude of the location.
+ * @param longitude The longitude of the location.
+ * @return The address as a string if successfully fetched, null otherwise.
+ */
 private fun getAddressFromLocation(context: Context, latitude: Double, longitude: Double): String? {
     val geocoder = Geocoder(context, Locale.getDefault())
     return try {
@@ -174,6 +203,11 @@ private fun getAddressFromLocation(context: Context, latitude: Double, longitude
     }
 }
 
+/**
+ * Composable function for displaying the screen for parking details.
+ * @param navController The navigation controller used for navigation.
+ * @param parkingId The ID of the parking space.
+ */
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ParkingDetailScreen(
@@ -231,10 +265,6 @@ fun ParkingDetailScreen(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
-//                    Text(
-//                        text = "${space.location}",
-//                        fontSize = 12.sp
-//                    )
                 when (parkingSpace.value){
                     is Resource.Success -> {
                         val space = (parkingSpace.value as Resource.Success).result

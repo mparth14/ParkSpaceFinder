@@ -169,15 +169,6 @@ fun ParkingSpotRow(
 
         Spacer(modifier = Modifier.weight(1f))
 
-//        Box(
-//            modifier = Modifier.padding(end = 5.dp)
-//        ) {
-//            Image(
-//                painter = painterResource(id = R.drawable.ic_favourite_filled),
-//                contentDescription = null,
-//                modifier = Modifier.size(30.dp)
-//            )
-//        }
     }
 }
 
@@ -229,18 +220,6 @@ fun ProductCard(
                         .clip(shape = RoundedCornerShape(16.dp))
                 )
 
-//                // Heart icon at top right corner
-//                Box(
-//                    modifier = Modifier
-//
-//                        .align(Alignment.TopEnd)
-//                ) {
-//                    Image(
-//                        painter = painterResource(id = R.drawable.ic_location),
-//                        contentDescription = null,
-//                        modifier = Modifier.size(24.dp)
-//                    )
-//                }
 
                 // Price at bottom right corner
                 Box(
@@ -381,13 +360,9 @@ fun BrowseScreen(
         Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-//    val needsLocationPermission = !permissions.all {
-//        ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-//    }
     val needsLocationPermission by parkingSpaceViewModel.needsLocationPermission.collectAsState()
     val currentLocation = parkingSpaceViewModel.currentLocation.collectAsState()
     val addresses = parkingSpaceViewModel.addresses.collectAsState()
-//    print(addresses.value[0].getAddressLine(0))
         val firstAddress = addresses.value.firstOrNull() // Get the first address if available
     val isLoading = firstAddress == null
     var locality: String? = ""
@@ -686,29 +661,6 @@ fun BrowseScreen(
                         color = Color.Black
                     )
                 )
-
-
-//                Row(
-//                    modifier = Modifier.clickable { /* Handle click */ },
-//                    verticalAlignment = Alignment.CenterVertically
-//                ){
-//                    Text(
-//                        text = "See all",
-//                        style = MaterialTheme.typography.bodyMedium.copy(
-//                            color = Color.DarkGray
-//                        )
-//                    )
-//
-//                    Image(
-//                        painter = painterResource(id = R.drawable.ic_arrow_forward),
-//                        contentDescription = null,
-//                        modifier = Modifier
-//                            .size(27.dp)
-//                            .padding(end = spacing.medium)
-//                    )
-//
-//
-//                }
             }
         }
 
@@ -818,70 +770,5 @@ fun BrowseScreen(
 
 
         }
-
-
     }
 }
-
-//Column {
-//    Surface(
-//        modifier = Modifier.zIndex(1f)
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .background(Color.White)
-//                .padding(top = 16.dp, bottom = 4.dp),
-//        ) {
-//            if (addresses.value.isNotEmpty()) {
-//                AddressBar(address = addresses.value[0].getAddressLine(0))
-//            }
-//            Text(text = "Showing parking lots near you", modifier = Modifier.padding(start = 16.dp, end=16.dp), fontSize = MaterialTheme.typography.headlineSmall.fontSize, fontWeight = FontWeight.Bold)
-//        }
-//    }
-//    Box(
-//        Modifier
-//            .nestedScroll(state.nestedScrollConnection)
-//            .padding(start = 16.dp, end = 16.dp)) {
-//        parkingSpaces.value.let {
-//            when (it) {
-//                is Resource.Success -> {
-//                    Column {
-//                        LazyColumn(modifier = Modifier.fillMaxSize().padding(bottom = 80.dp)) {
-//                            items(it.result!!.size) { index ->
-//                                Box(
-//                                    modifier = Modifier
-//                                        .fillMaxWidth()
-//                                        .padding(bottom = 16.dp)
-//                                ){
-//                                    ParkingLotItem(
-//                                        navController = navController,
-//                                        parkingSpace = it.result[index],
-//                                    )
-//                                }
-//
-//                            }
-//                        }
-//                    }
-//                }
-//                is Resource.Failure -> {
-//                    Log.d("BrowseScreen", it.exception.message.toString())
-//                    val context = LocalContext.current
-//                    Toast.makeText(context, it.exception.message, Toast.LENGTH_SHORT).show()
-//                }
-//
-//                is Resource.Loading -> {
-//                    Text(text = "Loading...")
-//                }
-//
-//                else -> {
-//                    Text(text = "Error")
-//                }
-//            }
-//        }
-//        PullToRefreshContainer(
-//            modifier = Modifier.align(Alignment.TopCenter),
-//            state = state,
-//        )
-//    }
-//}

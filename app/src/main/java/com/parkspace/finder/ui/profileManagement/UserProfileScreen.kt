@@ -1,5 +1,8 @@
 package com.parkspace.finder.ui.profileManagement
 
+/*
+ * This file contains the composable function for the user profile screen.
+ */
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
@@ -13,6 +16,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
+/**
+ * Composable function for the user profile screen.
+ */
 @Composable
 fun UserProfileScreen() {
     var name by remember { mutableStateOf("") }

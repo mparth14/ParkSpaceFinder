@@ -1,13 +1,8 @@
 package com.parkspace.finder.viewmodel
 
-import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.zxing.BarcodeFormat
@@ -16,7 +11,6 @@ import com.parkspace.finder.data.BookingDetailRepository
 import com.parkspace.finder.data.BookingDetails
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.ParkingSpaceRepository
-import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.data.Resource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -26,7 +20,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-
+/**
+ * Generates a QR code bitmap based on the provided data.
+ *
+ * @param qrData The data to encode into the QR code.
+ * @return The generated QR code bitmap.
+ */
 fun generateQRCodeBitmap(qrData: String): ImageBitmap {
     val writer = QRCodeWriter()
     val bitMatrix = writer.encode(qrData, BarcodeFormat.QR_CODE, 700, 700)
@@ -45,6 +44,13 @@ fun generateQRCodeBitmap(qrData: String): ImageBitmap {
     return bmp.asImageBitmap()
 }
 
+/**
+ * ViewModel responsible for managing booking detail data.
+ *
+ * @property bookingId The ID of the booking.
+ * @property bookingDetailRepository Repository for accessing booking detail data.
+ * @property parkingSpaceRepository Repository for accessing parking space data.
+ */
 @HiltViewModel(assistedFactory = BookingDetailViewModel.Factory::class)
 class BookingDetailViewModel @AssistedInject constructor(
     @Assisted private val bookingId: String,

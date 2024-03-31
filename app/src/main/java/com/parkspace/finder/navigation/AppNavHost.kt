@@ -55,7 +55,9 @@ import com.parkspace.finder.ui.payment.PaymentSuccessScreen
 import com.parkspace.finder.ui.home.HomeScreen
 import com.parkspace.finder.ui.search.ParkingBookingScreen
 
-
+/**
+ * Defines the screens used in the application.
+ */
 sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon: ImageVector?, val title: String) {
     object Browse : Screen(ROUTE_BROWSE, Icons.Outlined.Search, Icons.Filled.Search, "Browse")
     object Bookings : Screen(ROUTE_BOOKINGS, Icons.Outlined.Info, Icons.Filled.Info, "Bookings")
@@ -63,6 +65,10 @@ sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon:
     object Notifications : Screen(ROUTE_NOTIFICATIONS, Icons.Outlined.Notifications, Icons.Filled.Notifications, "Notifications")
     object Account : Screen(ROUTE_ACCOUNT, Icons.Outlined.AccountCircle, Icons.Filled.AccountCircle, "Account")
 }
+
+/**
+ * Composable function representing the navigation host of the application.
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -155,11 +161,9 @@ fun AppNavHost(
             }
             composable("cancelledBookingScreen/{bookingId}") { backStackEntry ->
                 val bookingId = backStackEntry.arguments?.getString("bookingId")
-//                CancelledBookingScreen(bookingId = bookingId)
             }
             composable("completedBookingScreen/{bookingId}") { backStackEntry ->
                 val bookingId = backStackEntry.arguments?.getString("bookingId")
-//                CompletedBookingScreen(bookingId = bookingId)
             }
             composable(Screen.Favorites.route) {
                 FavouriteScreen(context = context, navController = navController)
@@ -198,22 +202,4 @@ fun AppNavHost(
         }
     }
 
-}
-
-@Composable
-fun FavoritesScreen() {
-    Text(text = "Favorites")
-    // Home screen content
-}
-
-@Composable
-fun NotificationsScreen() {
-    Text(text = "Notifications")
-    // Dashboard screen content
-}
-
-@Composable
-fun AccountScreen() {
-    Text(text = "Account")
-    // Notifications screen content
 }

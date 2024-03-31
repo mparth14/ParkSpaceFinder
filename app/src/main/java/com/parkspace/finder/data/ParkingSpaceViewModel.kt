@@ -28,13 +28,21 @@ import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
+/**
+ * ViewModel for managing parking spaces.
+ */
 @HiltViewModel
 class ParkingSpaceViewModel @Inject constructor(
     @ApplicationContext context: Context,
     val repository: ParkingSpaceRepository
 ) : ViewModel() {
+
+    /**
+     * Retrieves a parking space by its name.
+     * @param name The name of the parking space.
+     * @return The parking space if found, or null otherwise.
+     */
     suspend fun getParkingSpaceByName(name: String): ParkingSpace? {
-        // Assuming repository provides a function to fetch by name
         return repository.getParkingSpaceByName(name)
     }
     private val _parkingSpaces = MutableStateFlow<Resource<List<ParkingSpace>>?>(null)
@@ -129,9 +137,6 @@ class ParkingSpaceViewModel @Inject constructor(
         viewModelScope.launch {
             _parkingSpaces.value = Resource.Loading
             val result = when (filterOptions.value.sortingOption) {
-//                "rating" -> repository.getParkingSpacesSortedByRating(
-//                    filterOptions.value.sortingOrder == "DESC"
-//                )
                 "price" -> if (filterOptions.value.sortingOrder == "DESC") {
                     repository.getParkingSpacesSortedByPriceHighToLow()
                 } else {

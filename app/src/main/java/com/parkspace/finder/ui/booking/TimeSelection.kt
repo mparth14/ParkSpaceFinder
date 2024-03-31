@@ -1,8 +1,5 @@
 package com.parkspace.finder.ui.booking
 
-import android.app.TimePickerDialog
-import android.util.Log
-import android.widget.TimePicker
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,30 +12,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.android.material.timepicker.MaterialTimePicker
 import com.parkspace.finder.data.BookingViewModel
 import com.parkspace.finder.data.utils.isStartTimeBeforeEndTime
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+/**
+ * Composable function for selecting time for booking.
+ *
+ * @param bookingViewModel: ViewModel for managing booking data.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeSelection(bookingViewModel: BookingViewModel) {

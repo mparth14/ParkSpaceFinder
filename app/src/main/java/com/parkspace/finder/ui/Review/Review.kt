@@ -1,5 +1,8 @@
 package com.parkspace.finder.ui.Review
 
+/*
+ * This file contains the composable function for the review screen.
+ */
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,7 +30,9 @@ import androidx.navigation.NavController
 import com.parkspace.finder.StarSelector
 import com.parkspace.finder.ui.theme.md_theme_light_primary
 
-
+/**
+ * Composable function for the review screen.
+ */
 @Composable
     @Preview
     fun ReviewScreen() {

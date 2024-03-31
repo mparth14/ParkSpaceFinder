@@ -22,15 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -47,6 +44,12 @@ import com.parkspace.finder.data.utils.getAddressesFromLatLng
 import com.parkspace.finder.navigation.ROUTE_PARKING_TICKET
 import com.parkspace.finder.viewmodel.BookingDetailViewModel
 
+/**
+ * Composable function for displaying the booking details screen.
+ *
+ * @param navController: NavHostController for navigating between composables.
+ * @param bookingId: ID of the booking to display details for.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookingDetailsScreen(navController: NavHostController, bookingId: String) {
