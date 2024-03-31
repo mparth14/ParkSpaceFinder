@@ -74,7 +74,7 @@ class ParkingSpaceViewModel @Inject constructor(
     var addresses: StateFlow<List<Address>> = _addresses
 
     @Suppress("MissingPermission")
-    private fun startLocationUpdates() {
+    fun startLocationUpdates() {
         Log.d("ParkingSpaceViewModel", "startLocationUpdates")
         locationCallback?.let {
             val locationRequest = LocationRequest.Builder(
@@ -99,9 +99,8 @@ class ParkingSpaceViewModel @Inject constructor(
                 super.onLocationResult(locationResult)
                 for (location in locationResult.locations) {
                     _currentLocation.value = LatLng(location.latitude, location.longitude)
-                    _addresses.value =
-                        geocoder.getFromLocation(location.latitude, location.longitude, 1)!!
-                        sortParkingSpaces()
+                    _addresses.value = geocoder.getFromLocation(location.latitude, location.longitude, 1)!!
+                    sortParkingSpaces()
                 }
             }
         }
