@@ -8,14 +8,19 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import com.parkspace.finder.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 
 
 @Composable
 fun ReviewBookingScreen(
+    navController: NavHostController,
     bookingDetails: BookingDetails,
     onConfirmClick: () -> Unit
 ) {
@@ -28,12 +33,28 @@ fun ReviewBookingScreen(
             ) {
                 item {
                     Spacer(
-                        modifier = Modifier.height(16.dp)
+                        modifier = Modifier.height(12.dp)
                     )
-                    Text(
-                        text = "Review Booking",
-                        fontSize = 40.sp
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        IconButton(
+                            onClick = { navController.popBackStack() },
+                            modifier = Modifier.offset(x = (-24).dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.back_24),
+                                contentDescription = "back icon"
+                            )
+                        }
+                        Text(
+                            text = "Review Booking",
+                            fontSize = 36.sp,
+                            modifier = Modifier.padding(bottom = 8.dp, end = 54.dp)
+
+                        )
+                    }
                     Spacer(
                         modifier = Modifier.height(16.dp)
                     )
@@ -216,6 +237,7 @@ fun ReviewBookingScreen(
 @Composable
 fun PreviewBookingDetailsScreen() {
     ReviewBookingScreen(
+        navController = rememberNavController(),
         bookingDetails = BookingDetails(
             date = "March 16, 2024",
             time = "10:00 AM",

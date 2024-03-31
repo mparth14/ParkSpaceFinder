@@ -171,6 +171,7 @@ fun AppNavHost(
             }
             composable(Screen.Favorites.route) {
                 ReviewBookingScreen(
+                    navController = navController,
                     bookingDetails = BookingDetails(
                         date = "March 16, 2024",
                         time = "10:00 AM",
