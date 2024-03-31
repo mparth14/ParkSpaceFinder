@@ -62,6 +62,19 @@ fun calculateDuration(startTimeStr: String, endTimeStr: String): String {
     return ""
 }
 
+fun calculateDurationInHours(startTimeStr: String, endTimeStr: String): Double {
+    val startTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(startTimeStr)
+    val endTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).parse(endTimeStr)
+    if(startTime != null && endTime != null) {
+        val diff = endTime.time - startTime.time
+        val hours: Double = diff / (60 * 60 * 1000.0)
+        val minutes = (diff - hours * (60 * 60 * 1000)) / (60 * 1000)
+        return hours + (minutes / 60.0)
+    }
+    return 0.0
+}
+
+
 /**
  * Checks if the given date and time is in the past relative to the current date and time.
  * @param date The date string in the format "yyyy-MM-dd".
