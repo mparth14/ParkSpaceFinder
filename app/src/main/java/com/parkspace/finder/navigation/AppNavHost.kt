@@ -57,11 +57,11 @@ import com.parkspace.finder.ui.search.ParkingBookingScreen
 
 
 sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon: ImageVector?, val title: String) {
-    object Browse : Screen("browse", Icons.Outlined.Search, Icons.Filled.Search, "Browse")
-    object Bookings : Screen("bookings", Icons.Outlined.Info, Icons.Filled.Info, "Bookings")
-    object Favorites : Screen("favorites", Icons.Outlined.Favorite, Icons.Filled.Favorite,"Favorite")
-    object Notifications : Screen("notifications", Icons.Outlined.Notifications, Icons.Filled.Notifications, "Notifications")
-    object Account : Screen("account", Icons.Outlined.AccountCircle, Icons.Filled.AccountCircle, "Account")
+    object Browse : Screen(ROUTE_BROWSE, Icons.Outlined.Search, Icons.Filled.Search, "Browse")
+    object Bookings : Screen(ROUTE_BOOKINGS, Icons.Outlined.Info, Icons.Filled.Info, "Bookings")
+    object Favorites : Screen(ROUTE_FAVORITES, Icons.Outlined.Favorite, Icons.Filled.Favorite,"Favorite")
+    object Notifications : Screen(ROUTE_NOTIFICATIONS, Icons.Outlined.Notifications, Icons.Filled.Notifications, "Notifications")
+    object Account : Screen(ROUTE_ACCOUNT, Icons.Outlined.AccountCircle, Icons.Filled.AccountCircle, "Account")
 }
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
