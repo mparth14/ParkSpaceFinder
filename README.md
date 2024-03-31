@@ -20,10 +20,10 @@ ParkSpace was built using the following technologies:
 
 |   |   |   |
 |---|---|---|
-| ![Home Screen](app/public/screenshots/HomeScreen.png){ width=100px } <br> Home Screen | ![Search Screen](app/public/screenshots/SearchScreen.png){ width=100px } <br> Search Screen | ![Parking Details](app/public/screenshots/ParkingDetails.png){ width=100px } <br> Parking Details |
-| ![Booking Form](app/public/screenshots/BookingForm.png){ width=100px } <br> Booking Form | ![Booking Summary Screen](app/public/screenshots/BookingSummaryScreen.png){ width=100px } <br> Booking Summary Screen | ![Parking Ticket Screen](app/public/screenshots/ParkingTicketScreen.png){ width=100px } <br> Parking Ticket Screen |
-| ![Navigation Feature](app/public/screenshots/NavigationFeature.png){ width=100px } <br> Navigation Feature | ![Active Bookings Screen](app/public/screenshots/ActiveBookings.png){ width=100px } <br> Active Bookings Screen | ![Active Booking Details Screen](app/public/screenshots/ActiveBookingDetailsScreen.png){ width=100px } <br> Active Booking Details Screen |
-| ![Timer Screen](app/public/screenshots/TimerScreen.png){ width=100px } <br> Timer Screen | ![User Profile Screen](app/public/screenshots/UserProfileScreen.png){ width=100px } <br> User Profile Screen | ![Notifications Screen](app/public/screenshots/NotificationsScreen.png){ width=100px } <br> Notifications Screen |
+| ![Home Screen](app/public/screenshots/HomeScreen.png){ width=300px } <br> Home Screen | ![Search Screen](app/public/screenshots/SearchScreen.png){ width=300px } <br> Search Screen | ![Parking Details](app/public/screenshots/ParkingDetails.png){ width=300px } <br> Parking Details |
+| ![Booking Form](app/public/screenshots/BookingForm.png){ width=300px } <br> Booking Form | ![Booking Summary Screen](app/public/screenshots/BookingSummaryScreen.png){ width=300px } <br> Booking Summary Screen | ![Parking Ticket Screen](app/public/screenshots/ParkingTicketScreen.png){ width=300px } <br> Parking Ticket Screen |
+| ![Navigation Feature](app/public/screenshots/NavigationFeature.png){ width=300px } <br> Navigation Feature | ![Active Bookings Screen](app/public/screenshots/ActiveBookings.png){ width=300px } <br> Active Bookings Screen | ![Active Booking Details Screen](app/public/screenshots/ActiveBookingDetailsScreen.png){ width=300px } <br> Active Booking Details Screen |
+| ![Timer Screen](app/public/screenshots/TimerScreen.png){ width=300px } <br> Timer Screen | ![User Profile Screen](app/public/screenshots/UserProfileScreen.png){ width=300px } <br> User Profile Screen | ![Notifications Screen](app/public/screenshots/NotificationsScreen.png){ width=300px } <br> Notifications Screen |
 
 
 ## ParkSpace - Build Instructions
