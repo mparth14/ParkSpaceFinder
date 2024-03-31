@@ -1,5 +1,6 @@
 package com.parkspace.finder.ui.timerParkingBooking
 
+import NotificationScreen
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
@@ -76,17 +77,21 @@ fun ParkingTimerScreen(
                     delay(1000) // Refresh every second
                 }
             }
+            val notifications = remember { mutableStateListOf<String>() }
 
 
             val remainingTime = calculateRemainingTime(remainingTimeMillis)
             if (remainingTimeMillis == totalTimeMillis) {
                 SetBeginTimerNotification(LocalContext.current)
+                notifications.add("Your parking timer has started")
             }
 
             // Call SetReminder function when 10 minutes are left
             if (remainingTimeMillis <= 10 * 60 * 1000) { // 10 minutes in milliseconds
                 SetReminder(LocalContext.current)
+                notifications.add("10 minutes left for your parking space")
             }
+            NotificationScreen(notifications = notifications)
 
             Scaffold(
                 topBar = {

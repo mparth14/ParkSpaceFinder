@@ -24,7 +24,7 @@ import kotlin.random.Random
  * Composable function to display a list of notifications.
  */
 @Composable
-fun NotificationScreen() {
+fun NotificationScreen(notifications: List<String>){
     Column(
         modifier = Modifier
             .fillMaxSize()
