@@ -402,6 +402,8 @@ fun BrowseScreen(
     if (needsLocationPermission) {
         navController.popBackStack()
         navController.navigate(ROUTE_REQUEST_LOCATION_PERMISSION)
+    }else{
+        parkingSpaceViewModel.startLocationUpdates()
     }
 
     val parkingSpaces = parkingSpaceViewModel.parkingSpaces
