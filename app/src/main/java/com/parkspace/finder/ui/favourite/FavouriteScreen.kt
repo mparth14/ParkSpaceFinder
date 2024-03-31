@@ -55,6 +55,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.data.Resource
+import com.parkspace.finder.navigation.ROUTE_PARKING_DETAIL
 
 /*
  * Composable function to display a product card.
@@ -70,6 +71,7 @@ fun ProductCard(
     productName: String,
     productImage: String,
     productDescription: String,
+    onCardClick: () -> Unit = {}
 ) {
     val painter: Painter = rememberImagePainter(
         data = productImage,
@@ -94,6 +96,9 @@ fun ProductCard(
         modifier = Modifier
             .padding(horizontal = 5.dp, vertical = 4.dp)
             .background(Color.White)
+            .clickable {
+                onCardClick()
+            }
     ) {
         Column(
             modifier = Modifier.background(Color.White)
@@ -252,7 +257,9 @@ fun FavouriteScreen(context: Context, favouritescreenViewModel: ParkingSpaceView
                                     productName = space.name,
                                     productImage = space.imageURL,
                                     productDescription = "${String.format("%.2f", space.distanceFromCurrentLocation)} km away · 27 left"
-                                )
+                                ){
+                                    navController.navigate(ROUTE_PARKING_DETAIL.replace("{parkingId}", space.id))
+                                }
                                 Spacer(modifier = Modifier.padding(8.dp))
                             }
                         }

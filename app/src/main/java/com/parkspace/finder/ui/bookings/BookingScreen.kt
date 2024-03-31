@@ -116,6 +116,9 @@ fun BookingList(bookingItems: List<BookingDetails>, navController: NavController
                     ?: ""))
             }
         }
+        item {
+            Spacer(modifier = Modifier.height(80.dp))
+        }
     }
 }
 
