@@ -103,6 +103,7 @@ dependencies {
     implementation ("androidx.compose.foundation:foundation:$compose_version")
     implementation ("androidx.compose.material:material-icons-core:$compose_version")
     implementation ("androidx.compose.material:material-icons-extended:$compose_version")
+    implementation ("com.google.android.material:material:$compose_version")
 }
 
 kapt {
