@@ -41,6 +41,7 @@ import com.parkspace.finder.R
 import com.parkspace.finder.data.AuthViewModel
 import com.parkspace.finder.data.Resource
 import com.parkspace.finder.data.SignupUIEvent
+import com.parkspace.finder.navigation.ROUTE_BROWSE
 import com.parkspace.finder.navigation.ROUTE_HOME
 import com.parkspace.finder.navigation.ROUTE_LOGIN
 import com.parkspace.finder.ui.theme.spacing
@@ -209,8 +210,8 @@ fun SignupScreen(viewModel: AuthViewModel?, navController: NavHostController) {
             }
             is Resource.Success -> {
                 LaunchedEffect(Unit){
-                    navController.navigate(ROUTE_HOME){
-                        popUpTo(ROUTE_HOME) {
+                    navController.navigate(ROUTE_BROWSE){
+                        popUpTo(ROUTE_BROWSE) {
                             inclusive = true
                         }
                     }

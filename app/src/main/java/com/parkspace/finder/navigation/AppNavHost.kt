@@ -1,7 +1,10 @@
 package com.parkspace.finder.navigation
 
+import BookingScreen
+import NotificationScreen
 import android.content.Context
-import android.util.Log
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Favorite
@@ -22,46 +25,50 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.parkspace.finder.FilterSection
 import com.parkspace.finder.data.AuthViewModel
+import com.parkspace.finder.ui.bookings.BookingDetailsScreen
 import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.ui.auth.LoginScreen
 import com.parkspace.finder.ui.auth.SignupScreen
+import com.parkspace.finder.ui.booking.EnterDetailsContent
 import com.parkspace.finder.ui.browse.BrowseScreen
-import com.parkspace.finder.ui.home.HomeScreen
+import com.parkspace.finder.ui.favourite.FavouriteScreen
+
 import com.parkspace.finder.ui.locationPermission.LocationPermissionScreen
 import com.parkspace.finder.ui.onboarding.OnboardingScreen
 import com.parkspace.finder.ui.parkingDetail.ParkingDetailScreen
 import com.parkspace.finder.ui.parkingticket.ParkingTicketScreen
-import com.parkspace.finder.ui.payment.BookingDetails
 import com.parkspace.finder.ui.payment.PaymentScreen
 import com.parkspace.finder.ui.payment.PaymentSuccessScreen
-import com.parkspace.finder.ui.timerParkingBooking.ParkingTimerScreen
+import com.parkspace.finder.ui.home.HomeScreen
+import com.parkspace.finder.ui.search.ParkingBookingScreen
 
 
 sealed class Screen(val route: String, val icon: ImageVector?, val selectedIcon: ImageVector?, val title: String) {
-    object Browse : Screen("browse", Icons.Outlined.Search, Icons.Filled.Search, "Browse")
-    object Bookings : Screen("bookings", Icons.Outlined.Info, Icons.Filled.Info, "Bookings")
-    object Favorites : Screen("favorites", Icons.Outlined.Favorite, Icons.Filled.Favorite,"Favorite")
-    object Notifications : Screen("notifications", Icons.Outlined.Notifications, Icons.Filled.Notifications, "Notifications")
-    object Account : Screen("account", Icons.Outlined.AccountCircle, Icons.Filled.AccountCircle, "Account")
+    object Browse : Screen(ROUTE_BROWSE, Icons.Outlined.Search, Icons.Filled.Search, "Browse")
+    object Bookings : Screen(ROUTE_BOOKINGS, Icons.Outlined.Info, Icons.Filled.Info, "Bookings")
+    object Favorites : Screen(ROUTE_FAVORITES, Icons.Outlined.Favorite, Icons.Filled.Favorite,"Favorite")
+    object Notifications : Screen(ROUTE_NOTIFICATIONS, Icons.Outlined.Notifications, Icons.Filled.Notifications, "Notifications")
+    object Account : Screen(ROUTE_ACCOUNT, Icons.Outlined.AccountCircle, Icons.Filled.AccountCircle, "Account")
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavHost(
     viewModel: AuthViewModel,
+    parkingSpaceViewModel: ParkingSpaceViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = ROUTE_ONBOARDING,
@@ -69,8 +76,8 @@ fun AppNavHost(
 ) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val screensToShowNavbar = listOf(Screen.Browse, Screen.Bookings, Screen.Favorites, Screen.Notifications, Screen.Account)
-    var selectedScreen = rememberSaveable {
-        mutableStateOf(0)
+    val selectedScreen = rememberSaveable {
+        mutableIntStateOf(0)
     }
     val currentRoute = navBackStackEntry.value?.destination?.route
     Scaffold (
@@ -124,103 +131,73 @@ fun AppNavHost(
                 HomeScreen(viewModel,navController = navController)
             }
             composable(ROUTE_PAYMENT) {
-                PaymentScreen(navController = navController)
+                val parkingId = it.arguments?.getString("parkingId") ?: "0"
+                PaymentScreen(navController = navController, parkingId = parkingId, it)
             }
-            composable(
-                route = "$ROUTE_PARKING_TIMER/{startTime}/{endTime}/{spotNumber}",
-                arguments = listOf(
-                    navArgument("startTime") { type = NavType.StringType },
-                    navArgument("endTime") { type = NavType.StringType },
-                    navArgument("spotNumber") { type = NavType.StringType }
-                )
-            ) { backStackEntry ->
-                ParkingTimerScreen(
-                    navController = navController,
-                    startTime = backStackEntry.arguments?.getString("startTime") ?: "01:00 PM",
-                    endTime = backStackEntry.arguments?.getString("endTime") ?: "11:00 PM",
-                    spotNumber = backStackEntry.arguments?.getString("spotNumber") ?: "B20"
-                )
-            }
-            composable(
-                route = "$ROUTE_PAYMENT_SUCCESS/{startTime}/{endTime}/{spotNumber}/{duration}/{price}/{lotName}",
-                arguments = listOf(
-                    navArgument("startTime") { type = NavType.StringType },
-                    navArgument("endTime") { type = NavType.StringType },
-                    navArgument("spotNumber") { type = NavType.StringType },
-                    navArgument("duration") { type = NavType.StringType },
-                    navArgument("price") { type = NavType.FloatType },
-                    navArgument("lotName") { type = NavType.StringType }
-                )
-            ) { backStackEntry ->
-                val bookingDetails = BookingDetails(
-                    startTime = backStackEntry.arguments?.getString("startTime") ?: "",
-                    endTime = backStackEntry.arguments?.getString("endTime") ?: "",
-                    spotNumber = backStackEntry.arguments?.getString("spotNumber") ?: "",
-                    duration = backStackEntry.arguments?.getString("duration") ?: "",
-                    price = backStackEntry.arguments?.getDouble("price") ?: 0.00,
-                    lotName = backStackEntry.arguments?.getString("lotName") ?: "",
-                )
-                PaymentSuccessScreen(navController = navController, bookingDetails = bookingDetails) {
-                }
+            composable(ROUTE_PAYMENT_SUCCESS) { backStackEntry ->
+
+                PaymentSuccessScreen(navController = navController, backStackEntry.arguments?.getString("bookingId") ?: "0")
             }
 
-            composable(
-                route = "$ROUTE_PARKING_TICKET/{startTime}/{endTime}/{spotNumber}/{duration}/{price}/{lotName}",
-                arguments = listOf(
-                    navArgument("startTime") { type = NavType.StringType },
-                    navArgument("endTime") { type = NavType.StringType },
-                    navArgument("spotNumber") { type = NavType.StringType },
-                    navArgument("duration") { type = NavType.StringType },
-                    navArgument("price") { type = NavType.FloatType },
-                    navArgument("lotName") { type = NavType.StringType }
-                )
-            ) { backStackEntry ->
-                ParkingTicketScreen(
-                    startTime = backStackEntry.arguments?.getString("startTime") ?: "",
-                    endTime = backStackEntry.arguments?.getString("endTime") ?: "",
-                    spotNumber = backStackEntry.arguments?.getString("spotNumber") ?: "",
-                    duration = backStackEntry.arguments?.getString("duration") ?: "",
-                    price = backStackEntry.arguments?.getDouble("price") ?: 0.0,
-                    lotName = backStackEntry.arguments?.getString("lotName") ?: "",
-                    onBackClicked = { navController.popBackStack() }
-                )
+            composable(ROUTE_PARKING_TICKET) { backStackEntry ->
+                ParkingTicketScreen(navController = navController, backStackEntry.arguments?.getString("bookingId") ?: "0")
             }
 
             composable(ROUTE_BROWSE) {
-                BrowseScreen(context = context, navController = navController)
+                BrowseScreen(context  = context, navController = navController, parkingSpaceViewModel = parkingSpaceViewModel)
             }
-            composable(Screen.Bookings.route) {
-                BookignsScreen(navController = navController)
+            composable(ROUTE_BOOKINGS) {
+                BookingScreen(navController = navController)
+            }
+            composable(ROUTE_BOOKING_DETAIL) { backStackEntry ->
+                val bookingId = backStackEntry.arguments?.getString("bookingId") ?: "0"
+                BookingDetailsScreen(navController = navController, bookingId = bookingId)
+            }
+            composable("cancelledBookingScreen/{bookingId}") { backStackEntry ->
+                val bookingId = backStackEntry.arguments?.getString("bookingId")
+//                CancelledBookingScreen(bookingId = bookingId)
+            }
+            composable("completedBookingScreen/{bookingId}") { backStackEntry ->
+                val bookingId = backStackEntry.arguments?.getString("bookingId")
+//                CompletedBookingScreen(bookingId = bookingId)
             }
             composable(Screen.Favorites.route) {
-                FavoritesScreen()
+                FavouriteScreen(context = context, navController = navController)
             }
             composable(Screen.Notifications.route) {
-                NotifactionsScreen()
+                NotificationScreen()
             }
             composable(Screen.Account.route) {
                 HomeScreen(navController = navController, viewModel = viewModel)
             }
             composable(
-                route = "parking_details/{name}",
-                arguments = listOf(navArgument("name") { type = NavType.StringType })
+                route = ROUTE_PARKING_DETAIL,
             ) { backStackEntry ->
-                val parkingSpaceName = backStackEntry.arguments?.getString("name") ?: ""
-                ParkingDetailScreen(navController = navController, parkingSpaceName = parkingSpaceName)
+                val parkingId = backStackEntry.arguments?.getString("parkingId") ?: "0"
+
+                ParkingDetailScreen(
+                    navController = navController,
+                    parkingId = parkingId,
+                )
             }
 
             composable(ROUTE_REQUEST_LOCATION_PERMISSION) {
                 LocationPermissionScreen(navController = navController)
             }
+            composable(ROUTE_ENTER_BOOKING_DETAIL_SCREEN) {
+                val parkingId = it.arguments?.getString("parkingId") ?: "0"
+                EnterDetailsContent(navController = navController, parkingId = parkingId)
+            }
+            composable(ROUTE_FILTER) {
+                FilterSection( parkingSpaceViewModel = parkingSpaceViewModel,navController = navController)
+            }
+            composable(ROUTE_SEARCH) {
+                ParkingBookingScreen(navController = navController,parkingSpaceViewModel = parkingSpaceViewModel)
+            }
+
         }
     }
 
-}
-@Composable
-fun BookignsScreen(navController: NavHostController) {
-    Text(text = "Bookings")
-    // Payment screen content
-    // Navigate back to the previous screen after completing the payment
 }
 
 @Composable
@@ -230,13 +207,13 @@ fun FavoritesScreen() {
 }
 
 @Composable
-fun NotifactionsScreen() {
+fun NotificationsScreen() {
     Text(text = "Notifications")
     // Dashboard screen content
 }
 
 @Composable
-fun AccontScreen() {
+fun AccountScreen() {
     Text(text = "Account")
     // Notifications screen content
 }

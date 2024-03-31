@@ -1,6 +1,12 @@
 package com.parkspace.finder.data.utils
 
+import android.content.Context
+import android.location.Geocoder
+import android.util.Log
+import android.widget.Toast
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.firestore.GeoPoint
+import java.util.Locale
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.pow
@@ -23,4 +29,16 @@ fun distanceBetween(start: LatLng, end: LatLng): Double {
     val c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
     return earthRadius * c
+}
+
+fun getAddressesFromLatLng(context: Context, latLng: GeoPoint ): String {
+    val geocoder = Geocoder(context, Locale.getDefault())
+    return try {
+        val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+        val address = addresses?.get(0)
+        "${address?.getAddressLine(0)}, ${address?.locality}, ${address?.adminArea}, ${address?.countryName}"
+    } catch (e: Exception) {
+        Log.d("Error", e.toString())
+        e.toString()
+    }
 }

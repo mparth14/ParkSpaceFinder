@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.parkspace.finder"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -54,7 +54,9 @@ android {
 }
 
 dependencies {
-
+    implementation("com.google.firebase:firebase-perf-ktx:20.5.2")
+    var compose_version = "1.0.0-beta01"
+    implementation("io.coil-kt:coil-compose:1.4.0")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -89,13 +91,21 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
-
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:core:1.0.2")
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:calendar:1.0.2")
+    implementation ("com.maxkeppeler.sheets-compose-dialogs:clock:1.0.2")
     implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.maps.android:maps-compose:2.14.0")
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material:material")
-    implementation("androidx.compose.ui:ui-tooling")
+    implementation ("androidx.compose.ui:ui:$compose_version")
+    implementation ("androidx.compose.material:material:$compose_version")
+    implementation ("androidx.compose.ui:ui-tooling:$compose_version")
+    implementation ("androidx.compose.foundation:foundation:$compose_version")
+    implementation ("androidx.compose.material:material-icons-core:$compose_version")
+    implementation ("androidx.compose.material:material-icons-extended:$compose_version")
+    implementation ("com.google.android.material:material:$compose_version")
+    implementation ("com.google.android.gms:play-services-maps:17.0.1")
+    implementation ("nl.dionsegijn:konfetti-compose:2.0.4")
 }
 
 kapt {
