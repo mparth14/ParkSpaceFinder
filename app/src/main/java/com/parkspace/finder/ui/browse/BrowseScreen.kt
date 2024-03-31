@@ -381,9 +381,10 @@ fun BrowseScreen(
         Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-    val needsLocationPermission = !permissions.all {
-        ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-    }
+//    val needsLocationPermission = !permissions.all {
+//        ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+//    }
+    val needsLocationPermission by parkingSpaceViewModel.needsLocationPermission.collectAsState()
     val currentLocation = parkingSpaceViewModel.currentLocation.collectAsState()
     val addresses = parkingSpaceViewModel.addresses.collectAsState()
 //    print(addresses.value[0].getAddressLine(0))
@@ -402,8 +403,6 @@ fun BrowseScreen(
     if (needsLocationPermission) {
         navController.popBackStack()
         navController.navigate(ROUTE_REQUEST_LOCATION_PERMISSION)
-    }else{
-        parkingSpaceViewModel.startLocationUpdates()
     }
 
     val parkingSpaces = parkingSpaceViewModel.parkingSpaces

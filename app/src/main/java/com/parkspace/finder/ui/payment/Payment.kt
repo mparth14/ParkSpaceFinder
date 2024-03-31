@@ -135,7 +135,10 @@ fun PaymentScreen(navController: NavHostController, parkingId: String, backStack
                                 navController.navigate("booking/$bookingId/success")
                             }
                             is Resource.Loading -> {
-                                CircularProgressIndicator()
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(24.dp),
+                                    color = Color.White
+                                )
                             }
                             else -> {
                                 Text(text = "Book Now")
