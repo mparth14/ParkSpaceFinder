@@ -113,12 +113,17 @@ The following dependencies are used in the ParkSpace project:
 
 ## References
 
-- "Jetpack," Android Developers. [Online]. Available: https://developer.android.com/courses/jetpack-compose/course?gad_source=1&gclid=Cj0KCQjwk6SwBhDPARIsAJ59GwdwBIOr9gs5K0ms4WsZCmfEz0aQpbGwGVCvEvOSszq05ySH2ua7EXQaAtb2EALw_wcB&gclsrc=aw.ds. [Accessed: March 11, 2024].
-- "Dagger HILT," Android Developers. [Online]. Available: https://developer.android.com/training/dependency-injection/hilt-android. [Accessed: March 10, 2024].
-- "Material UI," Material Design. [Online]. Available: https://m3.material.io/. [Accessed: March 16, 2024].
-- "JUnit," JUnit. [Online]. Available: https://junit.org/junit5/. [Accessed: March 14, 2024].
-- "Google Maps SDK," Google Developers. [Online]. Available: https://developers.google.com/maps/documentation/android-sdk/overview. [Accessed: March 13, 2024].
-- "Firebase," Firebase. [Online]. Available: https://firebase.google.com/. [Accessed: March 9, 2024].
+[1] "Jetpack," Android Developers. [Online]. Available: https://developer.android.com/courses/jetpack-compose/course?gad_source=1&gclid=Cj0KCQjwk6SwBhDPARIsAJ59GwdwBIOr9gs5K0ms4WsZCmfEz0aQpbGwGVCvEvOSszq05ySH2ua7EXQaAtb2EALw_wcB&gclsrc=aw.ds. [Accessed: March 11, 2024].
+
+[2] "Dagger HILT," Android Developers. [Online]. Available: https://developer.android.com/training/dependency-injection/hilt-android. [Accessed: March 10, 2024].
+
+[3] "Material UI," Material Design. [Online]. Available: https://m3.material.io/. [Accessed: March 16, 2024].
+
+[4] "JUnit," JUnit. [Online]. Available: https://junit.org/junit5/. [Accessed: March 14, 2024].
+
+[4] "Google Maps SDK," Google Developers. [Online]. Available: https://developers.google.com/maps/documentation/android-sdk/overview. [Accessed: March 13, 2024].
+
+[5] "Firebase," Firebase. [Online]. Available: https://firebase.google.com/. [Accessed: March 9, 2024].
 
 ## Authors & Acknowledgements
 
