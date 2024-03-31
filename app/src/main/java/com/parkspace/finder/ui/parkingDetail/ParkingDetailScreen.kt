@@ -294,28 +294,7 @@ fun ParkingDetailScreen(
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Icon(
-                                    painter = painterResource(id = R.drawable.location_24), // Your location icon resource
-                                    contentDescription = "Location",
-                                    tint = Color(0xFF777777),
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Text(
-                                    text = "${
-                                        String.format(
-                                            "%.2f",
-                                            space?.distanceFromCurrentLocation
-                                        )
-                                    } km away",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = Color(0xFF777777),
-                                    modifier = Modifier.padding(start = 4.dp) // Add padding to separate the icon and text
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(32.dp)) // Add space between the first and second items
-                            // Add the second item: "Available"
+
                             Text(
                                 text = "Available",
                                 style = MaterialTheme.typography.bodySmall,

@@ -10,11 +10,13 @@ import androidx.compose.material3.Surface
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.parkspace.finder.data.BookingViewModel
+import com.parkspace.finder.data.utils.isStartTimeBeforeEndTime
 
 /**
  * Composable function for displaying the content of entering booking details.
@@ -30,6 +32,8 @@ fun EnterDetailsContent(
     val bookingViewModel = hiltViewModel<BookingViewModel, BookingViewModel.Factory> {
         it.create(parkingId)
     }
+    val startTime = bookingViewModel.startTimeSelection.collectAsState()
+    val endTime = bookingViewModel.endTimeSelection.collectAsState()
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -41,6 +45,8 @@ fun EnterDetailsContent(
             DaySelector(bookingViewModel)
             TimeSelection(bookingViewModel)
         }
-        PriceBottomBar(navController, bookingViewModel)
+        if(isStartTimeBeforeEndTime(startTime.value, endTime.value)){
+            PriceBottomBar(navController, bookingViewModel)
+        }
     }
 }

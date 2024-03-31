@@ -24,6 +24,8 @@ import androidx.navigation.NavController
 import com.parkspace.finder.data.BookingViewModel
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.Resource
+import com.parkspace.finder.data.utils.calculateDurationInHours
+import com.parkspace.finder.data.utils.formatTime
 
 /**
  * Composable function for displaying the price bottom bar in the booking screen.
@@ -35,7 +37,9 @@ import com.parkspace.finder.data.Resource
 @Composable
 fun PriceBottomBar(navController: NavController, bookingViewModel: BookingViewModel) {
     val parkingSpace = bookingViewModel.parkingSpace.collectAsState()
-    when(parkingSpace.value){
+    val startTime = bookingViewModel.startTimeSelection.collectAsState()
+    val endTime = bookingViewModel.endTimeSelection.collectAsState()
+    when (parkingSpace.value) {
         is Resource.Success -> {
             val space = (parkingSpace.value as Resource.Success<ParkingSpace?>).result
             Box {
@@ -56,14 +60,19 @@ fun PriceBottomBar(navController: NavController, bookingViewModel: BookingViewMo
                         Row {
                             Text(text = "Price")
                             Text(
-                                text = "$ ${space?.hourlyPrice}/hr ",
+                                text = "$ %.2f".format(
+                                    calculateDurationInHours(
+                                        formatTime(startTime.value),
+                                        formatTime(endTime.value)
+                                    ) * (space?.hourlyPrice ?: 0.0)
+                                ),
                                 modifier = Modifier.padding(start = 8.dp),
                                 fontWeight = FontWeight.Bold
                             )
                         }
                         Button(onClick = {
                             Log.d("PriceBottomBar", space.toString())
-                            navController.navigate("parking/${space?.id}/pay")
+                            navController.navigate("parking/${space?.id}/confirm")
                         }) {
                             Text(
                                 text = "Book Now",
@@ -75,12 +84,16 @@ fun PriceBottomBar(navController: NavController, bookingViewModel: BookingViewMo
                 }
             }
         }
+
         is Resource.Loading -> {
             Text(text = "Loading...")
         }
+
         is Resource.Failure -> {
             Text(text = "Error")
-        } else -> {
+        }
+
+        else -> {
             Text(text = "Error")
         }
     }
