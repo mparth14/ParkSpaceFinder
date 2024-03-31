@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.parkspace.finder"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -104,6 +104,8 @@ dependencies {
     implementation ("androidx.compose.material:material-icons-core:$compose_version")
     implementation ("androidx.compose.material:material-icons-extended:$compose_version")
     implementation ("com.google.android.material:material:$compose_version")
+    implementation ("com.google.android.gms:play-services-maps:17.0.1")
+    implementation ("nl.dionsegijn:konfetti-compose:2.0.4")
 }
 
 kapt {
