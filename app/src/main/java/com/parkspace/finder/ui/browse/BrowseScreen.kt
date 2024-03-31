@@ -56,6 +56,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.parkspace.finder.FilterSection
 import com.parkspace.finder.R
@@ -78,17 +79,13 @@ fun ParkingSpotRow(
     modifier: Modifier = Modifier,
     onItemClick: () -> Unit
 ) {
-    val painter: Painter = rememberImagePainter(
-        data = imageResource,
-        builder = {
-            crossfade(true) // Optional - Enables crossfade animation between images
-        }
-    )
+    val painter: Painter = rememberAsyncImagePainter(model = imageResource)
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .padding(8.dp)
             .fillMaxWidth()
+            .clickable(onClick = onItemClick)
     ) {
         // Image
         Box(
@@ -467,14 +464,21 @@ fun BrowseScreen(
                                             context,
                                             { _, hourOfDay, minute ->
                                                 // Update selectedTime with the chosen time
-                                                val selectedCalendar = Calendar.getInstance().apply {
-                                                    set(Calendar.HOUR_OF_DAY, hourOfDay)
-                                                    set(Calendar.MINUTE, minute)
-                                                }
-                                                selectedTimeStart = timeFormat.format(selectedCalendar.time)
+                                                val selectedCalendar = Calendar
+                                                    .getInstance()
+                                                    .apply {
+                                                        set(Calendar.HOUR_OF_DAY, hourOfDay)
+                                                        set(Calendar.MINUTE, minute)
+                                                    }
+                                                selectedTimeStart =
+                                                    timeFormat.format(selectedCalendar.time)
                                             },
-                                            Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-                                            Calendar.getInstance().get(Calendar.MINUTE),
+                                            Calendar
+                                                .getInstance()
+                                                .get(Calendar.HOUR_OF_DAY),
+                                            Calendar
+                                                .getInstance()
+                                                .get(Calendar.MINUTE),
                                             false // 24-hour format
                                         )
                                         timePickerDialog.show()
@@ -503,11 +507,13 @@ fun BrowseScreen(
                                             context,
                                             { _, year, month, dayOfMonth ->
                                                 // Update selectedDate with the chosen date
-                                                selectedDateStart = Calendar.getInstance().apply {
-                                                    set(Calendar.YEAR, year)
-                                                    set(Calendar.MONTH, month)
-                                                    set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                                                }
+                                                selectedDateStart = Calendar
+                                                    .getInstance()
+                                                    .apply {
+                                                        set(Calendar.YEAR, year)
+                                                        set(Calendar.MONTH, month)
+                                                        set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                                                    }
                                             },
                                             selectedDateStart.get(Calendar.YEAR),
                                             selectedDateStart.get(Calendar.MONTH),
@@ -557,14 +563,21 @@ fun BrowseScreen(
                                             context,
                                             { _, hourOfDay, minute ->
                                                 // Update selectedTime with the chosen time
-                                                val selectedCalendar = Calendar.getInstance().apply {
-                                                    set(Calendar.HOUR_OF_DAY, hourOfDay)
-                                                    set(Calendar.MINUTE, minute)
-                                                }
-                                                selectedTimeEnd = timeFormat.format(selectedCalendar.time)
+                                                val selectedCalendar = Calendar
+                                                    .getInstance()
+                                                    .apply {
+                                                        set(Calendar.HOUR_OF_DAY, hourOfDay)
+                                                        set(Calendar.MINUTE, minute)
+                                                    }
+                                                selectedTimeEnd =
+                                                    timeFormat.format(selectedCalendar.time)
                                             },
-                                            Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-                                            Calendar.getInstance().get(Calendar.MINUTE),
+                                            Calendar
+                                                .getInstance()
+                                                .get(Calendar.HOUR_OF_DAY),
+                                            Calendar
+                                                .getInstance()
+                                                .get(Calendar.MINUTE),
                                             false // 24-hour format
                                         )
                                         timePickerDialog.show()
@@ -594,11 +607,13 @@ fun BrowseScreen(
                                             context,
                                             { _, year, month, dayOfMonth ->
                                                 // Update selectedDate with the chosen date
-                                                selectedDateEnd = Calendar.getInstance().apply {
-                                                    set(Calendar.YEAR, year)
-                                                    set(Calendar.MONTH, month)
-                                                    set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                                                }
+                                                selectedDateEnd = Calendar
+                                                    .getInstance()
+                                                    .apply {
+                                                        set(Calendar.YEAR, year)
+                                                        set(Calendar.MONTH, month)
+                                                        set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                                                    }
                                             },
                                             selectedDateEnd.get(Calendar.YEAR),
                                             selectedDateEnd.get(Calendar.MONTH),
@@ -686,7 +701,6 @@ fun BrowseScreen(
                         onItemClick = {
                             val parkingSpaceId = space.id
                             // Navigate to parking details page when clicked
-//                            navController.navigate("parking_details/$parkingSpaceName")
                             navController.navigate("parking/$parkingSpaceId")
                         }
 
@@ -754,10 +768,8 @@ fun BrowseScreen(
                                 rating = 4.5f,
                                 distance = "${String.format("%.2f", space.distanceFromCurrentLocation)} km away · 27 left",
                                 onItemClick = {
-                                    val parkingSpaceName = space.name
-                                    navController.navigate("parking_details/$parkingSpaceName")}
+                                    navController.navigate("parking/${space.id}")}
                             )
-                                //modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                         }
                     }
                 }
