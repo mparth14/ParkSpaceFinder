@@ -35,10 +35,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.parkspace.finder.R
+import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.navigation.ROUTE_BROWSE
 
 @Composable
-fun LocationPermissionScreen(navController: NavHostController?) {
+fun LocationPermissionScreen(navController: NavHostController, parkingSpaceViewModel: ParkingSpaceViewModel) {
     val context = LocalContext.current
     val permissions = arrayOf(
         android.Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -50,6 +51,7 @@ fun LocationPermissionScreen(navController: NavHostController?) {
         val areGranted = permissionMap.values.reduce{acc, next -> acc && next}
         if(areGranted){
             // Navigate to the next screen
+            parkingSpaceViewModel.setLocationPermissionGranted()
             navController?.popBackStack()
             navController?.navigate(ROUTE_BROWSE)
         }else{
@@ -121,10 +123,4 @@ fun LocationPermissionScreen(navController: NavHostController?) {
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LocationPermissionScreenPreview() {
-    LocationPermissionScreen(null)
 }
