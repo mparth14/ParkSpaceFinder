@@ -45,6 +45,7 @@ import com.parkspace.finder.data.Resource
 import com.parkspace.finder.data.utils.calculateDuration
 import com.parkspace.finder.data.utils.getAddressesFromLatLng
 import com.parkspace.finder.navigation.ROUTE_PARKING_TICKET
+import com.parkspace.finder.navigation.ROUTE_PARKING_TIMER
 import com.parkspace.finder.viewmodel.BookingDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -360,7 +361,8 @@ fun ActionButtons(navController: NavHostController, booking: BookingDetails) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OutlinedButton(
-                onClick = { /* TODO: Handle view timer action */ },
+                onClick = { navController.navigate(ROUTE_PARKING_TIMER.replace("{bookingId}", booking.id
+                    ?: ""))},
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp),

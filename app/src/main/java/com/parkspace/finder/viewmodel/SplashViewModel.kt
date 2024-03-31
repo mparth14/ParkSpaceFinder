@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.parkspace.finder.data.DataStoreRepository
 import com.parkspace.finder.navigation.ROUTE_LOGIN
 import com.parkspace.finder.navigation.ROUTE_ONBOARDING
+import com.parkspace.finder.navigation.ROUTE_PARKING_TIMER
 import com.parkspace.finder.navigation.ROUTE_PAYMENT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
