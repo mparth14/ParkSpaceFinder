@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -52,6 +53,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
@@ -379,7 +381,9 @@ fun BrowseScreen(
         Manifest.permission.ACCESS_FINE_LOCATION
     )
 
-    val needsLocationPermission = parkingSpaceViewModel.needsLocationPermission.collectAsState()
+    val needsLocationPermission = !permissions.all {
+        ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+    }
     val currentLocation = parkingSpaceViewModel.currentLocation.collectAsState()
     val addresses = parkingSpaceViewModel.addresses.collectAsState()
 //    print(addresses.value[0].getAddressLine(0))
@@ -395,7 +399,7 @@ fun BrowseScreen(
     }
     Log.d("Inside Browse Screen", firstAddress.toString())
 
-    if (needsLocationPermission.value) {
+    if (needsLocationPermission) {
         navController.popBackStack()
         navController.navigate(ROUTE_REQUEST_LOCATION_PERMISSION)
     }
