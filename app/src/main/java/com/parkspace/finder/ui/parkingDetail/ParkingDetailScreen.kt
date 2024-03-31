@@ -52,8 +52,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.parkspace.finder.R
 import com.parkspace.finder.data.ParkingSpace
-import com.parkspace.finder.data.ParkingSpaceRepository
-import com.parkspace.finder.data.ParkingSpaceViewModel
 import com.parkspace.finder.data.Resource
 import com.parkspace.finder.navigation.ROUTE_ENTER_BOOKING_DETAIL_SCREEN
 import com.parkspace.finder.ui.browse.Rating
@@ -384,7 +382,7 @@ fun ParkingDetailScreen(
                             //modifier = Modifier.padding(vertical = 8.dp)
                         )
                         Text(
-                            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce quis mauris vel odio ultricies condimentum. Nullam efficitur quam at est blandit, ac bibendum nulla sagittis. Mauris id quam et velit fermentum consectetur.",
+                            text = "This parking space offers convenient and secure parking facilities for both short-term and long-term stays. With state-of-the-art security measures and easy access, it's an ideal choice for commuters and visitors alike.",
                             modifier = Modifier.padding(top = 8.dp)
                         )
 
