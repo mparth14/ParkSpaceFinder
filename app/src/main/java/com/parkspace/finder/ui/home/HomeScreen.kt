@@ -21,12 +21,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -101,16 +98,7 @@ fun HomeScreen(viewModel: AuthViewModel?, navController: NavController?) {
                             .padding(16.dp),
                         contentAlignment = Alignment.TopEnd
                     ) {
-                        //three dot menu
-                        IconButton(
-                            onClick = { /* Handle menu click */ },
-                        ) {
-                            Icon(
-                                Icons.Filled.MoreVert,
-                                contentDescription = "Menu",
-                                tint = Color.White
-                            )
-                        }
+
                         Row(
                             modifier = Modifier.fillMaxSize(),
                             verticalAlignment = Alignment.Bottom
