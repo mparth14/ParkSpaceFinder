@@ -168,11 +168,6 @@ fun BookingInfoSection(booking : BookingDetails, parkingSpace: ParkingSpace?) {
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = getAddressesFromLatLng(context, parkingSpace?.location ?: GeoPoint(0.0, 0.0)),
-                style = MaterialTheme.typography.bodyLarge
-            )
         }
     }
     if(parkingSpace != null) {

@@ -46,7 +46,6 @@ import com.parkspace.finder.ui.booking.EnterDetailsContent
 import com.parkspace.finder.ui.browse.BrowseScreen
 import com.parkspace.finder.ui.favourite.FavouriteScreen
 import com.parkspace.finder.ui.bookings.ReviewBookingScreen
-import com.parkspace.finder.ui.bookings.BookingDetails
 
 import com.parkspace.finder.ui.locationPermission.LocationPermissionScreen
 import com.parkspace.finder.ui.onboarding.OnboardingScreen
@@ -189,6 +188,10 @@ fun AppNavHost(
             composable(ROUTE_ENTER_BOOKING_DETAIL_SCREEN) {
                 val parkingId = it.arguments?.getString("parkingId") ?: "0"
                 EnterDetailsContent(navController = navController, parkingId = parkingId)
+            }
+            composable(ROUTE_CONFIRM_BOOKING_DETAILS) {
+                val parkingId = it.arguments?.getString("parkingId") ?: "0"
+                ReviewBookingScreen(navController = navController, parkingId = parkingId, it)
             }
             composable(ROUTE_FILTER) {
                 FilterSection( parkingSpaceViewModel = parkingSpaceViewModel,navController = navController)

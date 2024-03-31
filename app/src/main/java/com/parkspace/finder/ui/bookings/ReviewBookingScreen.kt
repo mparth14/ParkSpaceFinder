@@ -1,170 +1,176 @@
 package com.parkspace.finder.ui.bookings
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-import com.parkspace.finder.R
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
+import com.google.firebase.firestore.GeoPoint
+import com.parkspace.finder.data.BookingViewModel
+import com.parkspace.finder.data.ParkingSpace
+import com.parkspace.finder.data.Resource
+import com.parkspace.finder.data.utils.calculateDurationInHours
+import com.parkspace.finder.data.utils.formatTime
+import com.parkspace.finder.data.utils.getAddressesFromLatLng
+import com.parkspace.finder.ui.booking.BookingHeader
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ReviewBookingScreen(
     navController: NavHostController,
-    bookingDetails: BookingDetails,
-    onConfirmClick: () -> Unit
+    parkingId: String,
+    backStackEntry: NavBackStackEntry
 ) {
-    Scaffold(
-        content = {
-            LazyColumn(
+    val context = LocalContext.current
+    val myBackStackEntry = remember(backStackEntry) {
+        navController.getBackStackEntry("parking/${parkingId}/book")
+    }
+    val bookingViewModel: BookingViewModel = hiltViewModel(myBackStackEntry)
+    val parkingSpace = bookingViewModel.parkingSpace.collectAsState()
+    val startTime = bookingViewModel.startTimeSelection.collectAsState()
+    val endTime = bookingViewModel.endTimeSelection.collectAsState()
+    val bookingDate = bookingViewModel.dateSelection.collectAsState()
+    val vehicleType = bookingViewModel.vehicleSelection.collectAsState()
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.surface)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(4.dp)
+        ) {
+            BookingHeader(navController = navController, headerText = "Review Booking")
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                item {
-                    Spacer(
-                        modifier = Modifier.height(12.dp)
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        IconButton(
-                            onClick = { navController.popBackStack() },
-                            modifier = Modifier.offset(x = (-24).dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.back_24),
-                                contentDescription = "back icon"
-                            )
-                        }
-                        Text(
-                            text = "Review Booking",
-                            fontSize = 36.sp,
-                            modifier = Modifier.padding(bottom = 8.dp, end = 54.dp)
+                    .padding(12.dp)
+                    .fillMaxWidth()
 
-                        )
-                    }
-                    Spacer(
-                        modifier = Modifier.height(16.dp)
-                    )
-                }
-                item {
+            ) {
+                Column {
                     Text(
                         text = "Date & Time:",
-                        modifier = Modifier.padding(bottom = 8.dp)
+                        modifier = Modifier.padding(bottom = 8.dp),
                     )
                     Text(
-                        text = bookingDetails.date,
+                        text = bookingDate.value.toString(),
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = bookingDetails.time,
+                        text = formatTime(startTime.value),
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                 }
 
-                item {
+                Column {
                     Text(
                         text = "Parking Space:",
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    Text(
-                        text = bookingDetails.parkingSpace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
+                    when (parkingSpace.value) {
+                        is Resource.Success -> {
+                            val space =
+                                (parkingSpace.value as Resource.Success<ParkingSpace?>).result
+                            Text(
+                                text = space?.name ?: "",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                        }
+
+                        is Resource.Loading -> {
+                            Text(text = "Loading...")
+                        }
+
+                        is Resource.Failure -> {
+                            Text(text = "Error")
+                        }
+
+                        else -> {
+                            Text(text = "Error")
+                        }
+                    }
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = bookingDetails.vehicleType,
+                        text = vehicleType.value,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                 }
-                item {
+                Column {
                     Text(
                         text = "Address:",
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    Text(
-                        text = bookingDetails.address,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
-                    )
-                    Text(
-                        text = bookingDetails.distance,
-                        fontWeight = FontWeight.Bold
-                    )
+                    when (parkingSpace.value) {
+                        is Resource.Success -> {
+                            val space =
+                                (parkingSpace.value as Resource.Success<ParkingSpace?>).result
+                            Text(
+                                text = getAddressesFromLatLng(
+                                    context,
+                                    space?.location ?: GeoPoint(0.0, 0.0)
+                                ),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 20.sp
+                            )
+                            Text(
+                                text = space?.distanceFromCurrentLocation.toString() + " km away",
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        is Resource.Loading -> {
+                            Text(text = "Loading...")
+                        }
+
+                        is Resource.Failure -> {
+                            Text(text = "Error")
+                        }
+
+                        else -> {
+                            Text(text = "Error")
+                        }
+                    }
                     Spacer(modifier = Modifier.height(24.dp))
                 }
-                item {
+                Column {
                     Text(
                         text = "Payment Method:",
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                     Text(
-                        text = bookingDetails.paymentMethod,
+                        text = "Credit Card",
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                 }
-                item {
+                Column {
                     Text(
                         text = "Payment Details:",
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
-                    Text(
-                        text = bookingDetails.vehicleType,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = bookingDetails.vehicleType,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                        Text(
-                            text = bookingDetails.paymentAmount,
-                            fontSize = 10.sp,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = bookingDetails.vehicleType,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                        Text(
-                            text = bookingDetails.paymentAmount,
-                            fontSize = 10.sp
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -175,94 +181,53 @@ fun ReviewBookingScreen(
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
-                        Text(
-                            text = bookingDetails.paymentTotal,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = "Code Redeemed:",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
-                            modifier = Modifier.padding(bottom = 8.dp, start = 16.dp)
-                        )
-                        Box(
-                            modifier = Modifier
-                                .padding(end = 16.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .background(color = Color(0xFFFFA500), shape = RoundedCornerShape(8.dp))
-                            ) {
+                        when (parkingSpace.value) {
+                            is Resource.Success -> {
+                                val space =
+                                    (parkingSpace.value as Resource.Success<ParkingSpace?>).result
                                 Text(
-                                    text = bookingDetails.redeemedCode,
+                                    text = "$ %.2f".format(
+                                        calculateDurationInHours(
+                                            formatTime(startTime.value),
+                                            formatTime(endTime.value)
+                                        ) * (space?.hourlyPrice ?: 0.0)
+                                    ),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.White,
-                                    modifier = Modifier.padding(8.dp)
+                                    modifier = Modifier.padding(bottom = 8.dp)
                                 )
+                            }
+
+                            is Resource.Loading -> {
+                                Text(text = "Loading...")
+                            }
+
+                            is Resource.Failure -> {
+                                Text(text = "Error")
+                            }
+
+                            else -> {
+                                Text(text = "Error")
                             }
                         }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                 }
-                item {
+                Column {
                     Button(
-                        onClick = onConfirmClick,
+                        onClick = {
+                            navController.navigate("parking/${parkingId}/pay")
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 32.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF7B99A9))
                     ) {
                         Text(
-                            text = "Confirm",
-                            fontSize = 20.sp)
+                            text = "Proceed to payment",
+                        )
                     }
                 }
             }
         }
-    )
+    }
 }
-
-@Preview
-@Composable
-fun PreviewBookingDetailsScreen() {
-    ReviewBookingScreen(
-        navController = rememberNavController(),
-        bookingDetails = BookingDetails(
-            date = "March 16, 2024",
-            time = "10:00 AM",
-            parkingSpace = "Parking Space A",
-            vehicleType = "Hatchback Sedan",
-            address = "123 Main Street, City, Country",
-            distance = "0.31 mi",
-            paymentMethod = "Credit Card",
-            paymentAmount = "$100",
-            paymentTotal = "$100",
-            redeemedCode = "20% off"
-        ),
-        onConfirmClick = {}
-    )
-}
-
-data class BookingDetails(
-    val date: String,
-    val time: String,
-    val parkingSpace: String,
-    val vehicleType: String,
-    val address: String,
-    val distance: String,
-    val paymentMethod: String,
-    val paymentAmount: String,
-    val paymentTotal: String,
-    val redeemedCode: String
-)
