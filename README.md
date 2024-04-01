@@ -134,6 +134,6 @@ The following dependencies are used in the ParkSpace project:
 - Rakshit Ranpariya (B00946421)
 - Rushikumar Patel (B00948619)
 - Sameer Amesara (B00961209)
-- Smit Patel (B00963930)
+- Smit Patel (B00963945)
 - Sneh Patel (B00968316)
 - Tathya Kapadia (B00968181)
