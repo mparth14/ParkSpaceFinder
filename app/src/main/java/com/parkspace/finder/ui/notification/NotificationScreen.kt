@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -25,48 +27,50 @@ import kotlin.random.Random
  */
 @Composable
 fun NotificationScreen(notifications: List<String>) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Notifications",
-            style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-        // Display existing notifications
-        notifications.forEach { notification ->
-            NotificationCard(
-                title = notification,
-                subtitle = "Subtitle placeholder",
-                timestamp = "Timestamp placeholder"
+    val scrollState = rememberScrollState()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(16.dp)
+                .verticalScroll(scrollState)
+        ) {
+            Text(
+                text = "Notifications",
+                style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+                modifier = Modifier.padding(bottom = 16.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        repeat(Random.nextInt(4, 6)) {
-            val notificationType = Random.nextInt(1, 4)
-            val title = when (notificationType) {
-                1 -> "Your booking is confirmed"
-                2 -> "Payment was successful"
-                else -> "Payment failed"
+            // Display existing notifications
+            notifications.forEach { notification ->
+                NotificationCard(
+                    title = notification,
+                    subtitle = "Subtitle placeholder",
+                    timestamp = "Timestamp placeholder"
+                )
+                Spacer(modifier = Modifier.height(16.dp))
             }
-            val subtitle = when (notificationType) {
-                1 -> "Your parking slot is reserved."
-                2 -> "Amount of $${Random.nextInt(10, 100)} has been deducted."
-                else -> "Please check your payment details and try again."
+            repeat(Random.nextInt(4, 6)) {
+                val notificationType = Random.nextInt(1, 4)
+                val title = when (notificationType) {
+                    1 -> "Your booking is confirmed"
+                    2 -> "Payment was successful"
+                    else -> "Payment failed"
+                }
+                val subtitle = when (notificationType) {
+                    1 -> "Your parking slot is reserved."
+                    2 -> "Amount of $${Random.nextInt(10, 100)} has been deducted."
+                    else -> "Please check your payment details and try again."
+                }
+                val timestamp = "${Random.nextInt(1, 24)} hours ago"
+                NotificationCard(
+                    title = title,
+                    subtitle = subtitle,
+                    timestamp = timestamp
+                )
+                Spacer(modifier = Modifier.height(16.dp))
             }
-            val timestamp = "${Random.nextInt(1, 24)} hours ago"
-            NotificationCard(
-                title = title,
-                subtitle = subtitle,
-                timestamp = timestamp
-            )
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
-}
 //fun NotificationScreen(notifications: List<String>){
 //    Column(
 //        modifier = Modifier
