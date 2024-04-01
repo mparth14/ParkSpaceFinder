@@ -158,7 +158,6 @@ fun BookingInfoSection(booking : BookingDetails, parkingSpace: ParkingSpace?) {
             Spacer(modifier = Modifier.height(4.dp)) // Space between title and badge
             BookingStatusBadge(booking.status)
         }
-        CallButton()
     }
     Row(
         modifier = Modifier

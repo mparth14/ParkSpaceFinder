@@ -29,7 +29,7 @@ sealed class OnboardingPage(
 
     object ThirdPage : OnboardingPage(
         image = R.drawable.extend_time,
-        title = "Extend Bookings",
-        description = "Extend your booking if you need more time"
+        title = "Parking Space Navigation",
+        description = "Navigate to parking spaces with ease"
     )
 }
