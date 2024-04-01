@@ -12,11 +12,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +42,7 @@ import com.parkspace.finder.data.BookingDetails
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.Resource
 import com.parkspace.finder.data.utils.calculateDuration
+import com.parkspace.finder.data.utils.calculateDurationInHours
 import com.parkspace.finder.data.utils.getAddressesFromLatLng
 import com.parkspace.finder.navigation.ROUTE_PARKING_TICKET
 import com.parkspace.finder.navigation.ROUTE_PARKING_TIMER
@@ -94,7 +97,7 @@ fun BookingDetailsScreen(navController: NavHostController, bookingId: String) {
                             Spacer(modifier = Modifier.height(1.dp))
                             PriceSection(booking)
                             Spacer(modifier = Modifier.weight(1f))
-                            ActionButtons(navController, booking)
+                            ActionButtons(navController, booking, bookingDetailViewModel)
                         }
                     }
                 }
@@ -128,6 +131,7 @@ fun BookingDetailsScreen(navController: NavHostController, bookingId: String) {
 
 @Composable
 fun BookingInfoSection(booking : BookingDetails, parkingSpace: ParkingSpace?) {
+    Log.d("BookingInfoSection", "Recomposing with booking status: ${booking.status}")
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,14 +181,6 @@ fun BookingInfoSection(booking : BookingDetails, parkingSpace: ParkingSpace?) {
     if(parkingSpace != null) {
         MapSection(parkingSpace)
     }
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(horizontal = 15.dp, vertical = 10.dp),
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        MapSection(parkingSpace = parkingSpace)
-//    }
     HorizontalDivider(
         modifier = Modifier.padding(horizontal = 16.dp),
         thickness = 1.dp,
@@ -320,7 +316,7 @@ fun PriceSection(booking : BookingDetails) {
             fontWeight = FontWeight.Normal
         )
         Text(
-            text = booking.price.toString(),
+            text = "$ %.2f".format(booking.price * (calculateDurationInHours(booking.startTime, booking.endTime))),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold
         )
@@ -333,8 +329,49 @@ fun PriceSection(booking : BookingDetails) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ActionButtons(navController: NavHostController, booking: BookingDetails) {
+fun ActionButtons(navController: NavHostController, booking: BookingDetails, bookingDetailViewModel: BookingDetailViewModel) {
+    val openAlertDialog = remember { mutableStateOf(false) }
+    when {
+        openAlertDialog.value -> {
+            AlertDialog(
+                onDismissRequest = { openAlertDialog.value = false },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            bookingDetailViewModel.cancelBooking()
+                            openAlertDialog.value = false
+                        }
+                    ) {
+                        Text("Confirm")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            openAlertDialog.value = false
+                        }
+                    ) {
+                        Text("Dismiss")
+                    }
+                },
+                title = {
+                    Text(text = "Cancel booking")
+                },
+                text = {
+                    Text(text = "Are you sure you want to cancel this booking?")
+                },
+                icon = {
+                       Icon(
+                        imageVector = Icons.Default.Warning,
+                        contentDescription = "Warning",
+                        tint = Color.Red
+                    )
+                },
+            )
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -346,7 +383,7 @@ fun ActionButtons(navController: NavHostController, booking: BookingDetails) {
         }
         if(booking.status == "Confirmed") {
             Button(
-                onClick = { /* TODO: Handle cancel action */ },
+                onClick = { openAlertDialog.value = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
@@ -363,19 +400,21 @@ fun ActionButtons(navController: NavHostController, booking: BookingDetails) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            OutlinedButton(
-                onClick = { navController.navigate(ROUTE_PARKING_TIMER.replace("{bookingId}", booking.id
-                    ?: ""))},
-                modifier = Modifier
-                    .weight(1f)
-                    .height(48.dp),
-                shape = RoundedCornerShape(25),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = Color(0xFF6200EE) // Assume the border color you want
-                ),
-                border = BorderStroke(1.dp, Color(0xFF6200EE))
-            ) {
-                Text("View Timer", style = MaterialTheme.typography.titleMedium, color = Color.Black, fontWeight = FontWeight.Bold)
+            if(booking.status == "Confirmed"){
+                OutlinedButton(
+                    onClick = { navController.navigate(ROUTE_PARKING_TIMER.replace("{bookingId}", booking.id
+                        ?: ""))},
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(48.dp),
+                    shape = RoundedCornerShape(25),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color(0xFF6200EE) // Assume the border color you want
+                    ),
+                    border = BorderStroke(1.dp, Color(0xFF6200EE))
+                ) {
+                    Text("View Timer", style = MaterialTheme.typography.titleMedium, color = Color.Black, fontWeight = FontWeight.Bold)
+                }
             }
             Button(
                 onClick = { navController.navigate(ROUTE_PARKING_TICKET.replace("{bookingId}", booking?.id ?: "")) },

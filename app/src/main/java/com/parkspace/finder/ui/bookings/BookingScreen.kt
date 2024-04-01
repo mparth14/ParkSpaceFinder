@@ -21,6 +21,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.parkspace.finder.data.BookingDetails
 import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.Resource
+import com.parkspace.finder.data.utils.calculateDurationInHours
 import com.parkspace.finder.navigation.ROUTE_BOOKING_DETAIL
 import com.parkspace.finder.viewmodel.AllBookingsDetailViewModel
 
@@ -174,7 +175,7 @@ fun BookingItemCard(booking: BookingDetails, parkingSpaces: Map<String, ParkingS
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text = booking.price.toString(),
+                            text = "$ %.2f".format(booking.price * (calculateDurationInHours(booking.startTime, booking.endTime))),
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyLarge
                         )

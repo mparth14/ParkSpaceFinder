@@ -24,4 +24,11 @@ interface BookingDetailRepository {
      * @return A resource containing the list of booking details.
      */
     suspend fun getBookingDetailsByEmail(email: String): Resource<List<BookingDetails>>
+
+    /**
+     * Cancels the booking with the given booking ID.
+     * @param bookingId The ID of the booking.
+     * @return A resource containing the result of the operation.
+     */
+    suspend fun cancelBooking(bookingId: String): Resource<String>
 }
