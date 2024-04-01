@@ -1,6 +1,7 @@
 /*
  * This file contains the NotificationScreen composable function and its related NotificationCard composable function.
  */
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,9 +26,16 @@ import kotlin.random.Random
 /*
  * Composable function to display a list of notifications.
  */
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun NotificationScreen(notifications: List<String>) {
     val scrollState = rememberScrollState()
+    NotificationCard(
+        title = "Your booking is confirmed",
+        subtitle = "Your parking slot is reserved.",
+        timestamp = "Just now"
+    )
+    Spacer(modifier = Modifier.height(16.dp))
         Column(
             modifier = Modifier
                 .fillMaxSize()
