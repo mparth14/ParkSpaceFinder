@@ -3,17 +3,35 @@ package com.parkspace.finder.ui.payment
 /*
  * This file contains the composable function for the payment success screen.
  */
+import PaymentSuccessNotification
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +45,8 @@ import androidx.navigation.NavController
 import com.parkspace.finder.R
 import com.parkspace.finder.data.Resource
 import com.parkspace.finder.navigation.ROUTE_PARKING_TICKET
+import com.parkspace.finder.ui.notification.NotificationUtils
+import com.parkspace.finder.ui.notification.scheduleNotification
 import com.parkspace.finder.viewmodel.BookingDetailViewModel
 import kotlinx.coroutines.launch
 import nl.dionsegijn.konfetti.compose.KonfettiView
@@ -60,6 +80,10 @@ fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
             confettiAnimationEnabled = false
         }
     }
+    val notifications = remember { mutableStateListOf<String>() }
+    SetBookingConfirmationNotification(context = LocalContext.current)
+    notifications.add("Payment was successful")
+    PaymentSuccessNotification(notifications = notifications)
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -165,4 +189,23 @@ fun PaymentSuccessScreen(navController : NavController, bookingId: String) {
             )
         }
     }
+}
+fun SetBookingConfirmationNotification(context: Context) {
+    val title = "Booking Confirmed"
+    val message = "Your booking is confirmed."
+
+    val CHANNEL_ID = "your_channel_id"
+
+    // Create the notification channel
+    NotificationUtils.createNotificationChannel(context, CHANNEL_ID, "Booking Confirmations")
+
+    // Schedule the notification
+    scheduleNotification(
+        context = context,
+        delay = 0, // Notification should be sent immediately
+        notificationId = 3, // Use a different notification ID to differentiate from other notifications
+        channelId = CHANNEL_ID,
+        title = title,
+        message = message
+    )
 }

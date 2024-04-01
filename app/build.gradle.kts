@@ -106,6 +106,8 @@ dependencies {
     implementation ("com.google.android.material:material:$compose_version")
     implementation ("com.google.android.gms:play-services-maps:17.0.1")
     implementation ("nl.dionsegijn:konfetti-compose:2.0.4")
+    implementation ("androidx.work:work-runtime-ktx:2.7.0")
+
 }
 
 kapt {

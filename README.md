@@ -1,93 +1,139 @@
-# CSCI_5708_Group_12G_Project
+# ParkSpace
+
+<img style="width: 120px" src="app\src\main\res\drawable\logo.png" align="right" />
+
+ParkSpace offers a sophisticated platform that harnesses GPS technology and real-time data to tackle the challenges of urban parking, providing seamless, affordable, and eco-friendly solutions. With features like nearby parking spot listings, advanced search and filtering options, booking history, and real-time navigation, ParkSpace caters to commuters, residents, businesses, and tourists alike, prioritizing convenience, accessibility, and sustainability in urban mobility. From stress-free parking options to optimized space utilization for businesses, ParkSpace endeavors to elevate the overall parking experience while fostering community engagement and knowledge sharing among users.
+
+## Tech Stack
+
+ParkSpace was built using the following technologies:
+
+[![Jetpack Compose](https://img.shields.io/badge/Jetpack_Compose-1.0.0-blue.svg)](https://developer.android.com/jetpack/compose)
+[![Dagger HILT](https://img.shields.io/badge/Dagger_HILT-2.51-green.svg)](https://dagger.dev/hilt/)
+[![Material UI](https://img.shields.io/badge/Material_UI-1.0.0-orange.svg)](https://material.io/)
+[![JUnit](https://img.shields.io/badge/JUnit-4.13.2-red.svg)](https://junit.org/junit4/)
+[![Google Maps SDK](https://img.shields.io/badge/Google_Maps_SDK-3.1.0-brightgreen.svg)](https://developers.google.com/maps/documentation/android-sdk/overview)
+[![Firebase](https://img.shields.io/badge/Firebase-20.5.2-yellow.svg)](https://firebase.google.com/)
+
+## Application Sneak Peek
 
 
+|   |   |   |
+|---|---|---|
+| ![Home Screen](app/public/screenshots/HomeScreen.png){ width=300px } <br> Home Screen | ![Search Screen](app/public/screenshots/SearchScreen.png){ width=300px } <br> Search Screen | ![Parking Details](app/public/screenshots/ParkingDetails.png){ width=300px } <br> Parking Details |
+| ![Booking Form](app/public/screenshots/BookingForm.png){ width=300px } <br> Booking Form | ![Booking Summary Screen](app/public/screenshots/BookingSummaryScreen.png){ width=300px } <br> Booking Summary Screen | ![Parking Ticket Screen](app/public/screenshots/ParkingTicketScreen.png){ width=300px } <br> Parking Ticket Screen |
+| ![Navigation Feature](app/public/screenshots/NavigationFeature.png){ width=300px } <br> Navigation Feature | ![Active Bookings Screen](app/public/screenshots/ActiveBookings.png){ width=300px } <br> Active Bookings Screen | ![Active Booking Details Screen](app/public/screenshots/ActiveBookingDetailsScreen.png){ width=300px } <br> Active Booking Details Screen |
+| ![Timer Screen](app/public/screenshots/TimerScreen.png){ width=300px } <br> Timer Screen | ![User Profile Screen](app/public/screenshots/UserProfileScreen.png){ width=300px } <br> User Profile Screen | ![Notifications Screen](app/public/screenshots/NotificationsScreen.png){ width=300px } <br> Notifications Screen |
 
-## Getting started
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## ParkSpace - Build Instructions
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### Cloning the Repository
 
-## Add your files
+Begin by cloning the ParkSpace repository using Git:
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+`git clone https://git.cs.dal.ca/patel33/csci_5708_group_12g_project.git`
 
-```
-cd existing_repo
-git remote add origin https://git.cs.dal.ca/patel33/csci_5708_group_12g_project.git
-git branch -M main
-git push -uf origin main
-```
+### Open in Android Studio
 
-## Integrate with your tools
+Open the cloned ParkSpace project in Android Studio.
 
-- [ ] [Set up project integrations](https://git.cs.dal.ca/patel33/csci_5708_group_12g_project/-/settings/integrations)
+### Sync Gradle Files
 
-## Collaborate with your team
+Ensure that Gradle files are synced by clicking on the "Sync Project with Gradle Files" icon or through the "File" menu.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### Configure Firebase
 
-## Test and Deploy
+ParkSpace utilizes Firebase services. Set up your Firebase project and add the necessary configuration files (google-services.json) to the app module.
 
-Use the built-in continuous integration in GitLab.
+### Configure API Keys
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+If your application uses APIs requiring keys (e.g., Google Maps API, Firebase services), obtain the necessary API keys and add them to your project's configuration files (e.g., google_maps_api.xml).
 
-***
+### Build Variants
 
-# Editing this README
+ParkSpace supports different build variants for debugging and release. Select the desired build variant from the "Build Variants" tab in Android Studio.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+### Run the Application
 
-## Suggestions for a good README
+You can run the ParkSpace application on an emulator or a physical device connected to your development machine. Select the target device from the device dropdown menu in Android Studio and click on the "Run" button.
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### Generating APK
 
-## Name
-Choose a self-explaining name for your project.
+To generate an APK file for distribution, select "Build" > "Build Bundle(s) / APK(s)" > "Build APK(s)" from the Android Studio menu. The APK file will be generated in the project's "build" directory.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## Dependencies
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+The following dependencies are used in the ParkSpace project:
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+- com.google.firebase:firebase-perf-ktx:20.5.2 - Firebase Performance Monitoring
+- io.coil-kt:coil-compose:1.4.0 - Coil Compose
+- androidx.core:core-ktx:1.12.0 - AndroidX Core Kotlin Extensions
+- androidx.lifecycle:lifecycle-runtime-ktx:2.7.0 - AndroidX Lifecycle Runtime Kotlin Extensions
+- androidx.activity:activity-compose:1.8.2 - AndroidX Activity Compose
+- androidx.compose.ui:ui:$compose_version - Jetpack Compose UI Toolkit
+- androidx.compose.ui:ui-graphics:$compose_version - Jetpack Compose UI Graphics
+- androidx.compose.ui:ui-tooling-preview:$compose_version - Jetpack Compose UI Tooling Preview
+- androidx.compose.material3:material3:1.2.1 - Jetpack Compose Material3 Components
+- junit:junit:4.13.2 - JUnit Testing Framework
+- androidx.test.ext:junit:1.1.5 - AndroidX JUnit Extension
+- androidx.test.espresso:espresso-core:3.5.1 - Espresso Testing Framework
+- com.google.firebase:firebase-auth - Firebase Authentication
+- com.google.firebase:firebase-auth-ktx - Firebase Authentication Kotlin Extensions
+- com.google.firebase:firebase-firestore-ktx - Firebase Firestore Kotlin Extensions
+- androidx.navigation:navigation-compose:2.7.7 - AndroidX Navigation Compose
+- androidx.constraintlayout:constraintlayout-compose:1.0.1 - ConstraintLayout Compose
+- com.google.dagger:hilt-android:2.51 - Dagger Hilt for Android
+- androidx.hilt:hilt-navigation-compose:1.2.0 - Hilt Navigation Compose
+- androidx.appcompat:appcompat:1.6.1 - AndroidX AppCompat Library
+- com.google.android.material:material:1.11.0 - Material Components for Android
+- androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0 - AndroidX Lifecycle ViewModel Compose
+- org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3 - Kotlin Coroutines for Android
+- com.google.zxing:core:3.4.1 - ZXing Core (Barcode scanning library)
+- com.journeyapps:zxing-android-embedded:4.2.0 - ZXing Android Embedded (Embedded barcode scanner)
+- io.coil-kt:coil-compose:2.6.0 - Coil Compose (Image loading library for Jetpack Compose)
+- androidx.compose.material3:material3:1.2.1 - Jetpack Compose Material3 Components
+- androidx.core:core-splashscreen:1.0.1 - AndroidX Core Splashscreen
+- androidx.datastore:datastore-preferences:1.0.0 - AndroidX DataStore Preferences
+- com.maxkeppeler.sheets-compose-dialogs:core:1.0.2 - Sheets Compose Dialogs Core
+- com.maxkeppeler.sheets-compose-dialogs:calendar:1.0.2 - Sheets Compose Dialogs Calendar
+- com.maxkeppeler.sheets-compose-dialogs:clock:1.0.2 - Sheets Compose Dialogs Clock
+- com.google.android.gms:play-services-location:21.2.0 - Google Play Services Location
+- com.google.android.gms:play-services-maps:18.2.0 - Google Play Services Maps
+- com.google.maps.android:maps-compose:2.14.0 - Google Maps Compose
+- androidx.compose.ui:ui:$compose_version - Jetpack Compose UI Toolkit
+- androidx.compose.material:material:$compose_version - Jetpack Compose Material
+- androidx.compose.ui:ui-tooling:$compose_version - Jetpack Compose UI Tooling
+- androidx.compose.foundation:foundation:$compose_version - Jetpack Compose Foundation
+- androidx.compose.material:material-icons-core:$compose_version - Jetpack Compose Material Icons Core
+- androidx.compose.material:material-icons-extended:$compose_version - Jetpack Compose Material Icons Extended
+- com.google.android.material:material:$compose_version - Material Components for Android
+- com.google.android.gms:play-services-maps:17.0.1 - Google Play Services Maps
+- nl.dionsegijn:konfetti-compose:2.0.4 - Konfetti Compose (Confetti animations for Jetpack Compose)
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## References
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+[1] "Jetpack," Android Developers. [Online]. Available: https://developer.android.com/courses/jetpack-compose/course?gad_source=1&gclid=Cj0KCQjwk6SwBhDPARIsAJ59GwdwBIOr9gs5K0ms4WsZCmfEz0aQpbGwGVCvEvOSszq05ySH2ua7EXQaAtb2EALw_wcB&gclsrc=aw.ds. [Accessed: March 11, 2024].
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+[2] "Dagger HILT," Android Developers. [Online]. Available: https://developer.android.com/training/dependency-injection/hilt-android. [Accessed: March 10, 2024].
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+[3] "Material UI," Material Design. [Online]. Available: https://m3.material.io/. [Accessed: March 16, 2024].
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+[4] "JUnit," JUnit. [Online]. Available: https://junit.org/junit5/. [Accessed: March 14, 2024].
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+[4] "Google Maps SDK," Google Developers. [Online]. Available: https://developers.google.com/maps/documentation/android-sdk/overview. [Accessed: March 13, 2024].
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+[5] "Firebase," Firebase. [Online]. Available: https://firebase.google.com/. [Accessed: March 9, 2024].
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## Authors & Acknowledgements
 
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- Dheemanth Rajendra Prasad Kumawat (B00962845)
+- Dhruv Kapoor (B00937833)
+- Kainat Khan (B00937232)
+- Parth Modi (B00962830)
+- Rakshit Ranpariya (B00946421)
+- Rushikumar Patel (B00948619)
+- Sameer Amesara (B00961209)
+- Smit Patel (B00963945)
+- Sneh Patel (B00968316)
+- Tathya Kapadia (B00968181)

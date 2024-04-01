@@ -55,10 +55,11 @@ import com.parkspace.finder.data.ParkingSpace
 import com.parkspace.finder.data.Resource
 import com.parkspace.finder.navigation.ROUTE_ENTER_BOOKING_DETAIL_SCREEN
 import com.parkspace.finder.ui.browse.Rating
+import com.parkspace.finder.ui.notification.NotificationUtils
+import com.parkspace.finder.ui.notification.scheduleNotification
 import com.parkspace.finder.viewmodel.ParkingDetailViewModel
 import kotlinx.coroutines.launch
 import java.util.Locale
-
 /*
  * This file contains composable functions for displaying details of a parking space.
  */
@@ -110,6 +111,31 @@ fun MapContent(location: LatLng) {
  * Composable function for displaying a star rating.
  * @param rating The rating value to be displayed.
  */
+@Composable
+fun SetReminder(context: Context) {
+    // Get the delay before the reminder from your UI or any other source
+    val delayBeforeReminderMillis = 20 * 1000 // 10 minutes before the end of the parking session
+
+    // Title and message for the notification
+    val title = "Parking Reminder"
+    val message = "Your parking session is ending in 10 minutes."
+    val CHANNEL_ID = "your_channel_id"
+
+
+    // Call the function to create the notification channel
+    NotificationUtils.createNotificationChannel(context, CHANNEL_ID, "Parking Reminders")
+
+    // Call the scheduleNotification function to trigger the notification
+    scheduleNotification(
+        context = context,
+        delay = delayBeforeReminderMillis,
+        notificationId = 1,
+        channelId = CHANNEL_ID,
+        title = title,
+        message = message
+    )
+}
+
 @Composable
 fun Rating(rating: Int) {
     Row(
@@ -219,6 +245,7 @@ fun ParkingDetailScreen(
     val parkingSpace = parkingDetailViewModel.parkingSpace.collectAsState()
     val scrollState = rememberScrollState()
     val context  = LocalContext.current
+    SetReminder(context)
     Scaffold(
         topBar = {
             TopAppBar(

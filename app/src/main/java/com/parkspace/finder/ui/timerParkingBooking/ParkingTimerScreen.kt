@@ -1,6 +1,8 @@
 package com.parkspace.finder.ui.timerParkingBooking
 
+import NotificationScreen
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -9,9 +11,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,13 +22,13 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.parkspace.finder.R
 import com.parkspace.finder.data.Resource
+import com.parkspace.finder.ui.notification.NotificationUtils
+import com.parkspace.finder.ui.notification.scheduleNotification
 import com.parkspace.finder.viewmodel.BookingDetailViewModel
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
@@ -75,9 +77,21 @@ fun ParkingTimerScreen(
                     delay(1000) // Refresh every second
                 }
             }
+            val notifications = remember { mutableStateListOf<String>() }
 
 
             val remainingTime = calculateRemainingTime(remainingTimeMillis)
+            if (remainingTimeMillis == totalTimeMillis) {
+                SetBeginTimerNotification(LocalContext.current)
+                notifications.add("Your parking timer has started")
+            }
+
+            // Call SetReminder function when 10 minutes are left
+            if (remainingTimeMillis <= 10 * 60 * 1000) { // 10 minutes in milliseconds
+                SetReminder(LocalContext.current)
+                notifications.add("10 minutes left for your parking space")
+            }
+            NotificationScreen(notifications = notifications)
 
             Scaffold(
                 topBar = {
@@ -256,6 +270,51 @@ fun ParkingTimerScreen(
             Text(text = "Error")
         }
     }
+}
+@Composable
+fun SetBeginTimerNotification(context: Context) {
+    val title = "Parking Timer Started"
+    val message = "Your parking timer has begun."
+
+    val CHANNEL_ID = "your_channel_id"
+
+    // Create the notification channel
+    NotificationUtils.createNotificationChannel(context, CHANNEL_ID, "Parking Timer")
+
+    // Schedule the notification
+    scheduleNotification(
+        context = context,
+        delay = 0, // Notification should be sent immediately
+        notificationId = 2, // Use a different notification ID to differentiate from other notifications
+        channelId = CHANNEL_ID,
+        title = title,
+        message = message
+    )
+}
+
+@Composable
+fun SetReminder(context: Context) {
+    // Get the delay before the reminder from your UI or any other source
+    val delayBeforeReminderMillis = 20 * 1000 // 10 minutes before the end of the parking session
+
+    // Title and message for the notification
+    val title = "Parking Reminder"
+    val message = "Your parking session is ending in 10 minutes."
+    val CHANNEL_ID = "your_channel_id"
+
+
+    // Call the function to create the notification channel
+    NotificationUtils.createNotificationChannel(context, CHANNEL_ID, "Parking Reminders")
+
+    // Call the scheduleNotification function to trigger the notification
+    scheduleNotification(
+        context = context,
+        delay = delayBeforeReminderMillis,
+        notificationId = 1,
+        channelId = CHANNEL_ID,
+        title = title,
+        message = message
+    )
 }
 
 @Composable

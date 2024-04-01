@@ -171,7 +171,7 @@ fun AppNavHost(
                 FavouriteScreen(context = context, navController = navController)
             }
             composable(Screen.Notifications.route) {
-                NotificationScreen()
+                NotificationScreen(notifications = emptyList())
             }
             composable(Screen.Account.route) {
                 HomeScreen(navController = navController, viewModel = viewModel)
