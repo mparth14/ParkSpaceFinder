@@ -127,7 +127,7 @@ The following dependencies are used in the ParkSpace project:
 
 ## Authors & Acknowledgements
 
-- Dheemanth Kumawat (B00962830)
+- Dheemanth Rajendra Prasad Kumawat (B00962845)
 - Dhruv Kapoor (B00937833)
 - Kainat Khan (B00937232)
 - Parth Modi (B00962830)
