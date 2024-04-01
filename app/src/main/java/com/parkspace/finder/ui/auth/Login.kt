@@ -136,28 +136,6 @@ fun LoginScreen(viewModel: AuthViewModel?,navController: NavController) {
                         )
                     )
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                top = spacing.small,
-                            ),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .wrapContentHeight()
-                                .clickable {
-                                    navController.navigate(ROUTE_SIGNUP)
-                                },
-                            text = "Forgot password?",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontSize = 14.sp,
-                            textAlign = TextAlign.Left,
-                            color = MaterialTheme.colorScheme.secondary
-                        )
-                    }
-
                     Button(
                         onClick = {
                             viewModel?.onLoginEvent(LoginUIEvent.LoginButtonClicked)

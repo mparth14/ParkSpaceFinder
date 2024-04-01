@@ -246,61 +246,6 @@ fun HomeScreen(viewModel: AuthViewModel?, navController: NavController?) {
                                 end = Offset(size.width, size.height),
                                 strokeWidth = 1.dp.toPx()
                             )
-                        }.clickable {
-                            viewModel?.logout()
-                            navController?.navigate(ROUTE_SIGNUP) {
-                                popUpTo(ROUTE_SIGNUP) {
-                                    inclusive = true
-                                }
-                            }
-                        }
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(30.dp)
-                            .background(
-                                color = colorResource(id = R.color.purple_500),
-                                shape = RoundedCornerShape(8.dp) // Adjust the corner radius as needed
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.padlock),
-                            contentDescription = "Change Password Image",
-                            modifier = Modifier
-                                .size(22.dp),
-                            colorFilter = ColorFilter.tint(Color.White)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(16.dp)) // Add horizontal space
-
-                    Text(
-                        text = "Change Password",
-                        style = MaterialTheme.typography.body1.copy(fontSize = 18.sp),
-                        modifier = Modifier.clickable {
-                            viewModel?.logout()
-                            navController?.navigate(ROUTE_SIGNUP) {
-                                popUpTo(ROUTE_SIGNUP) {
-                                    inclusive = true
-                                }
-                            }
-                        }
-                    )
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .height(50.dp)
-                        .padding(8.dp)
-                        .fillMaxWidth()
-                        .drawWithContent {
-                            drawContent()
-                            drawLine(
-                                color = Color.LightGray,
-                                start = Offset(0f, size.height),
-                                end = Offset(size.width, size.height),
-                                strokeWidth = 1.dp.toPx()
-                            )
                         }
                         .clickable {
                             viewModel?.logout()

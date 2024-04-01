@@ -94,9 +94,14 @@ class BookingDetailViewModel @AssistedInject constructor(
         }
     }
 
-    fun openParkingSpaceInMaps(){
-        if(_bookedParkingSpace.value is Resource.Success){
-
+    fun cancelBooking() {
+        viewModelScope.launch {
+            val currentBookingDetail = _bookingDetail.value
+            if (currentBookingDetail is Resource.Success) {
+                val updatedBookingDetails = currentBookingDetail.result.copy(status = "Cancelled")
+                _bookingDetail.value = Resource.Success(updatedBookingDetails)
+                bookingDetailRepository.cancelBooking(bookingId)
+            }
         }
     }
 }

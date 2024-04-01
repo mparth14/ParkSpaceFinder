@@ -36,6 +36,9 @@ class BookingDetailRepositoryImpl @Inject constructor(
             val result = db.collection("bookings").document(bookingId).get().await()
             val bookingDetails = result.toObject(BookingDetails::class.java).apply {
                 this?.id = result.id
+                if(checkIfDateTimeIsInPast(this!!.bookingDate, this.endTime)) {
+                    this.status = "Completed"
+                }
             }
             Resource.Success(bookingDetails!!)
         } catch (e: Exception) {
@@ -65,6 +68,21 @@ class BookingDetailRepositoryImpl @Inject constructor(
                 }
             }
             Resource.Success(bookingDetails)
+        } catch (e: Exception) {
+            Resource.Failure(e)
+        }
+    }
+
+    /**
+     * Cancels the booking with the given booking ID.
+     * @param bookingId The ID of the booking.
+     * @return A resource containing the result of the operation.
+     */
+    override suspend fun cancelBooking(bookingId: String): Resource<String> {
+        return try {
+           val documnet =  db.collection("bookings").document(bookingId).update("status", "Cancelled").await()
+            Log.d("BookingDetailRepositoryImpl", "Document updated with ID: ${documnet}")
+            Resource.Success("Booking cancelled successfully")
         } catch (e: Exception) {
             Resource.Failure(e)
         }
